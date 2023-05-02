@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Level - 1</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YU-Learn</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+    <style>
+      #video-container {
+        width: 640px;
+        height: 360px;
+        margin: 0 auto;
+        position: relative;
+      }
+      #video-player {
+        width: 100%;
+        height: 100%;
+      }
+      #fullscreen-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 1;
+      }
+      #video-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* set the number of columns */
+        grid-gap: 10px; /* set the gap between cells */
+        margin-top: 20px;
+      }
+      .video-thumbnail {
+        position: relative;
+        cursor: pointer;
+      }
+      .video-thumbnail img {
+        width: 100%;
+        height: auto;
+      }
+      .video-thumbnail .video-title {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+      }
+      .video-thumbnail:hover .video-title {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+  <body>
+	<header>
+		<nav id="header-nav" class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+
+					<!--<a href="index.html" class="pull-left visible-md visible-lg">
+						<div id="logo-img" alt="logo image"></div>
+					</a>-->
+
+					<a class="navbar-brand" style="max-width: 128px" href="index.html">
+						<img src="https://www.yunextraffic.com/wp-content/themes/yunex/public/images/yunex.56a477.svg" width="128" class="img-fluid navbar-logo">
+					  </a>
+
+					<!--<div class="navbar-brand">
+						<a href="index.html"><h1>YU Learn</h1></a>
+						<P>
+							<img src="images/book.png" width=20 alt="book logo">
+							<span>Uniting what's next in STEM!</span>
+						</P>
+					</div>-->
+
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsable-nav" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+
+				<!--<div id="collapsable-nav" class="collapse navbar-collapse">
+					<ul id="nav-list" class="nav navbar-nav navbar-right">
+					 <li>
+					   <a  href="#" onclick="playVideo_html()">HTML</a>
+					 </li>
+					 <li>
+					   <a href="#" onclick="playVideo_css()">CSS</a>
+					 </li>
+					 <li>
+					   <a href="#" onclick="playVideo_js()">JS</a>
+					 </li>
+					 
+				   </ul><!-- #nav-list -->
+				 </div><!-- .collapse .navbar-collapse --> 
+
+				 <!--<div id="header-text">
+					<h1 id="yulearn-head" align="center">YU
+					<span id="play"><button class="button" ><img src="images/play.svg" width=40px alt="Play Button"></button></span>
+					Learn</h1>
+					<h2 align="center" id="h2yunex">
+						Uniting what's next in STEM!
+					</h2>
+
+					<script>
+						function myFunction() {
+						   var element = document.body;
+						   element.classList.toggle("dark-mode");
+						}
+					</script>
+
+				 </div>-->
+
+
+				 
+
+			</div>
+		</nav>
+	</header>
+  <div id="main-content" class="container">
+
+		  <video id="background-video" autoplay muted loop>
+			<source src="videos/v.mp4" type="video/mp4">
+			Your browser does not support HTML5 video.
+		  </video>
+    <div id="video-container">
+      <video id="video-player" src="videos/Level1-1.mp4" autoplay controls></video>
+      <!--<button id="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>-->
+    </div>
+    <div id="video-list">
+      <div class="video-thumbnail" onclick="playVideo('videos/Level1-1.mp4')">
+        <img src="images/Thumbnail-1.PNG" alt="Level1-1">
+        <div class="video-title">Level1-1</div>
+      </div>
+      <div class="video-thumbnail" onclick="playVideo('videos/Level1-2.mp4')">
+        <img src="images/Thumbnail-2.PNG" alt="Level1-2">
+        <div class="video-title">Level1-2</div>
+      </div>
+      <div class="video-thumbnail" onclick="playVideo('videos/Level1-3.mp4')">
+        <img src="images/Thumbnail-3.PNG" alt="Level1-3">
+        <div class="video-title">Level1-3</div>
+      </div>
+    </div>
+	</div>
+    <script>
+      var videoContainer = document.getElementById("video-container");
+      var videoPlayer = document.getElementById("video-player");
+      
+      function playVideo(videoPath) {
+        videoPlayer.src = videoPath;
+        videoPlayer.load();
+        videoPlayer.play();
+      }
+      
+      function toggleFullscreen() {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        } else {
+          videoContainer.requestFullscreen();
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		/* Main video player */
+		.video-container {
+			position: relative;
+			padding-bottom: 56.25%; /* 16:9 */
+			height: 0;
+		}
+		.video-container video {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		/* Thumbnails and video options */
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.column {
+			flex: 33.33%;
+			padding: 5px;
+		}
+		.column img {
+			width: 100%;
+			height: auto;
+			cursor: pointer;
+		}
+
+		/* Video titles */
+		.title {
+			margin-top: 5px;
+			text-align: center;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+<body>
+	<header>
+		<nav id="header-nav" class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+
+					<!--<a href="index.html" class="pull-left visible-md visible-lg">
+						<div id="logo-img" alt="logo image"></div>
+					</a>-->
+
+					<a class="navbar-brand" style="max-width: 128px" href="index.html">
+						<img src="https://www.yunextraffic.com/wp-content/themes/yunex/public/images/yunex.56a477.svg" width="128" class="img-fluid navbar-logo">
+					  </a>
+
+					<!--<div class="navbar-brand">
+						<a href="index.html"><h1>YU Learn</h1></a>
+						<P>
+							<img src="images/book.png" width=20 alt="book logo">
+							<span>Uniting what's next in STEM!</span>
+						</P>
+					</div>-->
+
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsable-nav" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+
+				<div id="collapsable-nav" class="collapse navbar-collapse">
+					<ul id="nav-list" class="nav navbar-nav navbar-right">
+					 <li>
+					   <a  href="#" onclick="playVideo_html()">HTML</a>
+					 </li>
+					 <li>
+					   <a href="#" onclick="playVideo_css()">CSS</a>
+					 </li>
+					 <li>
+					   <a href="#" onclick="playVideo_js()">JS</a>
+					 </li>
+					 
+				   </ul><!-- #nav-list -->
+				 </div><!-- .collapse .navbar-collapse -->
+
+				 <div id="header-text">
+					<h1 id="yulearn-head" align="center">YU
+					<span id="play"><button class="button" ><img src="images/play.svg" width=40px alt="Play Button"></button></span>
+					Learn</h1>
+					<h2 align="center" id="h2yunex">
+						Uniting what's next in STEM!
+					</h2>
+
+					<script>
+						function myFunction() {
+						   var element = document.body;
+						   element.classList.toggle("dark-mode");
+						}
+					</script>
+
+				 </div>
+
+
+				 
+
+			</div>
+		</nav>
+	</header>
+
+	<div class="video-container">
+		<video id="main-video" controls>
+			<source src="videos/Level 1 Part 1 Rec.mov" type="video/mp4">
+		</video>
+	</div>
+
+	<div class="row">
+		<div class="column">
+			<img src="default-thumbnail.png" onclick="playVideo('videos/Level 1 Part 1 Rec.mov', 'Level 1 Part 1')">
+			<div class="title">Level 1 Part 1</div>
+		</div>
+		<div class="column">
+			<img src="default-thumbnail.png" onclick="playVideo('videos/Level 1 Part 2.mov', 'Level 1 Part 2')">
+			<div class="title">Level 1 Part 2</div>
+		</div>
+		<div class="column">
+			<img src="default-thumbnail.png" onclick="playVideo('videos/Part 3 Level 1.mov', 'Part 3 Level 1')">
+			<div class="title">Part 3 Level 1</div>
+		</div>
+	</div>
+
+	<script>
+		function playVideo(path, title) {
+			document.getElementById('main-video').src = path;
+			document.getElementById('main-video').play();
+			document.getElementById('video-title').innerHTML = title;
+		}
+	</script>
+
+</body>
+</html>
