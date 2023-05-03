@@ -11,6 +11,19 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet">
 	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
     <style>
+	#nowplaying {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#video-title {
+  color: red;
+}
+
+
+
       #video-container {
         width: 640px;
         height: 360px;
@@ -138,16 +151,19 @@
       <video id="video-player" src="videos/Level1-1.mp4" autoplay controls></video>
       <!--<button id="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>-->
     </div>
+	<div id="nowplaying">
+	Now playing - <span id="video-title">Level1 Part 1  (HTML)</span>
+	</div>
     <div id="video-list">
-      <div class="video-thumbnail" onclick="playVideo('videos/Level1-1.mp4')">
+      <div class="video-thumbnail" onclick="playVideo('videos/Level1-1.mp4','Level1 Part 1  (HTML)')">
         <img src="images/Thumbnail-1.PNG" alt="Level1-1">
         <div class="video-title">Level1-1</div>
       </div>
-      <div class="video-thumbnail" onclick="playVideo('videos/Level1-2.mp4')">
+      <div class="video-thumbnail" onclick="playVideo('videos/Level1-2.mp4','Level1 Part 2  (CSS)')">
         <img src="images/Thumbnail-2.PNG" alt="Level1-2">
         <div class="video-title">Level1-2</div>
       </div>
-      <div class="video-thumbnail" onclick="playVideo('videos/Level1-3.mp4')">
+      <div class="video-thumbnail" onclick="playVideo('videos/Level1-3.mp4','Level1 Part 3  (JSS)')">
         <img src="images/Thumbnail-3.PNG" alt="Level1-3">
         <div class="video-title">Level1-3</div>
       </div>
@@ -156,11 +172,13 @@
     <script>
       var videoContainer = document.getElementById("video-container");
       var videoPlayer = document.getElementById("video-player");
-      
-      function playVideo(videoPath) {
+      var now = document.getElementById("nowplaying")
+	  
+      function playVideo(videoPath,title) {
         videoPlayer.src = videoPath;
         videoPlayer.load();
         videoPlayer.play();
+		document.getElementById("video-title").innerHTML = title;
       }
       
       function toggleFullscreen() {
