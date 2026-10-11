@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Claude Code, Properly — A Daily Series by Kowshik Kesavarapu</title>
   <meta name="description" content="Anyone can use Claude Code. Using it well is a different skill. A daily series on getting real results from Claude Code, from the basics to MCP, skills and plugins." />
-  <meta property="og:title" content="Claude Code, Properly — Day 1" />
-  <meta property="og:description" content="Anyone can use Claude Code. Using it well is a different skill." />
+  <meta property="og:title" content="Claude Code, Properly" />
+  <meta property="og:description" content="A daily series on using Claude Code well." />
   <meta property="og:image" content="https://kowshik.co.in/claude-code/day-01.png" />
   <meta property="og:url" content="https://kowshik.co.in/claude-code/" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -33,119 +33,39 @@
   <!-- ===== HERO ===== -->
   <header class="cc-hero">
     <div class="cc-wrap">
-      <span class="cc-pill">A daily series · Day 1</span>
+      <span class="cc-pill">A daily series</span>
       <h1>Claude Code,<br /><span class="cc-grad">properly.</span></h1>
-      <p class="cc-lede">Anyone can use Claude Code. Using it well is a different skill. This series is about that second part, one short lesson a day, written for anyone, whether you code every day or have never opened a terminal.</p>
-      <div class="cc-meta">
-        <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>Day 1 · Introduction</span>
-        <span>6 min read</span>
-      </div>
+      <p class="cc-lede">Anyone can use Claude Code. Using it well is a different skill. One short article a day on getting real results, from the basics to MCP, skills and plugins. Written for anyone.</p>
       <div class="cc-jump">
-        <a href="#day-1" class="cc-btn solid">Read Day 1</a>
-        <a href="#series" class="cc-btn">See the full series</a>
+        <a href="day-01/" class="cc-btn solid">Start with Day 1</a>
+        <a href="#coming" class="cc-btn">See what's coming</a>
       </div>
     </div>
   </header>
 
   <main class="cc-wrap">
 
-    <!-- ===== DAY 1 ===== -->
-    <article class="cc-article" id="day-1">
-
-      <h2><span class="num">01</span>What Claude Code actually is</h2>
-      <p>Claude Code is Anthropic's AI coding agent. Unlike a chatbot where you copy and paste code back and forth, it works <strong>inside your project</strong>. It reads your files, edits them, runs commands, runs your tests and explains what it did. You describe the outcome you want in plain English, and it does the work in front of you.</p>
-      <p>It started in the terminal, and that is still where it is most powerful, but you can also use it in VS Code, JetBrains IDEs, a desktop app and the browser.</p>
-
-      <h2><span class="num">02</span>The easy part</h2>
-      <p>Getting started takes about two minutes. On Windows, open PowerShell and run:</p>
-
-      <div class="wt">
-        <div class="wt-bar">
-          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
-          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+    <section class="cc-latest">
+      <h2 class="cc-h2">Articles</h2>
+      <a href="day-01/" class="cc-card">
+        <img src="day-01.png" alt="Day 1: Anyone can use Claude Code. Using it well is a different skill." loading="lazy" />
+        <div class="cc-card-body">
+          <div class="cc-card-meta"><span class="cc-tag">Day 1</span><span>Introduction</span><span>6 min read</span><span>Oct 11, 2026</span></div>
+          <h3>Anyone can use Claude Code. Using it well is different.</h3>
+          <p>It works so well out of the box that it's easy to think you're already using it well. Four habits close the gap between "it works" and "I trust it", plus a simple loop to start with today.</p>
+          <span class="cc-more">Read Day 1 <i class="fas fa-arrow-right"></i></span>
         </div>
-<pre><span class="c"># install Claude Code</span>
-<span class="ps">PS C:\&gt;</span> irm https://claude.ai/install.ps1 | iex
+      </a>
+    </section>
 
-<span class="c"># go to any project and start it</span>
-<span class="ps">PS C:\&gt;</span> cd C:\dev\my-project
-<span class="ps">PS C:\dev\my-project&gt;</span> claude
-
-<span class="c"># then just ask</span>
-&gt; <span class="s">explain what this project does</span></pre>
-      </div>
-
-      <p>Sign in with your Claude account the first time, and that's it. You'll get a useful answer on your very first try. That is exactly why so many people stop there.</p>
-
-      <div class="cc-callout">
-        <p><strong>The trap:</strong> because it works so well out of the box, it's easy to assume you're already using it well. Most people are using maybe a fifth of what it can do.</p>
-      </div>
-
-      <h2><span class="num">03</span>Where it gets harder</h2>
-      <p>The gap between "it works" and "it works <em>and I trust it</em>" comes down to four habits. Each one gets its own day later in the series. Here's the short version.</p>
-
-      <div class="cc-gaps">
-        <div class="cc-gap">
-          <h3><i>01</i>Context beats clever prompts</h3>
-          <p>Claude Code only knows what it can see and what you tell it. Vague asks get vague code. Point it at the right files, say what "done" looks like, and mention the constraints you'd tell a new teammate.</p>
-          <div class="cc-vs">
-            <div class="bad"><small>Vague</small>"Fix the login bug."</div>
-            <div class="good"><small>Clear</small>"Users get logged out after refresh. The session logic is in <code>auth/session.py</code>. Find the cause, fix it, and add a test that reproduces it."</div>
-          </div>
-        </div>
-
-        <div class="cc-gap">
-          <h3><i>02</i>Plan before it builds</h3>
-          <p>For anything bigger than a small fix, ask it to explore and propose a plan first. Plan mode (press <code>Shift+Tab</code> to cycle into it) lets Claude read and think without touching a single file. Reviewing a plan takes a minute. Undoing the wrong build takes an afternoon.</p>
-          <div class="cc-vs">
-            <div class="bad"><small>Rushed</small>"Add dark mode to the app."</div>
-            <div class="good"><small>Planned</small>"Look at how styles are organised and propose a plan for dark mode. Don't change anything yet."</div>
-          </div>
-        </div>
-
-        <div class="cc-gap">
-          <h3><i>03</i>Review, don't rubber-stamp</h3>
-          <p>Claude Code is fast and usually right. "Usually" is the important word. Read the changes, ask it why it chose an approach, and give it a way to check its own work, like running the tests or opening the page. Code that verifies itself is code you can trust.</p>
-          <div class="cc-vs">
-            <div class="bad"><small>Blind</small>Accept every edit, ship it, hope.</div>
-            <div class="good"><small>Verified</small>"Run the tests. If anything fails, fix it and show me what changed."</div>
-          </div>
-        </div>
-
-        <div class="cc-gap">
-          <h3><i>04</i>Your setup decides how smart it feels</h3>
-          <p>Two people can use the same model and get very different results. The difference is setup. A <code>CLAUDE.md</code> file (run <code>/init</code> to create one) teaches Claude your project's conventions every session. Permissions, memory and connected tools (MCP) do the rest.</p>
-          <div class="cc-vs">
-            <div class="bad"><small>Starting cold</small>Re-explaining your stack, your style and your commands every single session.</div>
-            <div class="good"><small>Set up once</small><code>CLAUDE.md</code> says "use pnpm, run <code>pnpm test</code> before finishing, follow the patterns in <code>src/ui</code>."</div>
-          </div>
-        </div>
-      </div>
-
-      <h2><span class="num">04</span>One habit to start with today</h2>
-      <p>If you only take one thing from Day 1, take this loop. It works for a one-line fix and for a whole feature.</p>
-
-      <div class="cc-loop">
-        <div><b>Explore</b><span>Ask it to read the relevant code and explain it back.</span></div>
-        <div><b>Plan</b><span>Get a plan. Push back on it before anything changes.</span></div>
-        <div><b>Build</b><span>Let it implement the plan, in small steps.</span></div>
-        <div><b>Verify</b><span>Have it run tests or check the result, then review the diff.</span></div>
-      </div>
-
-      <p>Try it on something small this week. You'll notice the difference on the first task.</p>
-    </article>
-
-    <!-- ===== SERIES ===== -->
-    <section class="cc-road" id="series">
-      <span class="cc-pill">The series</span>
-      <h2 style="font-size:clamp(1.6rem,4vw,2.2rem);font-weight:750;letter-spacing:-0.02em;margin-top:1rem;">What's coming</h2>
-      <p style="color:var(--muted);margin-top:0.5rem;">A new lesson lands here every day. The order may shift as we go.</p>
+    <section class="cc-road" id="coming">
+      <h2 class="cc-h2">What's coming</h2>
+      <p style="color:var(--muted);margin-top:0.5rem;">A new article lands here every day. The order may shift as we go.</p>
 
       <div class="cc-stage">
         <h3>Foundations</h3>
         <ul class="cc-list">
-          <li class="live"><span class="d">Day 1</span><a href="#day-1" class="t">Introduction: using it vs. using it well</a><span class="st">Live</span></li>
+          <li class="live"><span class="d">Day 1</span><a href="day-01/" class="t">Introduction: using it vs. using it well</a><span class="st">Live</span></li>
           <li><span class="d">Next</span><span class="t">Installing and your first real session</span><span class="st">Soon</span></li>
           <li><span class="d">Next</span><span class="t">Talking to it: prompts that get the right result</span><span class="st">Soon</span></li>
           <li><span class="d">Next</span><span class="t">Slash commands and shortcuts worth knowing</span><span class="st">Soon</span></li>
@@ -177,7 +97,7 @@
 
     <section class="cc-follow">
       <h2>Follow along</h2>
-      <p>I post a short version of each lesson on LinkedIn every day. The full write-up always lands here.</p>
+      <p>I post a short version of each article on LinkedIn every day. The full write-up always lands here.</p>
       <div class="cc-jump" style="margin-top:0;">
         <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
         <a href="https://github.com/Kowshik46" target="_blank" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>

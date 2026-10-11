@@ -130,3 +130,33 @@
   .nav-links { display: none; }
   .cc-hero { padding: 3.5rem 0 2.5rem; }
 }
+
+/* ---- Hub: article cards ---- */
+.cc-h2 { font-size: clamp(1.5rem, 3.6vw, 2rem); font-weight: 750; letter-spacing: -0.02em; margin: 0 0 1rem; }
+.cc-latest { padding: 1rem 0 0; }
+.cc-card { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; align-items: center; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 1rem; transition: border-color .2s, transform .2s; }
+.cc-card:hover { border-color: var(--accent-hi); transform: translateY(-2px); }
+.cc-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; display: block; }
+.cc-card-body { padding: 0.5rem 0.5rem 0.5rem 0; }
+.cc-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.9rem; font-size: 0.78rem; color: var(--faint); margin-bottom: 0.7rem; }
+.cc-tag { color: var(--accent-hi); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid rgba(129,140,248,0.35); border-radius: 99px; padding: 0.15rem 0.6rem; }
+.cc-card h3 { font-size: 1.35rem; font-weight: 750; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 0.6rem; }
+.cc-card p { color: var(--muted); font-size: 0.98rem; line-height: 1.65; margin-bottom: 1rem; }
+.cc-more { color: var(--accent-hi); font-weight: 600; font-size: 0.92rem; }
+.cc-card:hover .cc-more i { transform: translateX(3px); }
+.cc-more i { transition: transform .2s; }
+
+/* ---- Article page ---- */
+.cc-hero-article { padding: 3.5rem 0 1.5rem; }
+.cc-hero-article h1 { font-size: clamp(2rem, 6vw, 3.4rem); margin: 1.2rem 0 1rem; }
+.cc-back { display: inline-block; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.4rem; transition: color .2s; }
+.cc-back:hover { color: var(--text); }
+.cc-back i { margin-right: 0.4rem; font-size: 0.75rem; }
+.cc-hero-article .cc-pill { display: block; width: fit-content; }
+.cc-article > h2:first-child { margin-top: 1.5rem; }
+.cc-pager { display: flex; justify-content: space-between; margin-top: 3rem; }
+
+@media (max-width: 720px) {
+  .cc-card { grid-template-columns: 1fr; }
+  .cc-card-body { padding: 0 0.4rem 0.4rem; }
+}
