@@ -602,3 +602,19 @@ img { display: block; max-width: 100%; }
 @media (min-width: 1600px) {
   :root { --gutter: clamp(4rem, 10vw, 10rem); }
 }
+
+/* ============ CLAUDE CODE SERIES FEATURE ============ */
+.series-feature { padding: 2.5rem var(--gutter); }
+.series-card {
+  display: grid; grid-template-columns: 240px 1fr; gap: 1.75rem; align-items: center;
+  max-width: 960px; margin: 0 auto; padding: 1rem;
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(244,114,182,0.05));
+  border: 1px solid var(--border-hi); border-radius: 18px;
+  transition: border-color .2s, transform .2s;
+}
+.series-card:hover { border-color: var(--accent-hi); transform: translateY(-2px); }
+.series-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; display: block; }
+.series-title { font-size: clamp(1.5rem, 3.5vw, 2rem); font-weight: 800; letter-spacing: -0.02em; margin: 0.3rem 0 0.6rem; }
+.series-desc { color: var(--muted); font-size: 1rem; line-height: 1.65; margin-bottom: 1rem; }
+.series-more { color: var(--accent-hi); font-weight: 600; font-size: 0.92rem; }
+@media (max-width: 720px) { .series-card { grid-template-columns: 1fr; } .series-body { padding: 0 0.4rem 0.4rem; } }
