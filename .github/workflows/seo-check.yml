@@ -1,0 +1,11 @@
+name: SEO check
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/check_seo.py
