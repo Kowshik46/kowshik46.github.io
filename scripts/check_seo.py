@@ -53,15 +53,28 @@ for path in pages:
     canon = re.search(r'<link rel="canonical" href="([^"]+)"', html)
     if not canon or canon.group(1) != url:
         err(f"canonical should be {url}")
-    for key in ("og:title", "og:description", "og:image", "og:url", "og:type"):
+    for key in ("og:title", "og:description", "og:image", "og:url", "og:type", "og:site_name"):
         if not meta(html, "property", key):
             err(f"missing {key}")
+    if not meta(html, "name", "twitter:card"):
+        err("missing twitter:card")
     if meta(html, "property", "og:url") not in (None, url):
         err(f"og:url should be {url}")
     if url not in sitemap_urls:
         err(f"{url} is not in sitemap.xml")
     if len(re.findall(r"<h1[\s>]", html)) != 1:
         err("needs exactly one <h1>")
+    level = 0
+    for h in map(int, re.findall(r"<h([1-6])[\s>]", html)):
+        if h > level + 1:
+            err(f"heading jumps from h{level} to h{h}")
+            break
+        level = h
+    if re.search(r'href="(?:\./|\.\./)*index\.html"', html):
+        err('internal link points at index.html; link the directory instead ("./", "../")')
+    for a in re.findall(r'<a\b[^>]*>\s*<i class="[^"]*"></i>\s*</a>', html):
+        if "aria-label" not in a:
+            err(f"icon-only link missing aria-label: {a[:80]}")
     for img in re.findall(r"<img\b[^>]*>", html):
         for a in ("alt", "width", "height"):
             if f'{a}="' not in img:
@@ -93,6 +106,20 @@ for path in pages:
         prev = ROOT / f"claude-code/day-{n - 1:02d}/index.html"
         if prev.exists() and f'href="../{slug}"' not in prev.read_text():
             err(f"previous day (day-{n - 1:02d}) has no next link to it")
+
+# Fonts load from <head>, not through a CSS @import chain.
+all_html = "".join(p.read_text() for p in pages)
+for css in ROOT.rglob("*.css"):
+    if css.name in all_html and "@import" in css.read_text():
+        errors.append(f"{css.relative_to(ROOT)}: uses @import; load it with <link> in <head>")
+
+# Images people download on every visit should stay small.
+for img in ROOT.rglob("*"):
+    if img.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".avif"} and ".git" not in img.parts:
+        rel = img.relative_to(ROOT).as_posix()
+        size = img.stat().st_size // 1024
+        if size > 200 and img.name in all_html:
+            warnings.append(f"{rel} is {size} KB; aim for under 200 KB")
 
 # The newest article must be linked from the home page.
 days = sorted(ROOT.glob("claude-code/day-*/index.html"))

@@ -17,13 +17,14 @@ Run `python3 scripts/check_seo.py` before every commit. It must report 0 errors.
 - Links that open in a new tab carry `rel="noopener"`. Icon-only links need an `aria-label`.
 - Internal links point at directories (`./`, `../`, `claude-code/day-04/`), never at `index.html`.
 - Load fonts from `<head>` with a preconnect, never from a CSS `@import`.
-- Keep images small. Resize photos to the largest size they're displayed at (600px for portraits), and strip EXIF data because phone photos carry GPS.
+- Keep every image under 200 KB. Resize photos to the largest size they're displayed at (600px for portraits), and strip EXIF data because phone photos carry GPS. For PNG share images, quantize to 256 colours, which takes a 1200x1200 card from about 290 KB to about 45 KB with no visible change:
+  `python3 -c "from PIL import Image as I; f='claude-code/day-NN.png'; I.open(f).convert('RGB').quantize(256, method=I.Quantize.FASTOCTREE, dither=I.Dither.FLOYDSTEINBERG).save(f, optimize=True)"`
 
 ### Each new Claude Code day (`claude-code/day-NN/index.html`)
 Copy the previous day's page as the template, then:
 1. Set the title, description, canonical, `og:*` and `article:published_time` (YYYY-MM-DD) for the new day.
 2. Update the `BlogPosting` JSON-LD (headline, description, url, image, datePublished) and the `BreadcrumbList` JSON-LD.
-3. Add a 1200x1200 share image at `claude-code/day-NN.png`.
+3. Add a 1200x1200 share image at `claude-code/day-NN.png`, quantized as above so it stays under 200 KB.
 4. Add the day to `sitemap.xml`.
 5. Add a card for it at the top of the Articles list in `claude-code/index.html`.
 6. On the previous day's page, add a next link in `.cc-pager`: `<a href="../day-NN/" class="cc-btn">Day N: Short title <i class="fas fa-arrow-right"></i></a>`.
