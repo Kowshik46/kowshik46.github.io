@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Day 3: Install Claude Code and Run Your First Real Session — Kowshik Kesavarapu</title>
-  <meta name="description" content="How to install Claude Code on Windows, Mac or Linux, sign in, and run a first session that is safe, useful and easy to undo." />
-  <meta property="og:title" content="Day 3: Install it, then run a real first session" />
-  <meta property="og:description" content="Install, sign in, and a first session you can trust." />
+  <title>Day 3: Set Up Claude Code in the Terminal and VS Code — Kowshik Kesavarapu</title>
+  <meta name="description" content="Install Claude Code on Windows, Mac or Linux, add it to VS Code, sign in, and run a first session with tips that save time." />
+  <meta property="og:title" content="Day 3: Set up Claude Code in the terminal and VS Code" />
+  <meta property="og:description" content="Terminal and VS Code setup, plus first-session tips." />
   <meta property="og:image" content="https://kowshik.co.in/claude-code/day-03.png" />
   <meta property="og:url" content="https://kowshik.co.in/claude-code/day-03/" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -46,11 +46,11 @@
   <header class="cc-hero cc-hero-article">
     <div class="cc-wrap">
       <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
-      <span class="cc-pill">Day 3 · Getting started</span>
-      <h1>Installed it.<br /><span class="cc-grad">Now what?</span></h1>
+      <span class="cc-pill">Day 3 · Setup</span>
+      <h1>Set it up once.<br /><span class="cc-grad">Use it anywhere.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>6 min read</span>
+        <span>10 min read</span>
         <span>Oct 13, 2026</span>
       </div>
     </div>
@@ -59,57 +59,118 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-3">
 
-      <h2><span class="num">01</span>Install it</h2>
-      <p>Claude Code runs in your terminal, on Windows, macOS and Linux. The recommended route is the native installer. Open a terminal and run the line for your system:</p>
+      <h2><span class="num">01</span>Pick your way in</h2>
+      <p>Claude Code is the same engine whichever door you use. Pick the one that matches how you already work, and know you can switch later because they share your conversation history.</p>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>Terminal (CLI)</h3>
+          <p>The original. Works everywhere, has every command, and is the best fit if you live in a shell or work over SSH.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>VS Code extension</h3>
+          <p>A chat panel inside your editor, with side-by-side diffs, file and selection context, and plan review. The easiest start if VS Code is home.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>Desktop app</h3>
+          <p>A graphical app if you'd rather not use a terminal at all. Not covered today, but worth a look.</p>
+        </div>
+      </div>
+      <p>This article sets up the first two. Most people end up using both: the panel for everyday edits, the terminal for everything else.</p>
 
+      <h2><span class="num">02</span>Setting up the terminal version</h2>
+      <p><b>Check first.</b> You need Windows 10 (1809 or later), macOS 13+, or a recent Ubuntu, Debian or Alpine, with at least 4 GB of RAM and an internet connection. And you need an account: a Claude Pro, Max, Team or Enterprise plan, or an Anthropic Console account. The free Claude plan does not include Claude Code.</p>
+      <p><b>Install.</b> The native installer is the recommended route. Open a terminal and run the line for your system:</p>
       <div class="wt">
         <div class="wt-bar">
           <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
           <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
         </div>
-<pre><span class="c"># Windows</span>
-<span class="ps">PS C:\&gt;</span> <span class="s">irm https://claude.ai/install.ps1 | iex</span>
+<pre><span class="c"># Windows PowerShell (prompt starts with PS)</span>
+<span class="s">irm https://claude.ai/install.ps1 | iex</span>
 
-<span class="c"># macOS / Linux / WSL</span>
-$ <span class="s">curl -fsSL https://claude.ai/install.sh | bash</span></pre>
+<span class="c"># Windows CMD (no PS in the prompt)</span>
+<span class="s">curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</span>
+
+<span class="c"># macOS, Linux or WSL</span>
+<span class="s">curl -fsSL https://claude.ai/install.sh | bash</span></pre>
       </div>
-
-      <p>Prefer a package manager? Windows has <code>winget install Anthropic.ClaudeCode</code> and macOS has Homebrew. There is also an npm package (<code>npm install -g @anthropic-ai/claude-code</code>) if you already live in Node. Whichever you pick, close and reopen your terminal afterwards so the <code>claude</code> command is found.</p>
-      <p>Check it worked:</p>
-
+      <p>It prints no progress while it downloads, so don't panic if it looks quiet. When it finishes, <b>open a new terminal window</b> and check:</p>
       <div class="wt">
         <div class="wt-bar">
           <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
           <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
         </div>
-<pre><span class="ps">PS C:\dev&gt;</span> claude --version
-<span class="ps">PS C:\dev&gt;</span> claude doctor   <span class="c"># checks your install and setup</span></pre>
+<pre><span class="ps">PS C:\dev&gt;</span> claude --version     <span class="c"># prints a version number</span>
+<span class="ps">PS C:\dev&gt;</span> claude doctor        <span class="c"># checks install, settings and updates</span></pre>
       </div>
-
+      <p>Prefer a package manager? Windows has <code>winget install Anthropic.ClaudeCode</code>, macOS has <code>brew install --cask claude-code</code>, and Debian, Fedora and Alpine have apt, dnf and apk repositories. npm works too (<code>npm install -g @anthropic-ai/claude-code</code>, needs Node.js 22 or later). One difference matters: the native installer updates itself in the background, while winget, Homebrew and the Linux package managers do not, so run their upgrade command now and then (or <code>claude update</code> where it applies).</p>
+      <p><b>Windows notes.</b> You don't need to run as Administrator. Git for Windows is optional: with it Claude Code uses Git Bash for shell commands, without it Claude Code uses PowerShell. If you want a Linux toolchain, install inside WSL and use the Linux command there.</p>
       <div class="cc-callout">
-        <p><strong>If something fails:</strong> <code>claude: command not found</code> almost always means the terminal was open before the install, or the install folder isn't on your PATH. Reopen the terminal first. On Windows, if it complains about Git, install Git for Windows and try again. <code>claude doctor</code> tells you what it found.</p>
+        <p><strong>If something fails:</strong> <code>claude</code> not found or not recognized almost always means your terminal was open before the install, so open a new one. Seeing <code>The token '&amp;&amp;' is not a valid statement separator</code> means you pasted the CMD command into PowerShell; <code>'irm' is not recognized</code> means the PowerShell command went into CMD. <code>claude doctor</code> tells you what it found.</p>
       </div>
 
-      <h2><span class="num">02</span>Sign in once</h2>
-      <p>Go to a project folder and type <code>claude</code>. The first run opens your browser to sign in. You need a Claude subscription (Pro or Max) or an Anthropic Console account with API credits. After that it remembers you.</p>
-      <p>It will also ask whether you trust the folder. That prompt is a real safety check, not a formality: Claude Code can read files there and, with your approval, edit them and run commands. Only say yes to folders you actually own or trust.</p>
-
-      <h2><span class="num">03</span>Your first session: look before you touch</h2>
-      <p>The best first prompt changes nothing. Ask it to read:</p>
-
+      <h2><span class="num">03</span>Setting up VS Code</h2>
+      <p>You need VS Code 1.94 or later (check under Help, About) and the same kind of account as above. No API key is needed.</p>
+      <p><b>Install the extension.</b> Press <code>Ctrl+Shift+X</code> (<code>Cmd+Shift+X</code> on Mac), search for <b>Claude Code</b> (publisher: Anthropic) and click Install. Or from a terminal:</p>
       <div class="wt">
         <div class="wt-bar">
           <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
           <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
         </div>
-<pre><span class="ps">PS C:\dev\shop&gt;</span> claude
+<pre><span class="ps">PS C:\dev&gt;</span> code --install-extension anthropic.claude-code</pre>
+      </div>
+      <p>If it doesn't appear, run <b>Developer: Reload Window</b> from the Command Palette (<code>Ctrl+Shift+P</code>). It also installs in Cursor and other VS Code forks.</p>
+      <p><b>Open it.</b> With a file open, click the Spark icon at the top right of the editor. No file open? Click <b>Claude Code</b> in the bottom-right status bar, or search "Claude Code" in the Command Palette. Then click <b>Sign in</b> and approve in your browser.</p>
+      <p><b>Give it context without typing paths.</b></p>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>Select code</h3>
+          <p>Whatever you highlight is visible to Claude. Press <code>Alt+K</code> (<code>Option+K</code> on Mac) to insert a reference like <code>@app.ts#5-10</code> into your prompt.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>@-mention</h3>
+          <p>Type <code>@</code> and part of a name to attach a file, or <code>@src/components/</code> for a folder. It fuzzy-matches, so partial names work.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>Terminal output</h3>
+          <p>Reference a terminal with <code>@terminal:name</code> so Claude can read an error or log without you copy-pasting it.</p>
+        </div>
+      </div>
+      <p><b>Review changes in a real diff.</b> In Manual mode, each edit opens as a side-by-side comparison and waits for you. Accept, reject, or tell Claude what to do instead. You can even edit the proposed text in the diff before accepting.</p>
+      <p><b>Pick a permission mode</b> using the indicator at the bottom of the prompt box: Manual asks before edits and most commands, Plan describes what it will do and waits for your approval, Edit automatically makes edits without asking, and Auto lets a classifier review most actions. While you're learning, use Manual or Plan.</p>
+
+      <p>Shortcuts worth learning on day one:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Shortcuts</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">Windows / Linux      macOS</span>
+<span class="s">Ctrl+Esc</span>             <span class="s">Cmd+Esc</span>           switch editor / Claude
+<span class="s">Ctrl+Shift+Esc</span>       <span class="s">Cmd+Shift+Esc</span>     new conversation in a tab
+<span class="s">Alt+K</span>                <span class="s">Option+K</span>          insert @-reference
+<span class="s">Ctrl+Shift+P</span>         <span class="s">Cmd+Shift+P</span>       type "Claude Code" for every command</pre>
+      </div>
+
+      <p><b>Two more things.</b> Hover over any message for the rewind button: you can revert your code to that point, fork the conversation, or both. And the history button at the top of the panel lets you search and resume earlier conversations.</p>
+      <div class="cc-callout">
+        <p><strong>Terminal inside VS Code:</strong> the extension bundles its own copy of Claude Code for the chat panel, but it does not add <code>claude</code> to your PATH. If you also want to type <code>claude</code> in VS Code's integrated terminal (<code>Ctrl+`</code>), do the terminal install from step 02 once. The two share conversation history, so <code>claude --resume</code> can pick up a panel conversation.</p>
+      </div>
+
+      <h2><span class="num">04</span>Your first session: look before you touch</h2>
+      <p>Open one of your own projects (ideally a git repository) in VS Code, or in a terminal with <code>cd</code>, and start Claude. It may ask whether you trust the folder. That's a real safety check: say yes only to projects you own or trust.</p>
+      <p>The best first prompt changes nothing:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="ps">PS C:\dev&gt;</span> claude
 
 &gt; <span class="s">explain how this project is laid out and how to run it</span></pre>
       </div>
-
-      <p>It will open files, follow imports and answer from what it finds. This is the fastest way to learn an unfamiliar codebase, and it is also a test: if the answer is wrong, you've learned what to put in your <code>CLAUDE.md</code> from Day 2.</p>
-      <p>Then make one small real change, with a clear ask:</p>
-
+      <p>It reads files, follows imports and answers from what it finds. This is the fastest way to learn an unfamiliar codebase, and also a test: if the answer is wrong, you've found what to add to your <code>CLAUDE.md</code> from Day 2.</p>
+      <p>Then make one small real change with a clear ask:</p>
       <div class="wt">
         <div class="wt-bar">
           <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
@@ -118,47 +179,58 @@ $ <span class="s">curl -fsSL https://claude.ai/install.sh | bash</span></pre>
 <pre>&gt; <span class="s">add a /health route to src/server.ts that returns { ok: true }.
   Follow the style of the other routes, then run the tests.</span></pre>
       </div>
+      <p>Read the proposed edits and commands before you approve them, then read the final diff like a teammate's pull request. If you don't like it, <code>git restore .</code> throws the changes away, and in VS Code you can also use the rewind button.</p>
 
-      <p>Notice what happens. Claude <b>proposes</b> each edit and each command, and waits for you. You can approve one at a time, or say no and explain why. Nothing is saved until you allow it.</p>
-
-      <h2><span class="num">04</span>What you'll see while it works</h2>
+      <h2><span class="num">05</span>Tips that save you time</h2>
       <div class="cc-gaps">
         <div class="cc-gap">
-          <h3><i>01</i>Permission prompts</h3>
-          <p>Before editing a file or running a command it asks. Read what it is about to do. This is you staying in control (we'll go deeper on permissions later in the series).</p>
+          <h3><i>01</i>Work inside git</h3>
+          <p>Commit before you start. Then trying something is cheap: <code>git diff</code> shows what changed and <code>git restore .</code> undoes it.</p>
         </div>
         <div class="cc-gap">
-          <h3><i>02</i>Diffs</h3>
-          <p>Edits appear as a before and after. Check them like you'd check a teammate's pull request.</p>
+          <h3><i>02</i>Read first, write second</h3>
+          <p>Ask it to explain or plan before it edits. Plan mode is made for this: it proposes, you approve.</p>
         </div>
         <div class="cc-gap">
-          <h3><i>03</i>Esc to stop</h3>
-          <p>Heading the wrong way? Press <code>Esc</code> to interrupt, then redirect. Two Esc presses let you step back to an earlier message.</p>
+          <h3><i>03</i>One task per session</h3>
+          <p>Finished something? Type <code>/clear</code> to start fresh. Old, unrelated chat only clutters its context.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>04</i>Name the file</h3>
+          <p>"Fix the bug in <code>src/auth.ts</code>" beats "fix the login bug". Less searching, fewer wrong guesses.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>05</i>Press Esc early</h3>
+          <p>Going the wrong way? Interrupt right away and redirect. Don't wait for it to finish a bad idea.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>06</i>Check your setup</h3>
+          <p><code>/status</code> shows your version, account and model. <code>claude doctor</code> diagnoses problems.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>07</i>Let it run your tests</h3>
+          <p>Say "run the tests" in the ask. When it can verify its own work, you review less.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>08</i>Resume, don't repeat</h3>
+          <p><code>claude --continue</code> resumes the last session here, <code>claude --resume</code> lets you choose one.</p>
         </div>
       </div>
 
-      <h2><span class="num">05</span>Leaving and coming back</h2>
-      <p>Type <code>/exit</code> (or press Ctrl+C twice) to quit. Your conversation is saved, so you can pick up where you stopped:</p>
-
-      <div class="wt">
-        <div class="wt-bar">
-          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
-          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+      <h2><span class="num">06</span>When it doesn't work</h2>
+      <div class="cc-gap">
+        <div class="cc-vs">
+          <div class="bad"><small>Symptom</small><code>claude</code> not found<br>No Spark icon in VS Code<br>Asked to sign in again<br>Panel never responds</div>
+          <div class="good"><small>Try this</small>Open a new terminal; run the install again if still missing<br>Open a file first, or use the status bar; check VS Code is 1.94+; reload the window<br>Sign in again, and launch VS Code from a terminal with <code>code .</code> if you use an API key variable<br>Check your connection, start a new conversation, then run <code>claude</code> in a terminal for a clearer error</div>
         </div>
-<pre><span class="ps">PS C:\dev\shop&gt;</span> claude --continue   <span class="c"># resume the last session in this folder</span>
-<span class="ps">PS C:\dev\shop&gt;</span> claude --resume     <span class="c"># choose from earlier sessions</span></pre>
       </div>
 
-      <div class="cc-callout">
-        <p><strong>Safety net:</strong> run your first sessions inside a git repository. If a change isn't what you wanted, <code>git diff</code> shows it and <code>git restore .</code> throws it away. Trying things is cheap when undo is one command.</p>
-      </div>
-
-      <h2><span class="num">06</span>Try this today</h2>
+      <h2><span class="num">07</span>Try this today</h2>
       <div class="cc-loop">
-        <div><b>Install</b><span>Run the installer, then <code>claude doctor</code>.</span></div>
-        <div><b>Read</b><span>Ask it to explain a project you know. Check its answer.</span></div>
-        <div><b>Change</b><span>One small edit, with a file and a "done".</span></div>
-        <div><b>Review</b><span>Read the diff. Keep it or <code>git restore .</code>.</span></div>
+        <div><b>Install</b><span>Terminal install, then <code>claude doctor</code>.</span></div>
+        <div><b>Add VS Code</b><span>Install the extension and sign in.</span></div>
+        <div><b>Read</b><span>Ask it to explain a project you know. Check the answer.</span></div>
+        <div><b>Change</b><span>One small edit. Review the diff. Keep or undo.</span></div>
       </div>
 
       <p>Next up: talking to it. Prompts that get the result you meant the first time.</p>
