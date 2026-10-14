@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 4: Claude Code Prompts and Plan Mode — Kowshik Kesavarapu</title>
+  <meta name="description" content="Write prompts that work first time, plan before you build, and learn the commands and shortcuts that keep you in control in terminal and VS Code." />
+  <meta property="og:title" content="Day 4: Prompts, plan mode and shortcuts" />
+  <meta property="og:description" content="Clear asks, plan mode and the commands that keep you in control." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-04.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-04/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-04/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 4: Claude Code Prompts and Plan Mode",
+  "description": "Write prompts that work first time, plan before you build, and learn the commands and shortcuts that keep you in control in terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-04/",
+  "image": "https://kowshik.co.in/claude-code/day-04.png",
+  "datePublished": "2026-10-14",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-14" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 4: Claude Code Prompts and Plan Mode",
+      "item": "https://kowshik.co.in/claude-code/day-04/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+  <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 4 · Working with it</span>
+      <h1>Ask clearly.<br /><span class="cc-grad">Plan before you build.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>11 min read</span>
+        <span>Oct 14, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="cc-wrap">
+    <article class="cc-article" id="day-4">
+
+      <h2><span class="num">01</span>Why the same tool gives different results</h2>
+      <p>Two people use Claude Code on the same project. One gets a clean, working change. The other gets a mess and blames the tool. The difference is almost never the model. It is how they ask, whether they let it think first, and how well they steer once it is running.</p>
+      <p>Today covers all three: <b>clear asks</b>, <b>plan before you build</b>, and the <b>commands and shortcuts</b> that keep you in control. Everything works the same in the terminal and in the VS Code panel unless a note says otherwise.</p>
+
+      <h2><span class="num">02</span>Prompts that work the first time</h2>
+      <p>Day 2 said Claude only knows what you tell it. A good ask answers four questions: <b>what</b> to change, <b>where</b>, <b>what good looks like</b>, and <b>how to check it</b>.</p>
+      <div class="cc-gap">
+        <div class="cc-vs">
+          <div class="bad"><small>Vague</small>"fix the login bug"<br><br>It has to guess which bug, which file and what "fixed" means.</div>
+          <div class="good"><small>Clear</small>"Users get logged out after 5 minutes. Look at the token refresh in <code>@src/auth.ts</code>. Reproduce it with a failing test first, then fix it and run <code>npm test</code>."</div>
+        </div>
+      </div>
+      <p>Four habits make most asks better:</p>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>Point at things</h3>
+          <p>Use <code>@file</code> and <code>@folder/</code> instead of describing them. In VS Code, select code and press <code>Alt+K</code> (<code>Option+K</code> on Mac).</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>Say how to verify</h3>
+          <p>"Run the tests", "run the build", "open the page and check". If it can check its own work, you review far less.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>Show an example</h3>
+          <p>"Follow the style of <code>@src/routes/users.ts</code>" beats a paragraph of rules.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>04</i>Give the symptom, not your guess</h3>
+          <p>Paste the error and the command that causes it. Your theory about the cause may be wrong and send it down the wrong path.</p>
+        </div>
+      </div>
+      <p><b>Long prompts.</b> In the terminal, <code>Shift+Enter</code> adds a new line in most modern terminals (Windows Terminal included). <code>\</code> then <code>Enter</code> works everywhere, and <code>Ctrl+G</code> opens your prompt in a text editor. In VS Code, the prompt box is multi-line already, and you can drag a screenshot straight into it.</p>
+      <p><b>Not sure what to ask?</b> Ask it to interview you: "I want to add search to this app. Ask me questions until you have what you need, then write a plan." That turns a fuzzy idea into a spec.</p>
+
+      <h2><span class="num">03</span>Plan first, then build</h2>
+      <p>The most reliable habit in this whole series is a four-step loop: <b>explore, plan, build, verify</b>. Skipping straight to build is how a small request turns into a 400-line surprise.</p>
+      <div class="cc-loop">
+        <div><b>Explore</b><span>"Read how auth works. Change nothing."</span></div>
+        <div><b>Plan</b><span>"Propose the steps and the files you'd touch."</span></div>
+        <div><b>Build</b><span>Approve the plan, let it edit.</span></div>
+        <div><b>Verify</b><span>Run tests, read the diff, then commit.</span></div>
+      </div>
+      <p><b>Plan mode</b> makes the first two steps safe. Claude can read your code and think, but it cannot edit anything until you approve its plan.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># start in plan mode</span>
+<span class="ps">PS C:\dev&gt;</span> claude --permission-mode plan
+
+<span class="c"># or, inside a running session</span>
+&gt; <span class="s">/plan add rate limiting to the login route</span>
+<span class="c"># or press Shift+Tab until the status bar shows "plan mode on"</span></pre>
+      </div>
+      <p><b>In VS Code</b>, use the mode indicator at the bottom of the prompt box and pick Plan. Claude shows the plan for you to read before anything changes. Read it properly: wrong files, a missing edge case or a step you did not ask for are far cheaper to fix now than in a diff. Tell it what to change ("also handle the case where the user is already locked out") and approve only when it matches what you want.</p>
+      <p>Not every task needs this. A typo or a one-line rename can go straight to build. Use plan mode when the change touches several files, when you are in unfamiliar code, or when you cannot say in one sentence what the diff should look like.</p>
+      <div class="cc-callout">
+        <p><strong>Rule of thumb:</strong> if you could describe the diff in one sentence, just ask for it. If not, plan first.</p>
+      </div>
+
+      <h2><span class="num">04</span>Commands worth knowing</h2>
+      <p>Type <code>/</code> at the start of a message to see every command (in the VS Code panel too). These are the ones you will use all the time:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Commands</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">/clear</span>          new conversation, empty context (use between tasks)
+<span class="s">/compact</span>        summarize the chat to free up space, keep going
+<span class="s">/context</span>        see how full the context window is
+<span class="s">/rewind</span>         go back to an earlier point (conversation, code, or both)
+<span class="s">/plan</span>           enter plan mode, optionally with a task
+<span class="s">/diff</span>           review everything that changed in your working tree
+<span class="s">/model</span>          switch model
+<span class="s">/init</span>           create a starter CLAUDE file for the project (Day 2)
+<span class="s">/memory</span>         edit your CLAUDE files
+<span class="s">/resume</span>         pick up an earlier conversation
+<span class="s">/permissions</span>    see and change what Claude may do without asking
+<span class="s">/btw</span>            ask a side question without adding to the chat
+<span class="s">/usage</span>          see your usage and plan limits
+<span class="s">/help</span>           everything else</pre>
+      </div>
+      <p>Two worth a closer look. <code>/rewind</code> is your safety net: every prompt creates a checkpoint, so you can roll the code back, roll the conversation back, or both. (It undoes Claude's file edits, not shell side effects like a database change, so keep using git.) <code>/btw</code> lets you ask "what does that flag do?" mid-task without cluttering the context.</p>
+
+      <h2><span class="num">05</span>Shortcuts that keep you in control</h2>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Terminal shortcuts</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">Esc</span>              stop Claude mid-turn, keep the work so far
+<span class="s">Esc Esc</span>          empty prompt: open rewind. Prompt has text: clear it
+<span class="s">Shift+Tab</span>        cycle permission modes (Manual, edits, plan...)
+<span class="s">Ctrl+C</span>           interrupt, or clear the prompt (twice to exit)
+<span class="s">Ctrl+R</span>           search your earlier prompts
+<span class="s">Ctrl+G</span>           edit the prompt in your text editor
+<span class="s">Ctrl+O</span>           show detailed tool activity
+<span class="s">!</span> <span class="c">at the start</span>   run a shell command yourself; output joins the chat
+<span class="s">@</span> <span class="c">anywhere</span>       attach a file or folder
+<span class="s">?</span> <span class="c">on empty input</span> show the shortcut help</pre>
+      </div>
+      <p><b>The one that matters most is Esc.</b> If Claude heads the wrong way, press it straight away and say what you want instead. Everything it did so far stays, and your next message steers it. The <code>!</code> prefix is handy too: <code>! git status</code> runs the command directly and puts the result in the conversation, so Claude sees it without a round trip.</p>
+      <p><b>In VS Code</b>, the same ideas live in the panel: the mode indicator replaces <code>Shift+Tab</code>, the rewind button on any message replaces <code>/rewind</code>, <code>Alt+K</code> and <code>@</code> attach context, and the stop button replaces <code>Esc</code>. Shortcuts vary a little by terminal and platform, so type <code>?</code> in your own terminal to see what yours supports.</p>
+
+      <h2><span class="num">06</span>Common mistakes</h2>
+      <div class="cc-gap">
+        <div class="cc-vs">
+          <div class="bad"><small>Mistake</small>One giant prompt for a whole feature<br>Never clearing between tasks<br>Letting it keep going down a bad path<br>Approving a plan you skimmed</div>
+          <div class="good"><small>Instead</small>Explore, plan, then build in small steps<br><code>/clear</code> when the task changes; <code>/compact</code> when it is the same task but long<br>Press <code>Esc</code> and redirect early<br>Read the plan; ask for changes before approving</div>
+        </div>
+      </div>
+
+      <h2><span class="num">07</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Explore</b><span>Ask it to explain one feature in your project. Change nothing.</span></div>
+        <div><b>Plan</b><span>Press <code>Shift+Tab</code> to plan mode (or use the VS Code mode picker) and ask for a small change.</span></div>
+        <div><b>Build</b><span>Approve, then review the diff with <code>/diff</code>.</span></div>
+        <div><b>Undo</b><span>Try <code>/rewind</code> once, so you know it is there.</span></div>
+      </div>
+
+      <p>Next up: context in long sessions. What fills it up, how to tell, and how to keep Claude sharp for hours.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-03/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 3</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
