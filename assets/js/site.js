@@ -1,6 +1,7 @@
 // Minimal visitor stats: anonymous page views, time on page, scroll depth and
 // outbound link clicks sent to a Supabase Edge Function. The server hashes the
-// IP; no cookies or local storage are used.
+// IP. A random ID kept in local storage (cookie as backup) lets return visits
+// from different networks count as one visitor; it holds no personal data.
 (function () {
   try {
     var URL_ = "https://mytaeovzlriyrqnydaas.supabase.co/functions/v1/ping";
@@ -11,10 +12,28 @@
     var device = /Mobi|Android|iPhone/.test(ua) ? "mobile" : /iPad|Tablet/.test(ua) ? "tablet" : "desktop";
     var q = new URLSearchParams(location.search);
     var viewId = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    function rid() {
+      try { return crypto.randomUUID(); } catch (e) {}
+      return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
+    var visitorId = null;
+    try {
+      visitorId = localStorage.getItem("_vid");
+      if (!visitorId) {
+        var m = document.cookie.match(/(?:^|; )_vid=([^;]+)/);
+        visitorId = m ? m[1] : rid();
+        localStorage.setItem("_vid", visitorId);
+      }
+    } catch (e) {
+      var m2 = document.cookie.match(/(?:^|; )_vid=([^;]+)/);
+      visitorId = m2 ? m2[1] : rid();
+    }
+    try { document.cookie = "_vid=" + visitorId + "; max-age=31536000; path=/; SameSite=Lax"; } catch (e) {}
     var start = Date.now(), maxScroll = 0, sent = false;
 
     function send(data) {
       data.view_id = viewId;
+      data.visitor_id = visitorId;
       data.path = location.pathname;
       fetch(URL_, {
         method: "POST",
