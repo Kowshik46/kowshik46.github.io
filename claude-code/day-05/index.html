@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code Context and Permissions — Kowshik Kesavarapu</title>
+  <meta name="description" content="Keep long Claude Code sessions sharp with /clear, /compact and /context, and set permissions so it asks only when it should. Terminal and VS Code." />
+  <meta property="og:title" content="Day 5: Context and permissions" />
+  <meta property="og:description" content="Keep long sessions sharp and stop approving the same prompt twice." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-05.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-05/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-05/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 5: Claude Code Context and Permissions",
+  "description": "Keep long Claude Code sessions sharp with /clear, /compact and /context, and set permissions so it asks only when it should. Terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-05/",
+  "image": "https://kowshik.co.in/claude-code/day-05.png",
+  "datePublished": "2026-10-15",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-15" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 5: Claude Code Context and Permissions",
+      "item": "https://kowshik.co.in/claude-code/day-05/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+  <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 5 · Working with it</span>
+      <h1>Keep it sharp.<br /><span class="cc-grad">Stay in control.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>11 min read</span>
+        <span>Oct 15, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="cc-wrap">
+    <article class="cc-article" id="day-5">
+
+      <h2><span class="num">01</span>Why long sessions go wrong</h2>
+      <p>Claude has no memory between sessions, but inside one session it re-reads the whole conversation on every message: your prompts, every file it opened, every command output. That history is the <b>context window</b>, and it is finite. As it fills, answers get slower, costlier and less accurate. Claude starts forgetting early instructions and repeating itself.</p>
+      <p>The second half of this article is the other side of control: <b>permissions</b>. Claude Code asks before it edits files or runs commands. Set that up well and you stop clicking "yes" on the same prompt fifty times, without handing over the keys.</p>
+
+      <h2><span class="num">02</span>What fills the context</h2>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>Files it read</h3>
+          <p>Every file Claude opens stays in the chat. A big file read once keeps costing space until you clear.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>Command output</h3>
+          <p>A test run or build log can dump thousands of lines into the chat. Ask for only the failures.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>Dead ends</h3>
+          <p>Every wrong turn and abandoned approach is still in there, nudging the next answer.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>04</i>Always-on extras</h3>
+          <p>Your CLAUDE file, MCP servers and skills load at the start of every session. Keep the CLAUDE file short (under about 200 lines).</p>
+        </div>
+      </div>
+
+      <h2><span class="num">03</span>See it, then manage it</h2>
+      <p><b>In the terminal</b>, run <code>/context</code> to see what is using the space. <code>/usage</code> shows your token use and plan limits. <b>In VS Code</b>, the prompt box has a context indicator that shows how full the window is, so you can glance at it as you work. Claude compacts automatically when it gets close to full, but do not wait for that: by then quality has already dropped.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Context commands</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">/context</span>              what is using the window right now
+<span class="s">/compact</span>              summarize the chat and keep going
+<span class="s">/compact</span> <span class="c">focus on the failing tests and the auth plan</span>
+<span class="s">/clear</span>                new conversation, empty context
+<span class="s">/rename</span> <span class="c">login-bug</span>      name this session so you can find it later
+<span class="s">/resume</span>               pick an earlier session back up</pre>
+      </div>
+      <div class="cc-gap">
+        <div class="cc-vs">
+          <div class="bad"><small>/compact</small>Same task, but the chat is long<br>You want to keep the thread: decisions, plan, what is left<br>Add instructions on what to keep</div>
+          <div class="good"><small>/clear</small>The task changed (new bug, new feature)<br>Claude keeps repeating a wrong idea<br>You finished and committed<br>Costs nothing, and your CLAUDE file loads again</div>
+        </div>
+      </div>
+      <p><b>In VS Code</b>, <code>/compact</code> and <code>/clear</code> work in the prompt box the same way. To start fresh, open a new conversation (the plus button in the panel, or a new editor tab). Click <b>Session history</b> to resume an earlier one. Name sessions before you leave them so you can find them tomorrow.</p>
+
+      <h2><span class="num">04</span>Habits that keep it sharp for hours</h2>
+      <div class="cc-loop">
+        <div><b>One task</b><span>One goal per session. Finish, commit, then <code>/clear</code>.</span></div>
+        <div><b>Compact early</b><span>Run <code>/compact</code> with instructions at a natural break, not at 95%.</span></div>
+        <div><b>Hand off research</b><span>"Use a subagent to find where X is handled." The reading stays in its own window and only a summary returns.</span></div>
+        <div><b>Write it down</b><span>Decisions that must survive go in your CLAUDE file, not the chat.</span></div>
+      </div>
+      <p>You can also tell Claude what to keep when it compacts by adding a "Compact instructions" section to your CLAUDE file, for example "when compacting, keep test output and code changes". Subagents get their own deep dive later in the series.</p>
+
+      <h2><span class="num">05</span>Permissions: asked, allowed, denied</h2>
+      <p>By default Claude Code is in <b>Manual</b> mode. It can read files in your project freely, but it asks before it edits a file, runs most shell commands or fetches from the web. That is the right starting point. Permissions are not a nuisance, they are the reason you can let it near a real codebase.</p>
+      <p>Six modes decide how much it asks. Switch with <code>Shift+Tab</code> in the terminal (it cycles through the common ones) or the mode indicator at the bottom of the VS Code prompt box.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Permission modes</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">Manual</span> <span class="c">(default)</span>   asks before edits and most commands
+<span class="s">acceptEdits</span>        edits files in your project without asking
+<span class="s">plan</span>               reads and proposes, no edits (Day 4)
+<span class="s">auto</span>               a background checker reviews actions for you
+<span class="s">dontAsk</span>            denies anything not already allowed
+<span class="s">bypassPermissions</span>   skips prompts. Only in a container or VM</pre>
+      </div>
+      <p>Start a session in a mode with <code>claude --permission-mode acceptEdits</code>. Use <code>acceptEdits</code> once you trust the plan and review the result with <code>/diff</code>. The names in VS Code differ slightly (for example "Edit automatically"), so pick from the indicator. Stay away from <code>bypassPermissions</code> on your own machine: it can write even to protected folders like <code>.git</code>.</p>
+
+      <h2><span class="num">06</span>Stop approving the same command</h2>
+      <p>When a prompt appears you can choose "Yes, and don't ask again". For a command, that saves a rule for the repository. You can also write rules yourself with <code>/permissions</code>, or in a settings file:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"allow"</span>: [ <span class="p">"Bash(npm run *)"</span>, <span class="p">"Bash(git commit *)"</span> ],
+    <span class="s">"deny"</span>:  [ <span class="p">"Bash(git push *)"</span>, <span class="p">"Read(./.env)"</span> ]
+  }
+}</pre>
+      </div>
+      <p>Three things to know. <b>Deny beats ask beats allow</b>, so a deny rule always wins. <b>Put the <code>*</code> after the subcommand</b>: <code>Bash(git log *)</code> allows only <code>git log</code>, while <code>Bash(git *)</code> allows every git command, including push. And <b>rules live in three places</b>: your own project file (<code>.claude/settings.local.json</code>, not committed), the shared project file (<code>.claude/settings.json</code>, committed, so the team gets it) and your user file (<code>~/.claude/settings.json</code>, every project).</p>
+      <div class="cc-callout">
+        <p><strong>Remember:</strong> rules are enforced by Claude Code itself. Writing "never touch the .env file" in a CLAUDE file shapes what Claude tries, but only a deny rule actually blocks it.</p>
+      </div>
+
+      <h2><span class="num">07</span>A safe setup to copy</h2>
+      <div class="cc-loop">
+        <div><b>Allow</b><span>Tests, the build, lint, <code>git status</code>, <code>git diff</code>.</span></div>
+        <div><b>Ask</b><span>Edits and installs, so you review what changes.</span></div>
+        <div><b>Deny</b><span><code>git push</code>, secrets such as <code>.env</code>, anything that deletes.</span></div>
+        <div><b>Backstop</b><span>Commit before big tasks. <code>/rewind</code> and git undo the rest.</span></div>
+      </div>
+
+      <h2><span class="num">08</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Look</b><span>Run <code>/context</code> (or glance at the VS Code indicator) in a session that has run a while.</span></div>
+        <div><b>Compact</b><span>Run <code>/compact</code> with one line on what to keep, then ask a follow-up and see it still knows.</span></div>
+        <div><b>Allow</b><span>Open <code>/permissions</code> and allow your test command so it stops asking.</span></div>
+        <div><b>Deny</b><span>Add a deny rule for <code>git push</code>.</span></div>
+      </div>
+
+      <p>Next up: git with Claude Code. Commits, reviews and pull requests, and how to let it do the boring parts without losing track of what changed.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-04/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 4</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
