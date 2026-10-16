@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code with Git: Commits and PRs — Kowshik Kesavarapu</title>
+  <meta name="description" content="Use Claude Code with git: review changes, write commits, open pull requests, run reviews and work in parallel, in the terminal and VS Code." />
+  <meta property="og:title" content="Day 6: Git, commits and pull requests" />
+  <meta property="og:description" content="Let it write the commits and PRs. Keep your hands on the review." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-06.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-06/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-06/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 6: Claude Code with Git, Commits and Pull Requests",
+  "description": "Use Claude Code with git: review changes, write commits, open pull requests, run reviews and work in parallel, in the terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-06/",
+  "image": "https://kowshik.co.in/claude-code/day-06.png",
+  "datePublished": "2026-10-16",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-16" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 6: Claude Code with Git, Commits and Pull Requests",
+      "item": "https://kowshik.co.in/claude-code/day-06/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+  <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 6 · Working with it</span>
+      <h1>Let it commit.<br /><span class="cc-grad">You review.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>11 min read</span>
+        <span>Oct 16, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="cc-wrap">
+    <article class="cc-article" id="day-6">
+
+      <h2><span class="num">01</span>Git is your safety net</h2>
+      <p>Claude Code edits many files fast. That is the point, and also the risk. Git is what turns "it changed things" into "I can see exactly what changed and undo it". Used well, Claude does the tedious parts (staging, commit messages, PR descriptions, a first review) and you keep the decisions.</p>
+      <p>You do not need a special setup. Claude runs the same <code>git</code> commands you do, so it works in any repository. For pull requests it uses the <b>GitHub CLI</b> (<code>gh</code>), which we set up in section 05.</p>
+
+      <h2><span class="num">02</span>Before you start: a clean tree</h2>
+      <p>Run <code>git status</code> first. If the tree is clean, every change in the session is Claude's, and <code>git diff</code> shows exactly that. If you had unfinished work, commit it or stash it (<code>git stash</code>) before you begin.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Start a task on a branch</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">git status</span>                    <span class="c">nothing to commit, working tree clean</span>
+<span class="s">git switch -c</span> <span class="p">fix/login-redirect</span>   <span class="c">work on a branch, never main</span>
+<span class="s">claude</span></pre>
+      </div>
+      <p>Why not rely on <code>/rewind</code>? It restores files Claude edited with its own edit tools, and it is a great quick undo. But it does not track changes made by shell commands (<code>rm</code>, <code>mv</code>, <code>cp</code>), or edits from outside the session. Anthropic's own docs say checkpoints are for session-level recovery and are not a replacement for version control. Git is the permanent record.</p>
+
+      <h2><span class="num">03</span>Review what changed</h2>
+      <p>Never commit what you have not read. Three ways to look, all useful:</p>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>/diff</h3>
+          <p>In the terminal session, <code>/diff</code> shows the changes in your working tree, including everything Claude has edited so far.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>git diff</h3>
+          <p>The plain command. <code>git diff</code> for unstaged changes, <code>git diff --staged</code> for what is about to be committed.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>VS Code diff</h3>
+          <p>In the extension, a proposed edit opens in VS Code's side-by-side diff. Accept or reject each change before it lands.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>04</i>Source Control</h3>
+          <p>VS Code's Source Control panel (<code>Ctrl+Shift+G</code>) lists every changed file next to the Claude panel. Click one to see its diff.</p>
+        </div>
+      </div>
+      <p><b>In VS Code</b>, the extension's "Accept this change" and "Reject this change" buttons let you review one hunk at a time. If you edit the proposed text in the diff before accepting, Claude is told, so it does not assume the file matches its own version.</p>
+
+      <h2><span class="num">04</span>Let it write the commit</h2>
+      <p>Ask in plain words: <code>commit my changes with a descriptive message</code>. Claude looks at the diff and the recent history, then writes a message that fits. In Manual mode it asks before running the commit, so you see the message first.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Commit prompts that work</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="y">&gt;</span> commit my changes with a descriptive message
+<span class="y">&gt;</span> split this into two commits: the bug fix, then the rename
+<span class="y">&gt;</span> commit only the files in src/auth, leave the rest
+<span class="y">&gt;</span> amend the last commit message to mention the redirect</pre>
+      </div>
+      <div class="cc-loop">
+        <div><b>Small commits</b><span>One logical change each. Ask for the split: it is easier to review and to revert.</span></div>
+        <div><b>House style</b><span>Put your commit format in your CLAUDE file ("imperative subject under 72 characters, explain why in the body") and it follows it.</span></div>
+        <div><b>Commit trailer</b><span>Claude adds a Co-Authored-By line to commits it makes. Change or hide it with the <code>attribution</code> setting in <code>settings.json</code>.</span></div>
+        <div><b>Commit often</b><span>A commit before each new ask is a restore point you can <code>git revert</code> to.</span></div>
+      </div>
+      <p><b>In VS Code</b>, the prompts are identical in the Claude panel. You can also commit with VS Code's own Source Control box and ask Claude for the message: "write a commit message for the staged changes".</p>
+
+      <h2><span class="num">05</span>Open a pull request</h2>
+      <p>Pull requests go through the GitHub CLI. Install it once and sign in:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>One-time GitHub CLI setup</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># Windows</span>
+<span class="s">winget install --id GitHub.cli</span>
+<span class="c"># macOS</span>
+<span class="s">brew install gh</span>
+<span class="c"># Linux (Debian/Ubuntu)</span>
+<span class="s">sudo apt install gh</span>
+
+<span class="s">gh auth login</span>      <span class="c">follow the prompts, then check:</span>
+<span class="s">gh auth status</span></pre>
+      </div>
+      <p>Then just ask: <code>create a pr for my changes</code>. Claude writes a title and a description from the actual diff, pushes the branch and opens the PR. Guide it when you want a particular shape:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PR prompts</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="y">&gt;</span> summarize the changes I've made to the auth module
+<span class="y">&gt;</span> create a pr
+<span class="y">&gt;</span> add the risks and how to test it to the PR description</pre>
+      </div>
+      <p>Claude Code links the session to the PR it creates. Come back later with <code>claude --from-pr 1234</code> (your own number) to reopen that session with its context. The same works in VS Code: the panel's session history lets you resume it.</p>
+      <div class="cc-callout">
+        <p><strong>Remember:</strong> a PR you open is yours. Read the description and the diff before you ask anyone to review. "Claude wrote it" is not a defence in code review.</p>
+      </div>
+
+      <h2><span class="num">06</span>Ask for a review first</h2>
+      <p>Before a human sees your code, have Claude look at it. Run <code>/code-review</code> (its alias is <code>/review</code>) on your current changes, or pass a PR number or branch:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Reviews</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">/code-review</span>             <span class="c">review the current diff for bugs</span>
+<span class="s">/code-review</span> <span class="p">high</span>        <span class="c">go deeper (low, medium, high, xhigh, max)</span>
+<span class="s">/review</span> <span class="p">1234</span>             <span class="c">review a pull request by number</span>
+<span class="s">/security-review</span>         <span class="c">check this branch for security issues</span></pre>
+      </div>
+      <p><code>/security-review</code> compares your branch with the default branch on <code>origin</code> and looks for things like injection, auth mistakes and data exposure. Treat every finding as a lead to check, not an order. Claude can be wrong, and a reviewer who has not read the code cannot tell which findings matter. Reading someone else's PR works too: <code>review PR 456 and list anything risky</code>.</p>
+
+      <h2><span class="num">07</span>Two jobs at once: worktrees</h2>
+      <p>Two Claude sessions in the same folder edit the same files and trip over each other. A <b>git worktree</b> gives each task its own checkout and branch:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Parallel sessions</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># terminal 1</span>
+<span class="s">claude --worktree</span> <span class="p">feature-auth</span>
+<span class="c"># terminal 2</span>
+<span class="s">claude --worktree</span> <span class="p">bugfix-123</span></pre>
+      </div>
+      <p>The repository needs at least one commit first. In VS Code you can open several conversations in separate tabs, but give each its own worktree so they do not edit the same files.</p>
+
+      <h2><span class="num">08</span>Guardrails for git</h2>
+      <p>You set up permissions on Day 5. Here is the git version, in <code>.claude/settings.json</code>:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"allow"</span>: [ <span class="p">"Bash(git status *)"</span>, <span class="p">"Bash(git diff *)"</span>, <span class="p">"Bash(git log *)"</span> ],
+    <span class="s">"deny"</span>:  [ <span class="p">"Bash(git push --force *)"</span>, <span class="p">"Bash(git reset --hard *)"</span> ]
+  }
+}</pre>
+      </div>
+      <div class="cc-loop">
+        <div><b>Allow</b><span>Read-only git: <code>status</code>, <code>diff</code>, <code>log</code>. No risk, no more prompts.</span></div>
+        <div><b>Ask</b><span><code>commit</code> and <code>push</code>, so you see what leaves your machine.</span></div>
+        <div><b>Deny</b><span>Force-push and <code>reset --hard</code>, the two commands that destroy work.</span></div>
+        <div><b>Never main</b><span>Work on a branch. Protect <code>main</code> on GitHub so a PR is the only way in.</span></div>
+      </div>
+
+      <h2><span class="num">09</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Branch</b><span>Run <code>git switch -c</code> with a new branch name, then start Claude.</span></div>
+        <div><b>Review</b><span>After a change, run <code>/diff</code> (or open Source Control in VS Code) and read it.</span></div>
+        <div><b>Commit</b><span>Ask for a commit message and read it before you accept.</span></div>
+        <div><b>Review it</b><span>Run <code>/code-review</code> before you open the PR, then <code>create a pr</code>.</span></div>
+      </div>
+
+      <p>Next up: MCP. How to connect Claude Code to the tools and data you already use, from GitHub and your database to your browser.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-05/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 5</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
