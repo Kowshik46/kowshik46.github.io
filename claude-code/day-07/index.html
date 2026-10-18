@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code MCP: Connect Your Tools and Data — Kowshik Kesavarapu</title>
+  <meta name="description" content="Connect Claude Code to Sentry, GitHub and your database with MCP: add servers, share them with your team and lock down permissions, in the terminal and VS Code." />
+  <meta property="og:title" content="Day 7: MCP, connect your tools and data" />
+  <meta property="og:description" content="One command per tool. Then ask about your real errors, PRs and data." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-07.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-07/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-07/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 7: Claude Code and MCP, Connecting Your Tools and Data",
+  "description": "Connect Claude Code to Sentry, GitHub and your database with MCP: add servers, share them with your team and lock down permissions, in the terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-07/",
+  "image": "https://kowshik.co.in/claude-code/day-07.png",
+  "datePublished": "2026-10-17",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-17" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 7: Claude Code and MCP, Connecting Your Tools and Data",
+      "item": "https://kowshik.co.in/claude-code/day-07/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+  <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 7 · Extending it</span>
+      <h1>Plug it into<br /><span class="cc-grad">your real tools.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>16 min read</span>
+        <span>Oct 17, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="cc-wrap">
+    <article class="cc-article" id="day-7">
+
+      <h2><span class="num">01</span>What MCP actually is</h2>
+      <p>So far Claude Code has worked with your files, your shell and git. <b>MCP</b> (Model Context Protocol) is the open standard that lets it reach everything else: your error tracker, your database, your issue board, a browser. In one line: <b>MCP is a standard way for an AI app to discover and use tools and data that live outside it.</b></p>
+      <p>The payoff is that questions you used to answer by tab-hopping become one prompt: <code>what broke in prod since yesterday's deploy, and which commit caused it?</code> Claude reads the error, finds the code and proposes the fix, all in one session.</p>
+
+      <h3>The three parts</h3>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>Host</h3>
+          <p>The AI app you use. Claude Code is a host. So are Claude Desktop and VS Code.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>Client</h3>
+          <p>A connection the host opens for each server, one client per server. You never touch it, it lives inside Claude Code.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>Server</h3>
+          <p>A small program that offers context to the host. It can run on your machine or on the vendor's platform, like Sentry's.</p>
+        </div>
+      </div>
+      <p>"Server" only means "the program that serves tools". It does not mean a big machine in a data centre, and it does not mean the program contains any AI.</p>
+
+      <h3>What happens when you ask a question</h3>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Behind one prompt</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">1. connect</span>   Claude Code starts or reaches the server and learns what it supports
+<span class="c">2. discover</span>  it asks the server: what tools do you have?
+              <span class="p">name</span>: get_issue_details
+              <span class="p">description</span>: fetch one error with its stack trace
+              <span class="p">inputSchema</span>: { issue_id: string }
+<span class="c">3. decide</span>    <span class="s">Claude</span> reads your prompt plus those descriptions and picks a tool
+<span class="c">4. ask you</span>   your permission rules apply here (see section 08)
+<span class="c">5. call</span>      Claude Code sends the call: get_issue_details { issue_id: "ABC-123" }
+<span class="c">6. answer</span>    the server returns the result, Claude reads it and continues</pre>
+      </div>
+      <p>Notice who does what. The <b>server</b> only lists tools and runs them. <b>Claude</b> decides which one to call and when, based on the descriptions. The MCP specification says this itself: MCP covers how context is exchanged and does not dictate how an AI app uses the model. The protocol underneath is JSON-RPC, and discovery is just a <code>tools/list</code> request, which is why one client can talk to any server.</p>
+
+      <h3>What a server can offer</h3>
+      <div class="cc-loop">
+        <div><b>Tools</b><span>Actions Claude can run: query a database, open an issue, take a screenshot. This is the part you will use most.</span></div>
+        <div><b>Resources</b><span>Data Claude can read: a schema, a document, an issue. In Claude Code you attach them by typing <code>@</code> (section 09).</span></div>
+        <div><b>Prompts</b><span>Reusable prompt templates a server can publish. Part of the standard, but you will meet tools and resources first.</span></div>
+      </div>
+
+      <h3>How is MCP different from an API?</h3>
+      <p>An <b>API</b> is how one program talks to another service, and every API is different: its own URLs, login, data shapes and docs. To use ten APIs from an AI tool, someone has to write ten custom integrations.</p>
+      <p><b>MCP</b> is a common layer on top. An MCP server usually wraps a service's API and describes what it can do in a standard, machine-readable way: tool names, what each does and what inputs it takes. Claude Code reads that list at connect time and calls any tool the same way, whichever service is behind it. The MCP docs compare it to a USB-C port: one plug shape, many devices.</p>
+      <div class="cc-loop">
+        <div><b>API</b><span>Built for developers to write code against. One per service, each with its own rules. You read docs, then write the glue.</span></div>
+        <div><b>MCP</b><span>Built for AI apps to discover and call tools on their own. One standard, many services. The tool list describes itself.</span></div>
+        <div><b>Not a replacement</b><span>The service still has its API, and the MCP server usually calls it. MCP is a friendlier door to it for tools like Claude Code.</span></div>
+      </div>
+
+      <h3>Who develops it?</h3>
+      <p>Anthropic created MCP and released it as an open standard. On 9 December 2025 Anthropic donated it to the <b>Agentic AI Foundation</b>, part of the Linux Foundation, co-founded by Anthropic, Block and OpenAI. So it is not Claude-only: VS Code, Cursor, ChatGPT, Gemini and Microsoft Copilot all support it, and Anthropic reported more than 10,000 active public servers at the time. The specification, SDKs for several languages, a debugging tool called MCP Inspector and reference servers are all open source.</p>
+      <p>The people who build the <i>servers</i> are different again. Many come from the tool's own vendor (Sentry, Notion, GitHub), and many are written by the community. That is why the security section matters: the protocol is a standard, but each server is only as trustworthy as whoever wrote it.</p>
+
+      <h3>Five things people get wrong</h3>
+      <div class="cc-loop">
+        <div><b>"MCP replaces APIs"</b><span>No. It sits in front of them. Without the API behind it, most servers would have nothing to call.</span></div>
+        <div><b>"The server is the AI"</b><span>No. A server is plain code that lists and runs tools. The model that chooses is Claude, in your session.</span></div>
+        <div><b>"It only works with Claude"</b><span>No. It is an open standard with support across many AI apps and editors.</span></div>
+        <div><b>"Connected means safe"</b><span>No. A server can only do what its tools do, but some tools write, delete or send. Permissions and least access are your job (sections 08 and 10).</span></div>
+        <div><b>"More servers is better"</b><span>No. Each server adds tools Claude has to choose between. Connect what a project really uses.</span></div>
+      </div>
+
+      <h2><span class="num">02</span>Three ways to connect</h2>
+      <p>A server is either hosted somewhere (remote) or runs on your machine (local). The transport tells Claude Code how to reach it. (In the MCP specification the remote kind is called "Streamable HTTP". In Claude Code you simply write <code>--transport http</code>.)</p>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>http</h3>
+          <p>Remote servers. The recommended choice. Most hosted tools (Notion, Sentry, GitHub) offer one.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>stdio</h3>
+          <p>A local process Claude Code starts for you, usually with <code>npx</code>. Good for databases and local tools.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>sse</h3>
+          <p>An older remote transport. Deprecated, so use http whenever the server supports it.</p>
+        </div>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Adding a server</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># remote (http)</span>
+<span class="s">claude mcp add --transport http</span> <span class="p">notion</span> https://mcp.notion.com/mcp
+
+<span class="c"># remote with a token header</span>
+<span class="s">claude mcp add --transport http</span> <span class="p">secure-api</span> https://api.example.com/mcp <span class="s">--header</span> "Authorization: Bearer your-token"
+
+<span class="c"># local (stdio): everything after -- is the command that starts the server</span>
+<span class="s">claude mcp add --transport stdio --env</span> <span class="p">AIRTABLE_API_KEY=YOUR_KEY</span> airtable <span class="s">--</span> npx -y airtable-mcp-server</pre>
+      </div>
+      <p>The <code>--</code> matters: everything before it is Claude's options, everything after it is the command that launches the server. On Windows, run these in PowerShell as written. For long commands, PowerShell continues a line with a backtick instead of the backslash you see in Mac and Linux guides, so the simplest fix is to keep each command on one line.</p>
+
+      <h2><span class="num">03</span>Check it worked</h2>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Managing servers</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude mcp list</span>            <span class="c">every server and its health</span>
+<span class="s">claude mcp get</span> <span class="p">notion</span>      <span class="c">details for one server</span>
+<span class="s">claude mcp remove</span> <span class="p">notion</span>   <span class="c">take it out</span>
+<span class="s">claude mcp login</span> <span class="p">sentry</span>    <span class="c">sign in to a server that uses OAuth</span>
+
+<span class="c"># inside a session</span>
+<span class="s">/mcp</span>                        <span class="c">status, sign-in, turn servers on or off</span></pre>
+      </div>
+      <p>Servers that need a sign-in (Sentry, Notion and most hosted tools) use OAuth. Add the server, run <code>/mcp</code> inside Claude Code, pick it and finish the login in your browser. If a server shows <b>Failed</b>, run <code>claude mcp get</code> with its name: it prints the reason, such as a bad token or an unreachable URL. Note that <code>claude mcp add</code> saves what you type without testing it, so a typo only shows up here.</p>
+
+      <h2><span class="num">04</span>How sign-in works</h2>
+      <p>Authorization is not built into MCP tools themselves. It belongs to the connection. For remote servers, MCP supports ordinary HTTP credentials (bearer tokens, API keys, custom headers) and recommends OAuth, following the OAuth 2.1 conventions. It is optional: a server that exposes nothing private may need no login. A local server runs as your own process, so it simply reads credentials from its environment. In Claude Code you will meet three patterns:</p>
+      <div class="cc-gaps">
+        <div class="cc-gap">
+          <h3><i>01</i>OAuth login</h3>
+          <p>Hosted tools like Sentry and Notion. Run <code>/mcp</code>, pick the server and approve in your browser, the same "Sign in with..." flow you know. Claude Code stores the resulting access. <code>claude mcp login name</code> starts it from the shell and <code>claude mcp logout name</code> clears it.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>02</i>Token in a header</h3>
+          <p>Servers that want an API key or personal access token, like the GitHub example below. Pass it with <code>--header "Authorization: Bearer ..."</code>. If the server rejects the header, Claude Code reports Failed and does not fall back to OAuth.</p>
+        </div>
+        <div class="cc-gap">
+          <h3><i>03</i>Env variables</h3>
+          <p>Local stdio servers run on your machine, so they usually take credentials from environment variables, set with <code>--env KEY=value</code>. Nothing goes over a browser flow.</p>
+        </div>
+      </div>
+      <p>If a server's OAuth needs a pre-registered app, add <code>--client-id</code>, <code>--client-secret</code> (it asks for the secret with masked input) and <code>--callback-port</code> to the add command. Whichever pattern you use, the access you grant is what the server can do as you, so give it only what the job needs.</p>
+
+      <h2><span class="num">05</span>Scopes: who gets the server</h2>
+      <p>Where you add a server decides who can use it:</p>
+      <div class="cc-loop">
+        <div><b>local</b><span>The default. Only you, only in this project. Stored in <code>~/.claude.json</code>. Best for experiments and personal tokens.</span></div>
+        <div><b>project</b><span>Everyone on the repo. Stored in <code>.mcp.json</code> in the project root, which you commit. Add it with <code>--scope project</code>.</span></div>
+        <div><b>user</b><span>You, in every project. Stored in <code>~/.claude.json</code>. Good for tools you always want, like GitHub. Add it with <code>--scope user</code>.</span></div>
+        <div><b>Same name</b><span>If a name exists in more than one scope, local wins over project, and project wins over user.</span></div>
+      </div>
+      <p>The project file is how a team shares one setup. Because it is committed, never put a secret in it. Use an environment variable instead, which <code>.mcp.json</code> expands in <code>url</code>, <code>headers</code>, <code>command</code>, <code>args</code> and <code>env</code>:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.mcp.json (committed to git)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"mcpServers"</span>: {
+    <span class="s">"api-server"</span>: {
+      <span class="s">"type"</span>: <span class="p">"http"</span>,
+      <span class="s">"url"</span>: <span class="p">"${API_BASE_URL:-https://api.example.com}/mcp"</span>,
+      <span class="s">"headers"</span>: { <span class="s">"Authorization"</span>: <span class="p">"Bearer ${API_KEY}"</span> }
+    }
+  }
+}</pre>
+      </div>
+      <p><code>${VAR}</code> reads the value from each person's own environment, and <code>${VAR:-default}</code> falls back to a default. When a teammate first opens the project, Claude Code asks them to approve each server in the file before it runs, so a cloned repo cannot start tools silently. Reset those choices with <code>claude mcp reset-project-choices</code>.</p>
+
+      <h2><span class="num">06</span>Three real workflows</h2>
+      <h3>Triage an error from Sentry</h3>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Sentry</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude mcp add --transport http</span> sentry https://mcp.sentry.dev/mcp
+<span class="c"># then /mcp inside Claude Code to log in</span>
+
+<span class="y">&gt;</span> what are the most common errors in the last 24 hours?
+<span class="y">&gt;</span> find the code behind the top one and propose a fix</pre>
+      </div>
+      <h3>Run PR and issue work from GitHub</h3>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>GitHub</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude mcp add --transport http</span> github https://api.githubcopilot.com/mcp/ <span class="s">--header</span> "Authorization: Bearer YOUR_GITHUB_PAT"
+
+<span class="y">&gt;</span> review PR #456 and suggest improvements
+<span class="y">&gt;</span> show me all open PRs assigned to me</pre>
+      </div>
+      <p>Create the personal access token on GitHub with the smallest scopes that do the job, and treat it like a password.</p>
+      <h3>Ask your database questions</h3>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Postgres (local, stdio)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude mcp add --transport stdio</span> db <span class="s">--</span> npx -y @bytebase/dbhub <span class="s">--dsn</span> "postgresql://readonly:pass@host:5432/analytics"
+
+<span class="y">&gt;</span> show me the schema for the orders table
+<span class="y">&gt;</span> what's our total revenue this month?</pre>
+      </div>
+      <p>Use a <b>read-only database user</b> in that connection string. Then even a wrong or manipulated query cannot change your data. This is the single most important habit with database servers.</p>
+
+      <h2><span class="num">07</span>In VS Code</h2>
+      <p>MCP works in the extension too, and it uses the same configuration as the terminal, so a server added in one place shows up in the other for new conversations.</p>
+      <div class="cc-loop">
+        <div><b>/mcp dialog</b><span>Type <code>/mcp</code> in the Claude panel. Add, remove, enable, disable and reconnect servers, and manage sign-in. Adding and removing needs a recent extension (Claude Code 2.1.261 or later).</span></div>
+        <div><b>Terminal</b><span>Open VS Code's integrated terminal (<code>Ctrl+`</code>) and run any <code>claude mcp add</code> command from this article.</span></div>
+        <div><b>Verify</b><span>Start a new conversation, type <code>/mcp</code> and look for <b>Connected</b>. Bad credentials show <b>Failed</b>.</span></div>
+        <div><b>PATH note</b><span>Installing the extension does not put <code>claude</code> on your shell PATH. For <code>claude mcp</code> in a terminal, install the standalone CLI from Day 3 once.</span></div>
+      </div>
+
+      <h2><span class="num">08</span>Control what the tools may do</h2>
+      <p>Every MCP tool goes through the permission system you met on Day 5. Rules name a server as <code>mcp__server</code> and a tool as <code>mcp__server__tool</code>, and <code>mcp__server__*</code> matches every tool on that server:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"allow"</span>: [ <span class="p">"mcp__sentry__*"</span> ],
+    <span class="s">"deny"</span>:  [ <span class="p">"mcp__github__create_issue"</span> ]
+  }
+}</pre>
+      </div>
+      <p>A good default: allow servers that only read (error trackers, docs), and leave the ones that write (GitHub, databases, chat) on the ask list so you approve each action. To see the real tool names for a server, run <code>/mcp</code> and open it.</p>
+
+      <h2><span class="num">09</span>Keep context and costs under control</h2>
+      <div class="cc-loop">
+        <div><b>Tool search</b><span>On by default. Claude Code loads only tool names at the start and fetches a tool's full description when it needs it, so extra servers cost little context.</span></div>
+        <div><b>Output limit</b><span>A single tool result over 25,000 tokens is cut off. Raise it with <code>MAX_MCP_OUTPUT_TOKENS=50000</code> before you start <code>claude</code>. Better still, ask for less ("last 50 rows").</span></div>
+        <div><b>Slow server</b><span>If a server times out on startup, give it longer with <code>MCP_TIMEOUT=10000 claude</code> (milliseconds).</span></div>
+        <div><b>@ resources</b><span>Some servers expose resources. Type <code>@</code> to browse them, or write <code>@github:issue://123</code> to attach one directly.</span></div>
+      </div>
+      <p>The habit that pays off: connect only the servers a project really uses, and switch off the rest from <code>/mcp</code>. It keeps tool choices clear for Claude and your session lean.</p>
+
+      <h2><span class="num">10</span>Security: connect with care</h2>
+      <div class="cc-callout">
+        <p><strong>Trust each server.</strong> An MCP server runs code or reads content on your behalf. A server that fetches outside content (web pages, tickets, emails) can carry hidden instructions meant for Claude, called prompt injection. Anthropic's docs say to verify you trust each server before connecting it.</p>
+      </div>
+      <div class="cc-loop">
+        <div><b>Source</b><span>Prefer servers from the tool's own vendor or a well-known project. Read what a stdio server will run before you add it.</span></div>
+        <div><b>Least access</b><span>Read-only database user, narrow token scopes, a sandbox workspace for first tries.</span></div>
+        <div><b>No secrets in git</b><span>Tokens live in environment variables, referenced as <code>${VAR}</code> in <code>.mcp.json</code>.</span></div>
+        <div><b>Read the prompts</b><span>Keep permissions on <b>ask</b> for any tool that writes, so an injected instruction still needs your yes.</span></div>
+      </div>
+
+      <h2><span class="num">11</span>Bonus: Claude Code as a server</h2>
+      <p>It works the other way too. <code>claude mcp serve</code> makes Claude Code itself an MCP server, so another app (Claude Desktop, for example) can use its file and edit tools. In that app's config:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>claude_desktop_config.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"mcpServers"</span>: {
+    <span class="s">"claude-code"</span>: { <span class="s">"type"</span>: <span class="p">"stdio"</span>, <span class="s">"command"</span>: <span class="p">"claude"</span>, <span class="s">"args"</span>: [<span class="p">"mcp"</span>, <span class="p">"serve"</span>] }
+  }
+}</pre>
+      </div>
+      <p>If you see <code>spawn claude ENOENT</code>, the app cannot find <code>claude</code> on its PATH. Put the full path to it in <code>command</code>.</p>
+
+      <h2><span class="num">12</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Add one</b><span>Pick one tool you use daily and add its server at the default scope.</span></div>
+        <div><b>Verify</b><span>Run <code>claude mcp list</code>, then <code>/mcp</code> in a session. Look for Connected.</span></div>
+        <div><b>Ask</b><span>Use it for one real question, such as an open PR or your latest error.</span></div>
+        <div><b>Lock it</b><span>Add an allow rule for reads and keep writes on ask.</span></div>
+      </div>
+
+      <p>Next up: skills. How to package your know-how, such as how you write tests or review code, so Claude applies it the same way every time.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-06/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 6</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
