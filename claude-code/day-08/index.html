@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code Skills and Custom Commands — Kowshik Kesavarapu</title>
+  <meta name="description" content="Write a skill once and Claude Code applies it every time: SKILL.md, arguments, live context and custom slash commands, in the terminal and VS Code." />
+  <meta property="og:title" content="Day 8: Skills and custom commands" />
+  <meta property="og:description" content="Teach Claude your way of working once. Reuse it with one slash." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-08.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-08/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-08/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 8: Claude Code Skills and Custom Commands",
+  "description": "Write a skill once and Claude Code applies it every time: SKILL.md, arguments, live context and custom slash commands, in the terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-08/",
+  "image": "https://kowshik.co.in/claude-code/day-08.png",
+  "datePublished": "2026-10-18",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-18" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 8: Claude Code Skills and Custom Commands",
+      "item": "https://kowshik.co.in/claude-code/day-08/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+  <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 8 · Extending it</span>
+      <h1>Teach it once.<br /><span class="cc-grad">Reuse it forever.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>18 min read</span>
+        <span>Oct 18, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="cc-wrap">
+    <article class="cc-article" id="day-8">
+
+      <h2><span class="num">01</span>What a skill is, and why you want one</h2>
+      <p><b>What.</b> A skill is a folder with one file in it, <code>SKILL.md</code>. The file has two parts: a short header that says what the skill is for, and plain Markdown instructions that say how to do it. Think of it as a written procedure you hand to a new teammate, except the teammate is Claude.</p>
+      <p><b>Why.</b> Look at the prompts you type more than once: "review this like we do", "write release notes in our style", "set this project up so I can run it". Each time you retype them you forget a detail, and each teammate words them differently, so results drift. A skill fixes the wording once, keeps it in a file you can edit and version, and makes the result repeatable.</p>
+      <p><b>How it works.</b> Claude Code puts only the one-line <code>description</code> of every skill in the session. The full instructions load <i>only</i> when the skill is used. That is the key design: you can keep dozens of skills and pay almost nothing in context until one is needed. A skill runs in one of two ways. Claude <b>loads it on its own</b> when your request matches the description, or you <b>call it</b> with <code>/skill-name</code>.</p>
+
+      <h2><span class="num">02</span>Skill, CLAUDE.md, prompt or command?</h2>
+      <p>You already know two ways to steer Claude. A skill is the third, and it helps to know which to reach for:</p>
+      <div class="cc-loop">
+        <div><b>CLAUDE.md (Day 2)</b><span>Facts that are true all the time: your stack, your commands, your conventions. Loaded every session. Keep it short because it always costs context.</span></div>
+        <div><b>A prompt</b><span>One-off instructions for one conversation. Gone when the chat ends.</span></div>
+        <div><b>A skill</b><span>A procedure you need <i>sometimes</i>: review a PR, generate scripts, write notes. Costs one line until used, then loads in full.</span></div>
+        <div><b>A custom command</b><span>The older form, one Markdown file in <code>.claude/commands/</code>. Still works and makes the same <code>/name</code>. Skills are the newer form with more features (section 13).</span></div>
+      </div>
+      <p>A simple test: if Claude should <i>always</i> know it, put it in CLAUDE.md. If you would only want it when a certain job comes up, make it a skill.</p>
+
+      <h2><span class="num">03</span>Where skills live</h2>
+      <p><b>What.</b> The folder you put a skill in decides who gets it. <b>Why it matters:</b> a personal habit should not clutter your team's repo, and a team standard should not depend on one person's laptop. <b>How:</b> pick the folder that matches who should have it.</p>
+      <div class="cc-loop">
+        <div><b>Personal</b><span><code>~/.claude/skills/&lt;name&gt;/SKILL.md</code>. Every project, only you. On Windows that is <code>$HOME\.claude\skills\</code>. Good for your own habits.</span></div>
+        <div><b>Project</b><span><code>.claude/skills/&lt;name&gt;/SKILL.md</code> inside the repo. Commit it and every teammate who clones gets it. Good for team standards.</span></div>
+        <div><b>Nested</b><span><code>packages/api/.claude/skills/...</code>. Loads when Claude works on files under that folder. Good for monorepos where each area has its own rules.</span></div>
+        <div><b>Plugin</b><span>Shipped inside a plugin and used as <code>/plugin-name:skill-name</code>. Plugins get their own day later in the series.</span></div>
+        <div><b>Name clash</b><span>If two skills share a name, enterprise beats personal, and personal beats project.</span></div>
+      </div>
+
+      <h2><span class="num">04</span>A real skill: create-launcher</h2>
+      <p><b>What.</b> <b>create-launcher</b> is a skill I wrote and use. It inspects a project, works out its stack (Python, Node, or a frontend plus backend), and writes three start scripts, <code>launch.sh</code>, <code>launch.bat</code> and <code>launch.ps1</code>, so anyone can run the project on any operating system. It is open source at <a href="https://github.com/Kowshik46/create_launcher_skill" target="_blank" rel="noopener">github.com/Kowshik46/create_launcher_skill</a>.</p>
+      <p><b>Why it is a good skill.</b> The job is the same every time but the details are fiddly: which package manager, where the virtual environment lives, how to stop every process on Ctrl+C, how to avoid PowerShell's execution-policy block. Writing that into a prompt each time is error-prone. Written once as a skill, it is correct every time.</p>
+      <p><b>How to install it.</b> A skill is just a file, so installing means copying it into a skills folder. From PowerShell:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Install a skill</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">git clone</span> https://github.com/Kowshik46/create_launcher_skill
+<span class="s">mkdir</span> .claude\skills\create-launcher
+<span class="s">copy</span> create_launcher_skill\.claude\skills\create-launcher\SKILL.md .claude\skills\create-launcher\
+
+<span class="c"># for every project instead, use your home folder</span>
+<span class="s">mkdir</span> $HOME\.claude\skills\create-launcher</pre>
+      </div>
+      <p><b>How to use it.</b> Open Claude Code in a project and either type <code>/create-launcher</code>, or ask in plain words: <code>create launcher scripts for this project</code>. The second works because Claude compares your request with the skill's description. There is no restart: Claude Code watches skill folders. The one exception is a brand-new top-level <code>skills</code> folder created mid-session, where you run <code>/reload-skills</code>.</p>
+      <p><b>How it is built.</b> Open its <code>SKILL.md</code>. Every part is doing a job:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/skills/create-launcher/SKILL.md (shortened)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">create-launcher</span>
+<span class="s">description:</span> <span class="p">Use when the user asks to create a launcher, setup script, or run configuration for a project. Detects the stack, provisions a missing .env, and generates launch.sh, launch.bat and launch.ps1.</span>
+<span class="c">---</span>
+
+<span class="s">## Step 1: Detect services</span>
+Python: requirements.txt or pyproject.toml. Node: package.json...
+<span class="s">## Step 2: Environment files</span>
+Copy .env.example to .env only if .env is missing. Never print it.
+<span class="s">## Step 3: Rules for all three scripts</span>
+Run from the script's own folder. Stop everything on Ctrl+C...
+<span class="s">## Step 5: Verify</span>
+Run bash -n launch.sh. Do not start the services unless asked.
+<span class="s">## Step 6: Report</span>
+List files, services found, TODOs, and how to run each script.</pre>
+      </div>
+      <div class="cc-loop">
+        <div><b>A "use when" description</b><span>It opens with <i>Use when the user asks for a launcher</i>. That tells Claude exactly when to pick it, and it names the words people really say.</span></div>
+        <div><b>Numbered steps</b><span>Detect, provision, generate, verify, report. A fixed order means the same behaviour every run.</span></div>
+        <div><b>Guard rails</b><span>"Never overwrite .env", "never print it", "do not start the services unless asked". These are the rules you would give a new teammate on day one.</span></div>
+        <div><b>A verify step</b><span>The skill checks its own work before it reports. That is what makes a skill trustworthy instead of just fast.</span></div>
+        <div><b>A report format</b><span>It ends with a fixed summary and a table of how to run each script, so the output is predictable.</span></div>
+      </div>
+      <p>It also ships as a Claude Code plugin, which bundles skills for easy sharing: <code>claude plugin marketplace add Kowshik46/create_launcher_skill</code>. Want to publish your own skill as open source? Read the companion page, <a href="publish-skills/">how to publish and share a skill</a>, which covers the repo, license, plugin, marketplace and updates.</p>
+
+      <h2><span class="num">05</span>Write your own, step by step</h2>
+      <p><b>What and why.</b> Your best first skill is a routine you already repeat. You do not need to invent anything: take the prompt you have typed three times and turn the best version of it into a file. Here is a small one that reviews your uncommitted changes.</p>
+      <p><b>How.</b> Create the folder and file from PowerShell, or in VS Code with <b>New Folder</b> and <b>New File</b> in the Explorer:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Create it</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">mkdir</span> .claude\skills\review-changes
+<span class="s">code</span> .claude\skills\review-changes\SKILL.md</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/skills/review-changes/SKILL.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">review-changes</span>
+<span class="s">description:</span> <span class="p">Reviews uncommitted changes and flags risks. Use when the user asks what changed, wants a review, or wants a commit message.</span>
+<span class="c">---</span>
+
+<span class="s">## Current changes</span>
+
+!`git diff HEAD`
+
+<span class="s">## Instructions</span>
+
+Summarise the changes above in 3 bullets. Then list risks:
+missing error handling, hard-coded values, missing tests.
+End with a one-line commit message.</pre>
+      </div>
+      <p>Two details matter. The very first line of the file must be <code>---</code>, otherwise the header is treated as ordinary text. And <code>!`git diff HEAD`</code> is special: Claude Code runs that command <i>before</i> Claude reads the skill and pastes the real diff in its place (section 10). Run it with <code>/review-changes</code>, then improve the skill by editing the file, not by correcting Claude in chat, so the fix is permanent.</p>
+
+      <h2><span class="num">06</span>The description: the line that matters most</h2>
+      <p><b>What.</b> The <code>description</code> is the only part of a skill Claude sees until it decides to use it. <b>Why it matters:</b> if the description does not match how you actually ask, Claude never loads the skill, however good the instructions are. <b>How to write it:</b> say what the skill does, then say when to use it, in the words people really type, and put the main use first.</p>
+      <div class="cc-loop">
+        <div><b>Weak</b><span><code>Helps with code</code>. Matches everything and nothing, so Claude cannot tell when it applies.</span></div>
+        <div><b>Strong</b><span><code>Reviews uncommitted changes and flags risks. Use when the user asks what changed, wants a review, or wants a commit message.</code> It names the job and the triggers.</span></div>
+        <div><b>Extra triggers</b><span>Add a <code>when_to_use</code> field for more example phrases. It is appended to the description.</span></div>
+        <div><b>Length</b><span>The description and <code>when_to_use</code> are cut at 1,536 characters in the listing, so lead with the key use case.</span></div>
+      </div>
+
+      <h2><span class="num">07</span>The header, field by field</h2>
+      <p>Every field is optional, but knowing them lets you shape how a skill behaves. These are the ones you will actually use:</p>
+      <div class="cc-loop">
+        <div><b>name</b><span>The <code>/command</code>. Defaults to the folder name.</span></div>
+        <div><b>description, when_to_use</b><span>When Claude should use it (section 06).</span></div>
+        <div><b>argument-hint, arguments</b><span>A hint shown in autocomplete such as <code>[issue-number]</code>, and names for the inputs (section 09).</span></div>
+        <div><b>disable-model-invocation</b><span><code>true</code> means only you can run it. For anything with side effects (section 08).</span></div>
+        <div><b>user-invocable</b><span><code>false</code> hides it from the <code>/</code> menu so only Claude uses it. For background knowledge.</span></div>
+        <div><b>allowed-tools</b><span>Tools Claude may use without asking while the skill runs (section 11).</span></div>
+        <div><b>paths</b><span>Globs such as <code>src/api/**/*.ts</code>. The skill then loads automatically only when Claude works on matching files.</span></div>
+        <div><b>context, agent</b><span><code>context: fork</code> runs the skill in a separate subagent (section 12).</span></div>
+        <div><b>model, effort</b><span>Use a different model or effort level for that skill's turn.</span></div>
+        <div><b>shell</b><span><code>bash</code> by default, or <code>powershell</code> for the <code>!`command`</code> lines on Windows.</span></div>
+      </div>
+      <p>Typos fail silently. Unknown field names are ignored, and if the YAML cannot be parsed the skill loads with no fields at all. If a skill acts strangely, check the header first.</p>
+
+      <h2><span class="num">08</span>Who may trigger it</h2>
+      <p><b>What.</b> By default both you and Claude can run a skill. <b>Why change that:</b> some skills should never fire by themselves. A deploy skill that Claude decides to run because you said "ship it" in passing is a bad surprise. <b>How:</b> one line in the header.</p>
+      <div class="cc-loop">
+        <div><b>Default</b><span>You can run it, Claude can load it. The description is always in context.</span></div>
+        <div><b>disable-model-invocation: true</b><span>Only you. Claude never loads it on its own, and the description is not even in context. Use it for deploys, commits, pushes and messages.</span></div>
+        <div><b>user-invocable: false</b><span>Only Claude. For knowledge like "how our legacy billing module works" that you would never type as a command.</span></div>
+      </div>
+      <p>Rule of thumb: if running it twice by accident would hurt, make it <code>disable-model-invocation: true</code>.</p>
+
+      <h2><span class="num">09</span>Arguments: make a skill reusable</h2>
+      <p><b>What.</b> Anything you type after the skill name is passed in as arguments. <b>Why:</b> one skill can then serve many cases, such as any issue number or any component name, instead of you writing a new skill each time. <b>How:</b> use a placeholder in the body.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/skills/fix-issue/SKILL.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">fix-issue</span>
+<span class="s">description:</span> <span class="p">Fix a GitHub issue on a branch</span>
+<span class="s">disable-model-invocation:</span> <span class="p">true</span>
+<span class="s">arguments:</span> <span class="p">[issue, branch]</span>
+<span class="c">---</span>
+
+Fix GitHub issue $issue on branch $branch.
+Follow our coding standards and write tests.
+
+<span class="c"># run it:</span>
+<span class="y">&gt;</span> /fix-issue 123 fix/login-bug</pre>
+      </div>
+      <div class="cc-loop">
+        <div><b>$ARGUMENTS</b><span>Everything you typed after the name, as one string.</span></div>
+        <div><b>$0, $1 or $ARGUMENTS[1]</b><span>One argument by position, counting from 0. Quote multi-word values: <code>/skill "hello world" two</code>.</span></div>
+        <div><b>$issue, $branch</b><span>Named arguments, filled in the order listed in <code>arguments</code>. Easier to read than numbers.</span></div>
+        <div><b>${CLAUDE_SKILL_DIR}</b><span>The skill's own folder, so it can point at its own files.</span></div>
+        <div><b>No placeholder?</b><span>If you pass arguments but the body uses none, Claude Code appends <code>ARGUMENTS: ...</code> so the input is not lost.</span></div>
+      </div>
+
+      <h2><span class="num">10</span>Live context: feed it real data</h2>
+      <p><b>What.</b> A line written as <code>!`command`</code> runs a shell command first and is replaced by its output. <b>Why:</b> Claude then starts from the real diff, the real PR or the real test output instead of guessing or spending turns running commands. <b>How:</b> put the command in the body where the data belongs. For several lines use a fenced block that opens with <code>```!</code>.</p>
+      <p>Know the limits. The command goes through your permission rules like any other. If an injected command fails, <b>the whole skill stops</b>, so use commands you know work in that project. The default shell is bash; add <code>shell: powershell</code> to the header when the command is PowerShell, as on many Windows machines.</p>
+
+      <h2><span class="num">11</span>Supporting files and pre-approved tools</h2>
+      <p><b>What.</b> A skill folder can hold more than <code>SKILL.md</code>. <b>Why:</b> a long skill wastes context every time it loads. Keep <code>SKILL.md</code> short (under 500 lines) and move reference material, examples and scripts next to it. <b>How:</b> mention each file in <code>SKILL.md</code> with a line on when to read it.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>A skill folder</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>release-notes\
+  <span class="s">SKILL.md</span>         <span class="c">overview: when and how</span>
+  <span class="p">style-guide.md</span>    <span class="c">read when writing the notes</span>
+  <span class="p">examples.md</span>       <span class="c">good and bad past notes</span>
+  <span class="p">scripts\collect.ps1</span>  <span class="c">run, never loaded as text</span></pre>
+      </div>
+      <p>Claude reads a supporting file only when the task needs it, and runs a script instead of loading it. To let a skill run specific commands without a prompt each time, pre-approve them in the header:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>header</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">allowed-tools:</span> <span class="p">Bash(git log *) Bash(git tag *)</span>
+<span class="c"># or a bundled script:</span>
+<span class="s">allowed-tools:</span> <span class="p">Bash(${CLAUDE_SKILL_DIR}/scripts/render.sh *)</span></pre>
+      </div>
+      <p>This only <i>adds</i> permission, and only for the turn that runs the skill. It clears on your next message and never loosens the Day 5 rules for anything else. Keep the list as narrow as the skill needs.</p>
+
+      <h2><span class="num">12</span>Run it in a fork</h2>
+      <p><b>What.</b> Adding <code>context: fork</code> runs the skill in its own subagent, a separate Claude with a fresh context. <b>Why:</b> jobs that read dozens of files would flood your main conversation. In a fork all that reading happens off to the side, and only the summary comes back, so your main session stays sharp (Day 5). <b>How:</b> two header lines.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/skills/deep-research/SKILL.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">deep-research</span>
+<span class="s">description:</span> <span class="p">Research a topic thoroughly across the codebase</span>
+<span class="s">context:</span> <span class="p">fork</span>
+<span class="s">agent:</span> <span class="p">Explore</span>
+<span class="c">---</span>
+
+Research $ARGUMENTS thoroughly:
+1. Find relevant files with Glob and Grep
+2. Read and analyse the code
+3. Summarise findings with file references</pre>
+      </div>
+      <p><code>agent</code> chooses the kind of subagent. <code>Explore</code> is a read-only searcher, a safe choice for research. This is a first taste of subagents, which are the next topic.</p>
+
+      <h2><span class="num">13</span>Custom slash commands: the older way</h2>
+      <p><b>What.</b> Before skills, a custom command was a single Markdown file in <code>.claude/commands/</code> (project) or <code>~/.claude/commands/</code> (personal). <b>Why you still see them:</b> they keep working, and plenty of repos have them. <code>.claude/commands/deploy.md</code> and <code>.claude/skills/deploy/SKILL.md</code> both create <code>/deploy</code>, and if both exist the skill wins. <b>How to choose:</b> a command file is fine for a quick one-off prompt. Use a skill when you want supporting files, invocation control, <code>paths</code> or automatic loading. Skills can also replace a built-in command of the same name, so check the <code>/</code> menu before reusing a name.</p>
+
+      <h2><span class="num">14</span>In VS Code</h2>
+      <p>Skills are plain files, so the terminal and the extension read the same folders. A skill you write in one place appears in the other.</p>
+      <div class="cc-loop">
+        <div><b>Find them</b><span>Type <code>/</code> in the Claude panel. Project, personal and bundled skills are all listed.</span></div>
+        <div><b>Run one</b><span>Pick it from the menu or type <code>/create-launcher</code>. Arguments go after the name.</span></div>
+        <div><b>Write one</b><span>In the Explorer create <code>.claude/skills/&lt;name&gt;/SKILL.md</code> and save. No restart needed.</span></div>
+        <div><b>Terminal extras</b><span>In the CLI, <code>/skills</code> lists them all, and you can stack up to six at the start of one message, for example <code>/write-tests /fix-issue 123</code>.</span></div>
+      </div>
+
+      <h2><span class="num">15</span>When a skill does not trigger</h2>
+      <p>The usual causes, in the order to check them:</p>
+      <div class="cc-loop">
+        <div><b>1. The description</b><span>Is it specific, and does it say when to use it in the words you would type? This is the most common cause.</span></div>
+        <div><b>2. The header</b><span>Opening <code>---</code> on line 1, valid YAML, field names spelled exactly (hyphens included).</span></div>
+        <div><b>3. Is it listed?</b><span>Run <code>/skills</code>. If it is missing, run <code>/reload-skills</code>, or start with <code>claude --debug</code> and look at the log.</span></div>
+        <div><b>4. A setting</b><span>The <code>skillOverrides</code> setting can turn a skill <code>off</code> or restrict it to <code>user-invocable-only</code>.</span></div>
+        <div><b>5. Long sessions</b><span>After compaction each used skill keeps its first 5,000 tokens. Put the essentials at the top of the file.</span></div>
+      </div>
+
+      <h2><span class="num">16</span>Skills that already ship with it</h2>
+      <p>Claude Code includes bundled skills, which are good working examples. Try <code>/doctor</code> for a setup check-up that asks before changing anything, <code>/code-review</code> for a review, <code>/debug</code> for a stubborn bug and <code>/loop</code> to repeat a prompt on a timer. Others include <code>/batch</code>, <code>/verify</code>, <code>/run</code> and <code>/claude-api</code>. Run one, notice how it behaves, then copy that shape for your own skills.</p>
+
+      <h2><span class="num">17</span>Habits that make skills good</h2>
+      <div class="cc-loop">
+        <div><b>One job each</b><span>"Review a PR" is a skill. "Do all my chores" is not. Small skills trigger accurately and are easy to fix.</span></div>
+        <div><b>Start from a real repeat</b><span>Wait until you have typed the same prompt three times, then write the skill from the best version.</span></div>
+        <div><b>Write for a new teammate</b><span>Give the steps, an example of good output, and what <i>not</i> to do.</span></div>
+        <div><b>Add a verify step</b><span>Tell the skill to check its own work, as create-launcher does, before it reports.</span></div>
+        <div><b>Gate side effects</b><span>Deploys, pushes and messages get <code>disable-model-invocation: true</code>.</span></div>
+        <div><b>Commit them</b><span>Project skills are code. Review changes to them in a PR like anything else.</span></div>
+        <div><b>Let Claude draft it</b><span>Ask: <code>turn what we just did into a skill in .claude/skills</code>, then read and edit the result.</span></div>
+      </div>
+
+      <h2><span class="num">18</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Install</b><span>Copy create-launcher into a project and run <code>/create-launcher</code> on something you want to start with one command.</span></div>
+        <div><b>Write</b><span>Pick one routine you repeat weekly and write a project skill with a sharp description and a few steps.</span></div>
+        <div><b>Run it twice</b><span>Once with <code>/name</code>, once by asking in plain words, to prove the description matches.</span></div>
+        <div><b>Tighten</b><span>Fix whatever it got wrong in <code>SKILL.md</code>, not in the chat.</span></div>
+      </div>
+
+      <p>Ready to share what you built? See <a href="publish-skills/">how to publish a skill as open source</a>.</p>
+
+      <p>Next up: subagents. How to split a big job across helpers that each work in their own context.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-07/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 7</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
