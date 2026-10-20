@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code Subagents and Hooks — Kowshik Kesavarapu</title>
+  <meta name="description" content="Split work across Claude Code subagents and enforce rules with hooks: custom agents, tools, models, auto-format, file protection and alerts, in terminal and VS Code." />
+  <meta property="og:title" content="Day 9: Subagents and hooks" />
+  <meta property="og:description" content="Hand work to helpers with their own context. Make rules that always run." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-09.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-09/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-09/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 9: Claude Code Subagents and Hooks",
+  "description": "Split work across Claude Code subagents and enforce rules with hooks: custom agents, tools, models, auto-format, file protection and alerts, in terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-09/",
+  "image": "https://kowshik.co.in/claude-code/day-09.png",
+  "datePublished": "2026-10-20",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-20" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 9: Claude Code Subagents and Hooks",
+      "item": "https://kowshik.co.in/claude-code/day-09/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+  <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 9 · Extending it</span>
+      <h1>Delegate the work.<br /><span class="cc-grad">Automate the rules.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>34 min read</span>
+        <span>Oct 20, 2026</span>
+      </div>
+    </div>
+  </header>
+
+    <main class="cc-wrap">
+    <article class="cc-article" id="day-9">
+
+      <div class="cc-callout">
+        <p><strong>Two roadmap rows in one day:</strong> subagents (Part 1) and hooks (Part 2). They fit together. Subagents decide <i>who</i> does the work. Hooks decide which rules <i>always</i> run, no matter who does it. A reader asked for hooks, so here they are.</p>
+      </div>
+
+      <h2><span class="num">01</span>The big picture: helpers and guardrails</h2>
+      <p><b>What.</b> Two features that make Claude Code feel less like a chat and more like a small team with house rules. A <b>subagent</b> is a separate Claude with its own fresh context that you hand a job to. A <b>hook</b> is a command of yours that Claude Code runs automatically at a fixed moment, such as right after every file edit.</p>
+      <p><b>Why they belong together.</b> Everything so far (CLAUDE.md, skills, prompts) <i>asks</i> Claude to behave. Asking works almost always, but "almost" is not good enough for "never touch the .env file" or "always format the code". A hook does not ask, it simply runs. And a subagent keeps big, noisy jobs out of your main conversation, which protects the context you learned to manage on Day 5.</p>
+      <div class="cc-loop">
+        <div><b>Part 1: Subagents</b><span>Sections 02 to 09. Hand a job to a helper with its own context, tools and model. Built-in helpers, your own helpers, running them in parallel and in the background.</span></div>
+        <div><b>Part 2: Hooks</b><span>Sections 10 to 26. Rules that run every time: notifications, auto-format, protected files, blocked commands, context re-injection, and smarter checks that use a model.</span></div>
+        <div><b>Both in VS Code</b><span>Section 27. Everything is plain files and settings, so the terminal and the extension share it.</span></div>
+      </div>
+
+      <h2><span class="num">02</span>What a subagent is, and why you want one</h2>
+      <p><b>What.</b> A subagent is a specialist Claude that your main Claude can hand a task to. It starts with a <b>clean context window</b>, works on the task using its own instructions and its own set of tools, and sends back only a short result. The files it read and the dead ends it explored never enter your main conversation.</p>
+      <p><b>Why.</b> Three reasons, and each solves a real problem:</p>
+      <div class="cc-loop">
+        <div><b>Protect your context</b><span>"Find every place we call the payments API" can mean reading forty files. Done in your main chat, that fills the window with search noise and Claude starts forgetting your real task (Day 5). A subagent reads the forty files and returns a ten-line answer.</span></div>
+        <div><b>Limit what a helper can do</b><span>A reviewer should read code, not change it. You give it read-only tools, so it <i>cannot</i> edit by accident. This is a guardrail you set once in the file.</span></div>
+        <div><b>Fit the model to the job</b><span>A quick search does not need your most powerful (and most expensive) model. A subagent can run on a small fast model while the main session keeps the strong one.</span></div>
+        <div><b>Work in parallel</b><span>Claude can start several subagents at the same time, for example one per module, then combine the answers. Up to 20 can run at once by default.</span></div>
+      </div>
+      <p><b>How you meet them.</b> You already have, without noticing. When Claude says it is "searching the codebase" with an Explore agent, or when a Day 8 skill used <code>context: fork</code>, a subagent did the work. Now you will make your own.</p>
+
+      <h2><span class="num">03</span>The built-in subagents</h2>
+      <p><b>What and why.</b> Claude Code ships with helpers so delegation works from day one. Claude picks them itself when a task fits, and you can ask for them by name. <b>How to use:</b> just describe the job in words, for example <code>use an Explore agent to find where login errors are handled</code>.</p>
+      <div class="cc-loop">
+        <div><b>Explore</b><span>Fast and read-only. Built for searching and understanding a codebase. Claude sets a thoroughness level: quick, medium or very thorough. Starts without your CLAUDE.md or the git status, so it stays small.</span></div>
+        <div><b>Plan</b><span>Read-only research used in plan mode (Day 4) to gather what Claude needs before it writes a plan. Also starts without CLAUDE.md.</span></div>
+        <div><b>general-purpose</b><span>Full tools. For multi-step jobs that need both exploring and changing things. The default when nothing more specific fits.</span></div>
+        <div><b>Others</b><span>Small helpers such as <code>statusline-setup</code> and <code>claude-code-guide</code> (answers questions about Claude Code itself) exist too. You rarely call them by hand.</span></div>
+      </div>
+      <p>Explore and Plan are one-shot: they answer once and finish. If you ever want to block a built-in, add <code>"Agent(Explore)"</code> to <code>permissions.deny</code> in your settings.</p>
+
+      <h2><span class="num">04</span>Build your own, step by step</h2>
+      <p><b>What.</b> A custom subagent is one Markdown file. The header (called frontmatter) configures it. The text below the header becomes its <b>system prompt</b>, meaning its standing instructions. <b>Why:</b> you get a specialist that behaves the same every time: a reviewer with your standards, a test runner that only reports failures, a researcher that never edits. <b>How:</b> two ways.</p>
+      <p><b>Way 1: ask Claude to write it.</b> This is the easiest start. In the terminal or the VS Code panel, say:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Ask Claude</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="y">&gt;</span> create a subagent called code-reviewer in .claude/agents. It should
+  review changes for bugs, security and missing tests, be read-only,
+  and report findings as a short list with file and line.</pre>
+      </div>
+      <p><b>Way 2: write the file yourself.</b> From PowerShell, or with <b>New File</b> in the VS Code Explorer:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Create it</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">mkdir</span> .claude\agents
+<span class="s">code</span> .claude\agents\code-reviewer.md</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/agents/code-reviewer.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">code-reviewer</span>
+<span class="s">description:</span> <span class="p">Reviews code changes for bugs, security issues and missing tests. Use proactively after code is written or modified.</span>
+<span class="s">tools:</span> <span class="p">Read, Grep, Glob, Bash</span>
+<span class="s">model:</span> <span class="p">sonnet</span>
+<span class="c">---</span>
+
+You are a senior code reviewer. When invoked:
+1. Run git diff to see the recent changes.
+2. Review only the changed code.
+3. Report findings in three groups: must fix, should fix, nice to have.
+4. For each finding give the file, the line, the problem and a fix.
+Never edit files. If everything looks good, say so in one line.</pre>
+      </div>
+      <p>Only <code>name</code> and <code>description</code> are required. Save the file and Claude Code picks it up within a few seconds, with one exception: if you created the brand-new <code>.claude/agents</code> folder during a session, restart the session once. Then try <code>use the code-reviewer agent on my uncommitted changes</code>. The review runs in its own context, and you get the summary back.</p>
+
+      <h2><span class="num">05</span>The header, field by field</h2>
+      <p><b>What and why.</b> These fields decide what the helper can do, how smart it is and how it runs. Knowing them is the difference between a toy and a trustworthy helper. These are the ones you will use:</p>
+      <div class="cc-loop">
+        <div><b>name, description</b><span>The name is the identifier. The description is what Claude reads to decide <i>when to delegate</i>, so write it like a skill description (Day 8): what it does, and when to use it. Adding "use proactively" nudges Claude to delegate without being asked.</span></div>
+        <div><b>tools, disallowedTools</b><span>An allowlist or a denylist of tools. Leave both out and the helper inherits everything. For a reviewer or researcher, list only <code>Read, Grep, Glob</code>. This is your main safety control.</span></div>
+        <div><b>model</b><span><code>sonnet</code>, <code>opus</code>, <code>haiku</code>, a full model ID, or <code>inherit</code> to match the main session. Use a smaller model for cheap, simple jobs.</span></div>
+        <div><b>permissionMode</b><span>How the helper handles permission prompts, for example <code>plan</code> for read-only planning or <code>acceptEdits</code>. Same ideas as Day 5.</span></div>
+        <div><b>skills</b><span>Skills whose full text is loaded into the helper at start, so it knows your procedures without discovering them.</span></div>
+        <div><b>memory</b><span><code>user</code>, <code>project</code> or <code>local</code> gives the helper memory that persists between runs, so a reviewer can learn your codebase over time.</span></div>
+        <div><b>mcpServers</b><span>Connect an MCP server (Day 7) for this helper only, so its tools do not clutter your main session.</span></div>
+        <div><b>hooks</b><span>Hooks that run only while this helper is working (Part 2).</span></div>
+        <div><b>maxTurns, effort</b><span>Cap how many steps it may take, and how hard it thinks. Good for keeping cheap jobs cheap.</span></div>
+        <div><b>isolation</b><span><code>worktree</code> runs the helper in a temporary copy of the repo (a git worktree) so its edits cannot collide with yours.</span></div>
+        <div><b>background</b><span><code>true</code> always runs it in the background.</span></div>
+        <div><b>color</b><span>A label colour so you can tell helpers apart in the interface.</span></div>
+      </div>
+      <p>Typos fail quietly: unknown fields are ignored, and a file with broken YAML or no <code>name</code> is skipped. If a helper does not show up, check the header first.</p>
+
+      <h2><span class="num">06</span>Where subagents live</h2>
+      <p><b>What and why.</b> As with skills, the folder decides who gets the helper. A team reviewer belongs in the repo; a personal helper belongs in your home folder. <b>How:</b> pick the location. When two helpers share a name, the higher one in this list wins:</p>
+      <div class="cc-loop">
+        <div><b>1. Managed settings</b><span>Set by an organisation for everyone. You will only meet this at work.</span></div>
+        <div><b>2. --agents flag</b><span>Defined on the command line for one session only (next section).</span></div>
+        <div><b>3. .claude/agents/</b><span>Inside the project. Commit it and teammates get the same helpers.</span></div>
+        <div><b>4. ~/.claude/agents/</b><span>Your personal helpers, available in every project. On Windows: <code>$HOME\.claude\agents\</code>.</span></div>
+        <div><b>5. Plugins</b><span>Helpers shipped in a plugin. Lowest priority. Plugins get their own day.</span></div>
+      </div>
+      <p>Subfolders are scanned too, so you can organise <code>agents/review/</code> and <code>agents/research/</code>. The name inside the file is what counts, not the path.</p>
+
+      <h2><span class="num">07</span>Four ways to run a subagent</h2>
+      <p><b>What and why.</b> You control how much say Claude has in the delegation. <b>How:</b></p>
+      <div class="cc-loop">
+        <div><b>Let Claude decide</b><span>Describe the job, or just work. If the task matches a helper's description, Claude delegates on its own.</span></div>
+        <div><b>Ask in words</b><span><code>use the code-reviewer agent to check the auth changes</code>. Claude still chooses the exact instructions it sends.</span></div>
+        <div><b>@-mention</b><span>Type <code>@</code> and pick the helper, for example <code>@"code-reviewer (agent)" look at the auth changes</code>. This <i>guarantees</i> that helper is the one that runs.</span></div>
+        <div><b>Whole session as a helper</b><span><code>claude --agent code-reviewer</code> starts the entire session as that helper, with its tools and prompt. Set <code>"agent": "code-reviewer"</code> in <code>.claude/settings.json</code> to make it the project default.</span></div>
+      </div>
+      <p><b>Try one without creating a file.</b> The <code>--agents</code> flag takes JSON and lives only for that session. Good for experiments. In PowerShell, put the JSON in a here-string so quotes survive:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>A session-only subagent</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>$a = @'
+{"quick-reviewer": {
+  "description": "Fast reviewer. Use proactively after code changes.",
+  "prompt": "You are a senior reviewer. Focus on bugs and security.",
+  "tools": ["Read", "Grep", "Glob", "Bash"],
+  "model": "sonnet"
+}}
+'@
+<span class="s">claude</span> --agents $a</pre>
+      </div>
+      <p>And one more: <code>/subtask &lt;task&gt;</code> starts a <b>fork</b>, a helper that inherits your whole conversation so far. Use it when the side job needs the context you built, which a normal subagent does not get.</p>
+
+      <h2><span class="num">08</span>Foreground, background, resuming and limits</h2>
+      <div class="cc-loop">
+        <div><b>Foreground vs background</b><span>A foreground helper blocks your chat until it finishes, and its permission prompts come to you. A background helper runs alongside while you keep working, and its prompts appear in your main session with its name on them. In the terminal press <b>Ctrl+B</b> to push a running task to the background. In VS Code use <b>Run in background</b>.</span></div>
+        <div><b>Resuming</b><span>Each call starts a fresh helper. To continue earlier work, ask Claude to resume it (it uses the helper's ID or name). A resumed helper keeps its full history. Explore and Plan cannot be resumed.</span></div>
+        <div><b>Context isolation</b><span>A normal helper does <i>not</i> see your conversation or the files you read earlier. It only gets the task text Claude writes, its own prompt, CLAUDE.md and any preloaded skills. So a vague delegation produces a vague result: tell Claude exactly what to hand over.</span></div>
+        <div><b>Nesting and count</b><span>Helpers can start their own helpers, up to three layers below your main session by default. Up to 20 can run at once. To stop one from spawning more, leave <code>Agent</code> out of its <code>tools</code>.</span></div>
+        <div><b>Transcripts</b><span>Every helper's full transcript is saved under <code>~/.claude/projects/.../subagents/</code>, so you can read exactly what it did.</span></div>
+      </div>
+
+      <h2><span class="num">09</span>Patterns that work</h2>
+      <p><b>What and why.</b> Subagents pay off when the work is big, noisy or risky. Here are the shapes that earn their keep, each with the prompt to use:</p>
+      <div class="cc-loop">
+        <div><b>Parallel research</b><span><code>Use separate subagents to investigate the auth, billing and notification modules in parallel, then summarise how they depend on each other.</code> Three searches at once, three short answers, a clean main chat.</span></div>
+        <div><b>Second opinion</b><span><code>After you finish, use the code-reviewer agent on your own changes.</code> A fresh reviewer with no memory of your reasoning catches what the author missed.</span></div>
+        <div><b>Noisy commands</b><span><code>Use a subagent to run the full test suite and report only the failures.</code> The thousand lines of passing output never reach your context.</span></div>
+        <div><b>Read-only audit</b><span>A helper with <code>tools: Read, Grep, Glob</code> and a security-minded prompt can scan the whole repo with zero chance of editing it.</span></div>
+        <div><b>Safe experiments</b><span>A helper with <code>isolation: worktree</code> can try a risky refactor in a throwaway copy. If it fails, nothing of yours changed.</span></div>
+        <div><b>Chains</b><span>Reviewer finds problems, then a fixer helper repairs them. Claude can chain them in one request, or you can run them one after another.</span></div>
+      </div>
+      <p><b>When not to use one.</b> For a small edit in a file you are already looking at, a subagent is overhead: it has to rebuild context from scratch. Delegate when the job is large, independent or noisy, not for everything.</p>
+
+      <h2><span class="num">10</span>What a hook is, and why it is different</h2>
+      <p><b>What.</b> A hook is a command you register to run at a specific moment in Claude Code's life: when a session starts, before a tool runs, after a file is edited, when Claude finishes, when it needs your attention. Claude Code runs it for you and passes it information about what is happening.</p>
+      <p><b>Why.</b> Compare two ways to get your code formatted. With CLAUDE.md you write "always run the formatter" and hope Claude remembers on every edit. With a hook you say "after any edit, run the formatter" and the system does it, every time, whether or not Claude would have remembered. That is <b>deterministic</b>. Use instructions for judgement and style; use hooks for rules that must never be skipped.</p>
+      <p><b>How they work.</b> Every hook has three parts: an <b>event</b> (when), an optional <b>matcher</b> (which tool or situation) and a <b>handler</b> (what to run). You describe them in JSON inside a settings file. When the event fires, Claude Code sends details as JSON to your command, and your command answers with an exit code.</p>
+
+      <h2><span class="num">11</span>Hooks in plain words: a restaurant with house rules</h2>
+      <p><b>What.</b> Picture a restaurant. The chef (Claude) is clever and usually does the right thing. But the owner has rules that must hold even on a rushed night: "wash hands before cooking", "never serve a dish with nuts to an allergic guest", "ring the bell when an order is ready". The owner does not trust memory for these, so each rule is a <b>checkpoint</b> built into the kitchen: something happens at a fixed moment, and it either lets the work continue or stops it.</p>
+      <p>A hook is exactly that checkpoint. Claude Code has fixed moments (before it uses a tool, after it edits a file, when it finishes). At each moment it asks: "is there a hook here?" If yes, it runs your command and reads the answer.</p>
+      <div class="cc-loop">
+        <div><b>The moment</b><span>Called an <b>event</b>. Examples: "before a tool runs", "after a file is edited", "Claude finished".</span></div>
+        <div><b>The filter</b><span>Called a <b>matcher</b>. "Only when the tool is Bash", "only when the tool is Edit or Write".</span></div>
+        <div><b>The action</b><span>Called a <b>handler</b>. Usually a command: a one-liner or a script you wrote. It can look at what is about to happen and say go ahead, or stop.</span></div>
+        <div><b>The answer</b><span>An <b>exit code</b> or a small piece of JSON. "0" means fine, "2" means block, and what you wrote to the error output becomes the explanation Claude reads.</span></div>
+      </div>
+      <p><b>The most important sentence in this article:</b> a hook is <i>your</i> program, not Claude. Claude Code runs it for you at the checkpoint. Claude cannot forget it, skip it or talk its way past it. That is the whole point.</p>
+
+      <h2><span class="num">12</span>One request, step by step: where hooks fire</h2>
+      <p><b>What and why.</b> Most people struggle with hooks because they cannot picture <i>when</i> each one runs. So follow one real request from start to finish: you type <code>fix the typo in README</code>. Every numbered line below is a moment where a hook could run.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>The life of one request</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">1. You press Enter</span>
+   <span class="y">UserPromptSubmit</span>   <span class="c">your hook can add context or block the prompt</span>
+<span class="c">2. Claude decides to edit README.md</span>
+   <span class="y">PreToolUse</span>         <span class="c">your hook can ALLOW, ASK or BLOCK the edit</span>
+<span class="c">3. If approval is needed</span>
+   <span class="y">PermissionRequest</span>  <span class="c">your hook can answer the approval prompt for you</span>
+   <span class="y">Notification</span>       <span class="c">your hook can ping you that Claude is waiting</span>
+<span class="c">4. The edit happens</span>
+   <span class="y">PostToolUse</span>        <span class="c">your hook can format, lint or log the result</span>
+<span class="c">5. Claude writes its final answer</span>
+   <span class="y">Stop</span>               <span class="c">your hook can run a last check, or send Claude back to work</span></pre>
+      </div>
+      <p><b>How to read it.</b> The word <b>Pre</b> means "before it happens, so I can stop it". The word <b>Post</b> means "after it happened, so I can react but cannot undo it". If your rule is "never do X", you want a Pre hook. If your rule is "after X, always do Y", you want a Post hook. The same pattern holds for longer sessions: <code>SessionStart</code> runs when the session opens, <code>SessionEnd</code> when it closes, and subagent and compaction events sit in between.</p>
+
+      <h2><span class="num">13</span>A hook config, line by line</h2>
+      <p><b>What and why.</b> The JSON looks intimidating the first time. It is only three nested boxes, and once you see them you can read or write any hook. Here is a real one with every line explained. <b>How:</b> read the code, then the notes under it.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">&quot;hooks&quot;</span>: {                      <span class="c">// 1. the one box that holds all hooks</span>
+    <span class="s">&quot;PostToolUse&quot;</span>: [               <span class="c">// 2. the EVENT: after a tool succeeds</span>
+      {
+        <span class="s">&quot;matcher&quot;</span>: <span class="p">&quot;Edit|Write&quot;</span>,      <span class="c">// 3. the FILTER: only these tools</span>
+        <span class="s">&quot;hooks&quot;</span>: [                <span class="c">// 4. the list of things to run</span>
+          {
+            <span class="s">&quot;type&quot;</span>: <span class="p">&quot;command&quot;</span>,       <span class="c">// 5. run a shell command</span>
+            <span class="s">&quot;command&quot;</span>: <span class="p">&quot;echo Edited!&quot;</span> <span class="c">// 6. the command itself</span>
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p>(The <code>//</code> notes are for you: real settings files must not contain comments, so do not copy them in.)</p>
+      <div class="cc-loop">
+        <div><b>Lines 1 and 2</b><span>The top-level <code>hooks</code> object holds one key per event. Add more events as siblings, never a second <code>hooks</code> object.</span></div>
+        <div><b>Line 3</b><span>The <code>matcher</code> picks which tool, session type or notification type this applies to. Empty or missing means "every time".</span></div>
+        <div><b>Line 4</b><span>Each event holds a <i>list</i> of matcher groups, and each group holds a <i>list</i> of hooks. So you can run several commands for one match. They run in parallel.</span></div>
+        <div><b>Lines 5 and 6</b><span>What to actually do. A short one-liner can live right in the <code>command</code>. Anything longer belongs in a script file that the command calls.</span></div>
+      </div>
+      <p><b>The three most common mistakes:</b> a trailing comma or a comment in the JSON (the file is then ignored), a second <code>"hooks"</code> key instead of adding to the existing one, and a matcher in the wrong case (<code>edit</code> will not match <code>Edit</code>).</p>
+
+      <h2><span class="num">14</span>Your first hook: a notification when Claude needs you</h2>
+      <p><b>What and why.</b> You start a long task, switch to another window, and Claude sits waiting for permission for ten minutes. A <code>Notification</code> hook pops up a message the moment it needs you. It is the safest first hook because it changes nothing. <b>How:</b> open <code>~/.claude/settings.json</code> (on Windows, <code>$HOME\.claude\settings.json</code>; create it if missing) and add the block for your system.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Windows (PowerShell) — settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude Code needs your attention', 'Claude Code')\""
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Linux — settings.json (macOS: use osascript)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "notify-send 'Claude Code' 'Claude Code needs your attention'" }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p>The Windows version opens a dialog box, which can appear behind your window, so test it. On Linux you need a desktop notification service (<code>libnotify-bin</code> on Ubuntu). The empty <code>matcher</code> fires for every notification type. Narrow it with <code>permission_prompt</code> (needs approval) or <code>idle_prompt</code> (finished and waiting). Verify with <code>/hooks</code>, which lists every configured hook by event. If a settings file already has a <code>hooks</code> key, add your event next to the others instead of replacing the object.</p>
+      <p><b>Shortcut:</b> you can also just describe it to Claude: <code>add a hook that notifies me when you need input</code>, then check the result with <code>/hooks</code>.</p>
+
+      <h2><span class="num">15</span>The events you will use most</h2>
+      <p><b>What.</b> There are more than thirty events. You do not need them all. These cover most real needs:</p>
+      <div class="cc-loop">
+        <div><b>SessionStart</b><span>A session begins or resumes. The matcher can be <code>startup</code>, <code>resume</code>, <code>clear</code> or <code>compact</code>. Anything your command prints is added to Claude's context.</span></div>
+        <div><b>UserPromptSubmit</b><span>You press Enter, before Claude reads the prompt. Add context to every prompt, or block it.</span></div>
+        <div><b>PreToolUse</b><span>Before a tool runs. <b>The one that can say no.</b> Block dangerous commands and protected files here.</span></div>
+        <div><b>PermissionRequest</b><span>Claude is about to ask you to approve something. A hook can answer for you, for narrow cases you always allow.</span></div>
+        <div><b>PostToolUse</b><span>After a tool succeeds. Format, lint, log. It cannot undo the action, since it already happened.</span></div>
+        <div><b>Notification</b><span>Claude is waiting on you.</span></div>
+        <div><b>Stop</b><span>Claude finishes responding. Run a final check, or tell Claude to keep going. Not fired when you interrupt.</span></div>
+        <div><b>SubagentStart, SubagentStop</b><span>A helper from Part 1 starts or finishes.</span></div>
+        <div><b>PreCompact, PostCompact</b><span>Around context compaction (Day 5).</span></div>
+        <div><b>FileChanged, CwdChanged</b><span>A watched file changes, or Claude changes directory. Good for reloading environment variables.</span></div>
+        <div><b>SessionEnd</b><span>The session closes. Clean up temporary files.</span></div>
+      </div>
+
+      <h2><span class="num">16</span>Matchers and the if field: aim the hook</h2>
+      <p><b>What and why.</b> Without a matcher a hook fires on every occurrence of its event. That is wasteful and sometimes dangerous. A matcher narrows it. <b>How:</b> what the matcher matches depends on the event.</p>
+      <div class="cc-loop">
+        <div><b>Tool events</b><span>For <code>PreToolUse</code>, <code>PostToolUse</code> and friends, the matcher is the tool name: <code>Bash</code>, <code>Edit|Write</code> (either one), or <code>mcp__github__.*</code> for every GitHub MCP tool. Case matters.</span></div>
+        <div><b>SessionStart</b><span>Matches how it started: <code>startup</code>, <code>resume</code>, <code>clear</code>, <code>compact</code>.</span></div>
+        <div><b>Notification</b><span>Matches the type, such as <code>permission_prompt</code> or <code>idle_prompt</code>.</span></div>
+        <div><b>Subagent events</b><span>Match the helper name: <code>Explore</code>, <code>Plan</code> or your own.</span></div>
+        <div><b>No matcher support</b><span><code>UserPromptSubmit</code> and <code>Stop</code> always fire on every occurrence.</span></div>
+      </div>
+      <p>For finer aim use <code>if</code>, which uses the same pattern style as permission rules (Day 5) and works on tool events only:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Run only for git commands</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git *)",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-git-policy.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p>The hook process now starts only when the command is a git command. Treat <code>if</code> as a convenience filter, not a security boundary: use the permission rules for real enforcement.</p>
+
+      <h2><span class="num">17</span>How a hook talks to Claude Code</h2>
+      <p><b>What.</b> Your command receives a JSON description of the event on <b>stdin</b> and answers with its <b>exit code</b> and what it prints. <b>Why you need this:</b> it is how a hook knows <i>which file</i> was edited or <i>which command</i> is about to run, and how it says "allow" or "stop". <b>How:</b> for a Bash command about to run, stdin looks like this:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Input your script receives (stdin)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "session_id": "abc123",
+  "cwd": "C:\\dev\\myproject",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": { "command": "npm test" }
+}</pre>
+      </div>
+      <p>Edit and Write calls carry <code>tool_input.file_path</code> instead. Your script reads these with a JSON tool such as <code>jq</code> (install it first; on Windows, for example, <code>winget install jqlang.jq</code>) or with a few lines of Python or Node. Then it answers:</p>
+      <div class="cc-loop">
+        <div><b>Exit 0</b><span>No objection. The action goes ahead through the normal permission flow. (On a <code>PreToolUse</code> hook, exit 0 does <i>not</i> mean approved.) For <code>SessionStart</code> and <code>UserPromptSubmit</code>, anything printed to stdout is added to Claude's context.</span></div>
+        <div><b>Exit 2</b><span><b>Block.</b> Whatever you wrote to stderr goes back to Claude as the reason, so it can change approach. Works on events that can be blocked, like <code>PreToolUse</code>.</span></div>
+        <div><b>Any other code</b><span>A non-blocking error. The action continues and you see a hook error notice.</span></div>
+        <div><b>JSON on stdout</b><span>For finer control, exit 0 and print JSON instead. Pick one style per hook, not both.</span></div>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>A JSON decision from a PreToolUse hook</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "deny",
+    "permissionDecisionReason": "Use rg instead of grep for better performance"
+  }
+}</pre>
+      </div>
+      <p><code>permissionDecision</code> can be <code>deny</code> (cancel and tell Claude why), <code>ask</code> (show you the normal prompt) or <code>allow</code>. Put the fields inside <code>hookSpecificOutput</code>: at the top level they are silently ignored. To add context to a prompt, return <code>additionalContext</code> inside <code>hookSpecificOutput</code> from a <code>UserPromptSubmit</code> hook.</p>
+
+      <h2><span class="num">18</span>Walkthrough: build your first real hook, step by step</h2>
+      <p><b>What and why.</b> Claude's edits sometimes disagree with your formatter, so your diffs fill with spacing noise. We will add a hook that runs Prettier on every file Claude writes. It is a good first real hook: useful, easy to see working and safe, since it only formats. <b>How:</b> follow the steps in order. The same steps work for any other hook.</p>
+      <p><b>Step 1. Decide the event and matcher.</b> Ask yourself the two questions. "Must it happen <i>before</i> or <i>after</i>?" After, because the file has to exist first, so <code>PostToolUse</code>. "Which tool?" The ones that write files, so <code>Edit|Write</code>.</p>
+      <p><b>Step 2. Check your tools exist.</b> This hook needs <code>jq</code> (to pull the file name out of the event) and <code>npx</code> (to run Prettier). In a terminal, or the VS Code terminal opened with <b>Ctrl+`</b>:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Check the tools</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">jq</span> --version
+<span class="s">npx</span> --version
+<span class="c"># no jq? Ubuntu:  sudo apt-get install jq</span>
+<span class="c"># no jq? Windows: winget install jqlang.jq   (then open a new terminal)</span></pre>
+      </div>
+      <p><b>Step 3. Write the hook.</b> Open <code>.claude/settings.json</code> in your project (create the folder and file if needed; in VS Code use <b>New File</b> in the Explorer). Paste:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write"
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p><b>What the command does, in order:</b> Claude Code hands the event to the command as JSON. <code>jq -r '.tool_input.file_path'</code> pulls out just the path of the file that was edited. The pipe <code>|</code> passes that path on, and <code>xargs npx prettier --write</code> runs Prettier on it.</p>
+      <p><b>Step 4. Make Claude Code see it.</b> Changes to settings are usually picked up on their own. Type <code>/hooks</code> in Claude Code (terminal or the VS Code panel). You should see <code>PostToolUse</code> with your <code>Edit|Write</code> entry. If it is missing, check for a trailing comma, then restart the session.</p>
+      <p><b>Step 5. Test it with a trap.</b> Ask: <code>add a line to src/app.js that logs hello using single quotes</code>. Prettier's default turns single quotes into double quotes. Open the file: if you see <code>"hello"</code>, the hook ran. Success is silent, so the file is your proof.</p>
+      <p><b>Step 6. If it did not work, test the command alone.</b> Take Claude out of the picture and feed your command a fake event. In a terminal:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Test without Claude</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">echo</span> '{"tool_input":{"file_path":"src/app.js"}}' | jq -r '.tool_input.file_path'
+<span class="c"># should print:  src/app.js</span>
+<span class="c"># then the full command:</span>
+<span class="s">echo</span> '{"tool_input":{"file_path":"src/app.js"}}' | jq -r '.tool_input.file_path' | xargs npx prettier --write</pre>
+      </div>
+      <p>If this works by hand but not inside Claude Code, press <b>Ctrl+O</b> to open the transcript view and look for a "hook error" line, or start with <code>claude --debug</code>. If it fails by hand, the problem is your command, not the hook setup. Fix it there first.</p>
+      <p><b>Step 7. Share it.</b> Because the file is <code>.claude/settings.json</code> inside the project, committing it gives every teammate the same behaviour. Use <code>.claude/settings.local.json</code> instead if it is only for you.</p>
+      <p><b>Make it your own.</b> Swap Prettier for Black (<code>black</code>), gofmt, rustfmt or ESLint (<code>npx eslint --fix</code>). Note the limit: this fires on Edit and Write, not on files that a shell command changed.</p>
+      <p><b>Shortcut for beginners:</b> you can skip hand-writing the JSON. Say <code>add a PostToolUse hook that runs prettier on files you edit</code>. Claude writes it, and you verify with <code>/hooks</code> and the test above.</p>
+
+      <h2><span class="num">19</span>Recipe: protect files Claude must not touch</h2>
+      <p><b>What and why.</b> Some files should never change by accident: <code>.env</code> with secrets, lock files, anything inside <code>.git</code>. A <code>PreToolUse</code> hook stops the edit <i>before</i> it happens, and Claude receives the reason so it can try another route. <b>How:</b> two files. First the script, saved as <code>.claude/hooks/protect-files.sh</code>:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/hooks/protect-files.sh</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">#!/bin/bash</span>
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+
+<span class="c"># Windows paths use backslashes; normalise them</span>
+FILE_PATH="${FILE_PATH//\\//}"
+
+PROTECTED_PATTERNS=(".env" "package-lock.json" ".git/")
+
+for pattern in "${PROTECTED_PATTERNS[@]}"; do
+  if [[ "$FILE_PATH" == *"$pattern"* ]]; then
+    echo "Blocked: $FILE_PATH matches protected pattern '$pattern'" >&2
+    exit 2
+  fi
+done
+exit 0</pre>
+      </div>
+      <p>Make it executable on macOS and Linux with <code>chmod +x .claude/hooks/protect-files.sh</code>. Then register it:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh" }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p><code>$CLAUDE_PROJECT_DIR</code> is the project root, so the path works from any folder. Test: ask Claude to add a comment to <code>.env</code>. The edit is refused and the <code>Blocked:</code> message reaches Claude. A hook's <code>deny</code> holds in every permission mode, even bypass mode, which makes hooks the right tool for rules nobody should be able to switch off.</p>
+      <p><b>No jq or bash on Windows?</b> Write the script in Python instead. It needs nothing but Python:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/hooks/protect_files.py</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">import</span> json, sys
+
+event = json.load(sys.stdin)
+path = event.get("tool_input", {}).get("file_path", "").replace("\\", "/")
+
+<span class="s">for</span> pattern <span class="s">in</span> (".env", "package-lock.json", ".git/"):
+    <span class="s">if</span> pattern <span class="s">in</span> path:
+        print(f"Blocked: {path} matches protected pattern '{pattern}'", file=sys.stderr)
+        sys.exit(2)
+sys.exit(0)</pre>
+      </div>
+      <p>Register it with <code>"command": "python .claude/hooks/protect_files.py"</code> instead of the shell script path. Same event, same matcher, same exit code 2.</p>
+
+      <h2><span class="num">20</span>Recipe: stop dangerous commands</h2>
+      <p><b>What and why.</b> The same idea applies to shell commands. Matching on <code>Bash</code>, a script can look at <code>tool_input.command</code> and refuse patterns you never want, such as dropping a database table. <b>How:</b></p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Block a risky command (shell script)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>INPUT=$(cat)
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command')
+
+if echo "$COMMAND" | grep -q "drop table"; then
+  echo "Blocked: dropping tables is not allowed" >&2   <span class="c"># becomes Claude&#x27;s feedback</span>
+  exit 2                                                <span class="c"># 2 = block</span>
+fi
+exit 0</pre>
+      </div>
+      <p>Several hooks on the same event all run in parallel and the most restrictive answer wins (deny, then defer, then ask, then allow). That lets you stack a logging hook with a blocking hook safely. One caution: a denied sibling does not stop the others from running, so do not put side effects in a hook that depends on another hook's verdict.</p>
+
+      <h2><span class="num">21</span>Recipe: remind Claude after compaction</h2>
+      <p><b>What and why.</b> When a long session compacts (Day 5), small but vital details can be lost, like "use Bun, not npm". A <code>SessionStart</code> hook with the <code>compact</code> matcher re-injects them. Its stdout goes straight into Claude's context. <b>How:</b></p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Reminder: use Bun, not npm. Run bun test before committing.'"
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p>Replace the <code>echo</code> with something dynamic, like <code>git log --oneline -5</code>. For facts that are true in every session, plain CLAUDE.md is still simpler. Use the hook for what must come back <i>after</i> a compaction.</p>
+
+      <h2><span class="num">22</span>More recipes in one list</h2>
+      <div class="cc-loop">
+        <div><b>Log every command</b><span><code>PostToolUse</code> with matcher <code>Bash</code> and <code>jq -r '.tool_input.command' &gt;&gt; ~/.claude/command-log.txt</code> gives you an audit trail.</span></div>
+        <div><b>Audit config changes</b><span>The <code>ConfigChange</code> event fires when a settings or skills file changes, so you can log or block it.</span></div>
+        <div><b>Reload environment</b><span><code>SessionStart</code> plus <code>CwdChanged</code> hooks that run <code>direnv export bash &gt; "$CLAUDE_ENV_FILE"</code> keep environment variables right as directories change.</span></div>
+        <div><b>Auto-approve one prompt</b><span>A <code>PermissionRequest</code> hook with matcher <code>ExitPlanMode</code> can approve the "proceed with this plan" prompt. Keep the matcher narrow: an empty one would approve everything.</span></div>
+        <div><b>Clean up</b><span><code>SessionEnd</code> with matcher <code>clear</code> can delete scratch files.</span></div>
+      </div>
+
+      <h2><span class="num">23</span>Smarter hooks: prompt, agent and HTTP</h2>
+      <p><b>What and why.</b> A command hook follows a fixed rule. Sometimes you need judgement, such as "is the work really complete?". Three other handler types cover that. <b>How:</b> set the <code>type</code>.</p>
+      <div class="cc-loop">
+        <div><b>prompt</b><span>Sends your question plus the event data to a model for a single decision, answered as <code>{"ok": true}</code> or <code>{"ok": false, "reason": "..."}</code>. Cheap and fast.</span></div>
+        <div><b>agent</b><span>Starts a helper (Part 1) that can read files and run commands to check something for real, for up to 50 steps. Experimental, so prefer command hooks for production.</span></div>
+        <div><b>http</b><span>Posts the event JSON to a URL, for a shared team service such as an audit log. Needs <code>allowedEnvVars</code> for any secrets in headers.</span></div>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>A Stop hook that checks the work is finished</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if all tasks are complete. If not, respond with {\"ok\": false, \"reason\": \"what remains to be done\"}."
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p>With <code>ok: false</code> on a <code>Stop</code> hook, Claude keeps going and uses your reason as its next instruction. Swap in <code>"type": "agent"</code> with a prompt like "Run the test suite and verify all tests pass" and the check becomes real.</p>
+
+      <h2><span class="num">24</span>Where hooks live</h2>
+      <p><b>What and why.</b> Same logic as skills and subagents: the file decides the audience. <b>How:</b></p>
+      <div class="cc-loop">
+        <div><b>~/.claude/settings.json</b><span>All your projects, only you. Good for notifications.</span></div>
+        <div><b>.claude/settings.json</b><span>One project, committed, shared with the team. Good for formatting and protected files.</span></div>
+        <div><b>.claude/settings.local.json</b><span>One project, just you, not committed.</span></div>
+        <div><b>Managed settings</b><span>Organisation-wide, set by admins.</span></div>
+        <div><b>Plugin hooks/hooks.json</b><span>Active while that plugin is enabled.</span></div>
+        <div><b>Skill or subagent frontmatter</b><span>The hook lives only while that skill or helper is active. A reviewer helper can carry its own checks.</span></div>
+      </div>
+      <p>To switch every hook off, set <code>"disableAllHooks": true</code>. Edits to settings files are normally picked up automatically.</p>
+
+      <h2><span class="num">25</span>Subagents and hooks together</h2>
+      <p><b>What and why.</b> This is where the two halves meet. Use the <code>SubagentStart</code> and <code>SubagentStop</code> events (matcher: the helper name) to log or react when helpers run. Put a <code>hooks</code> block inside a helper's own frontmatter to give <i>that helper</i> a guardrail, for example a database helper whose Bash calls are checked by a script that allows only read-only queries. <b>How:</b></p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/agents/db-reader.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">db-reader</span>
+<span class="s">description:</span> <span class="p">Answers questions about our data using read-only queries.</span>
+<span class="s">tools:</span> <span class="p">Bash</span>
+<span class="s">hooks:</span>
+  <span class="s">PreToolUse:</span>
+    - <span class="s">matcher:</span> <span class="p">&quot;Bash&quot;</span>
+      <span class="s">hooks:</span>
+        - <span class="s">type:</span> <span class="p">command</span>
+          <span class="s">command:</span> <span class="p">&quot;./scripts/validate-readonly-query.sh&quot;</span>
+<span class="c">---</span>
+
+You answer data questions. Only run SELECT queries.</pre>
+      </div>
+      <p>The helper decides <i>what to do</i>; the hook <i>guarantees</i> the rule. Plugin-supplied helpers ignore <code>hooks</code>, <code>mcpServers</code> and <code>permissionMode</code> for security, so copy the helper into your own folder if you need those fields.</p>
+
+      <h2><span class="num">26</span>When a hook does not work</h2>
+      <div class="cc-loop">
+        <div><b>Not firing</b><span>Run <code>/hooks</code> and check the hook sits under the right event. Matchers are case-sensitive. Confirm you chose <code>PreToolUse</code> (before) versus <code>PostToolUse</code> (after).</span></div>
+        <div><b>Hook error in the transcript</b><span>Test your script by hand: <code>echo '{"tool_name":"Bash","tool_input":{"command":"ls"}}' | ./my-hook.sh</code>, then check <code>echo $?</code>. Use absolute paths or <code>$CLAUDE_PROJECT_DIR</code>. "jq: command not found" means install jq. A script that will not run may need <code>chmod +x</code>.</span></div>
+        <div><b>No hooks listed</b><span>Settings JSON must be valid: no trailing commas, no comments. The file must be at <code>.claude/settings.json</code> or <code>~/.claude/settings.json</code>. Restart the session if the watcher missed the change.</span></div>
+        <div><b>JSON has no effect</b><span>Something else is printing before your JSON (often a line in your shell profile), or a field is at the wrong level. Run <code>claude --debug</code> and search the log. Guard profile echoes with <code>if [[ $- == *i* ]]</code>.</span></div>
+        <div><b>Stop hook loops</b><span>A <code>Stop</code> hook that keeps saying "not done" is overridden after eight blocks in a row. Read <code>stop_hook_active</code> from the input and exit 0 when it is <code>true</code>.</span></div>
+        <div><b>See what happened</b><span>Press <b>Ctrl+O</b> for the transcript view. Success is silent; blocks and errors show a message.</span></div>
+        <div><b>Windows</b><span>Hook commands run through Git Bash, so install Git for Windows if you see a "Git Bash wasn't found" message.</span></div>
+      </div>
+      <p>Hooks run with <b>your</b> permissions, on your machine, and a hook can run any command. Only add hooks you understand, read project hooks before trusting a repository you cloned, and keep scripts short. A hook can cause damage as easily as prevent it.</p>
+
+      <h2><span class="num">27</span>In VS Code</h2>
+      <p>Subagents and hooks are files and settings, so the terminal and the extension share them. Create a helper or hook in one place and it appears in the other.</p>
+      <div class="cc-loop">
+        <div><b>Subagents</b><span>Ask in the Claude panel to create or use one, or use <code>@</code> to pick a helper. For a running task use <b>Run in background</b>. Open a new conversation after changing fork settings.</span></div>
+        <div><b>Edit the files</b><span>Create <code>.claude/agents/&lt;name&gt;.md</code> and <code>.claude/settings.json</code> from the Explorer. Use <b>New File</b>; VS Code highlights the JSON and flags trailing commas, which saves you a common hook error.</span></div>
+        <div><b>Hook scripts</b><span>Keep them in <code>.claude/hooks/</code>. The built-in terminal (Ctrl+`) is the easiest place to test a script by piping sample JSON into it.</span></div>
+        <div><b>Permissions</b><span>The extension answers permission prompts itself, so timing for <code>permission_prompt</code> notifications differs from the terminal. Test the hook in the place you actually work.</span></div>
+        <div><b>Check it</b><span>Type <code>/hooks</code> in the panel to browse what is configured.</span></div>
+      </div>
+
+      <h2><span class="num">28</span>Habits that keep both useful</h2>
+      <div class="cc-loop">
+        <div><b>Subagent: one job each</b><span>"Review security" is a helper. "Do everything" is not. Narrow helpers are chosen correctly and are easy to fix.</span></div>
+        <div><b>Least tools</b><span>Give a helper only the tools it needs. Reviewers and researchers rarely need Edit or Write.</span></div>
+        <div><b>Write the description well</b><span>It decides when Claude delegates. Say what and when, in the words you really use.</span></div>
+        <div><b>Delegate big, not small</b><span>Use helpers for large, independent or noisy work. Do tiny edits yourself.</span></div>
+        <div><b>Hook: start harmless</b><span>Notifications first, then formatting, then blocking. Add power slowly.</span></div>
+        <div><b>Test with sample JSON</b><span>Pipe a fake event into your script and read the exit code before you trust it.</span></div>
+        <div><b>Fast and quiet</b><span>Hooks run on every matching event. A slow script slows every edit.</span></div>
+        <div><b>Commit the shared ones</b><span>Project hooks and helpers are code. Review changes to them in a PR.</span></div>
+      </div>
+
+      <h2><span class="num">29</span>Cheat sheet: I want this, so use that</h2>
+      <p><b>What and why.</b> Most of the work in hooks is choosing the event. Use this table of intentions first, then read the section for details.</p>
+      <div class="cc-loop">
+        <div><b>"Tell me when Claude needs me"</b><span><code>Notification</code>, matcher empty or <code>permission_prompt</code>.</span></div>
+        <div><b>"Format or lint after edits"</b><span><code>PostToolUse</code>, matcher <code>Edit|Write</code>.</span></div>
+        <div><b>"Never touch this file"</b><span><code>PreToolUse</code>, matcher <code>Edit|Write</code>, exit 2.</span></div>
+        <div><b>"Never run this command"</b><span><code>PreToolUse</code>, matcher <code>Bash</code>, exit 2.</span></div>
+        <div><b>"Keep a log of what ran"</b><span><code>PostToolUse</code>, matcher <code>Bash</code>, append to a file.</span></div>
+        <div><b>"Add facts to every prompt"</b><span><code>UserPromptSubmit</code>, print text or return <code>additionalContext</code>.</span></div>
+        <div><b>"Remind Claude after compaction"</b><span><code>SessionStart</code>, matcher <code>compact</code>.</span></div>
+        <div><b>"Check the work before it stops"</b><span><code>Stop</code>, a prompt or agent hook.</span></div>
+        <div><b>"Skip one approval prompt I always click"</b><span><code>PermissionRequest</code>, narrow matcher, JSON <code>allow</code>.</span></div>
+        <div><b>"Clean up when I close"</b><span><code>SessionEnd</code>.</span></div>
+      </div>
+
+      <h2><span class="num">30</span>Questions beginners ask about hooks</h2>
+      <div class="cc-loop">
+        <div><b>Do hooks cost tokens?</b><span>A command hook is an ordinary program, so it makes no model call. Only text your hook prints back for certain events (like <code>SessionStart</code>) is added to the context, so keep that short. Prompt and agent hooks do use a model.</span></div>
+        <div><b>Can Claude see my hooks?</b><span>It sees their results: a block message, or text you print for it. It cannot skip a hook, because Claude Code runs it, not Claude.</span></div>
+        <div><b>Are hooks safe?</b><span>They are exactly as safe as the command inside. They run with your permissions on your machine, so read hooks in any repo you clone before you trust it.</span></div>
+        <div><b>Hook or CLAUDE.md?</b><span>CLAUDE.md for guidance ("prefer small functions"). A hook for rules that must never fail ("never edit .env"). A deny rule in permissions (Day 5) is the simplest way to block a plain tool call without a script.</span></div>
+        <div><b>Why does my hook run but nothing happens?</b><span>Exit 0 with no output means "no objection". A <code>PreToolUse</code> hook only blocks on exit 2, or on JSON with <code>permissionDecision: "deny"</code>.</span></div>
+        <div><b>Can one hook break my session?</b><span>A slow hook delays every matching action, and a command that errors shows a hook error. Failures usually do not stop Claude, apart from the cases where you set a hook to block on failure. Test a new hook on a throwaway project first.</span></div>
+      </div>
+
+      <h2><span class="num">31</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Notify</b><span>Add the Notification hook for your system, then start a task that needs approval and switch windows.</span></div>
+        <div><b>Protect</b><span>Add the protect-files hook and ask Claude to edit your <code>.env</code>. Watch it get refused.</span></div>
+        <div><b>Delegate</b><span>Create a read-only code-reviewer helper, make a small change, then run <code>use the code-reviewer agent on my changes</code>.</span></div>
+        <div><b>Compare</b><span>Ask Claude to explore a part of your code twice: once in your main chat, once through an Explore helper. Notice how much cleaner the context is.</span></div>
+      </div>
+      <p>Next up: plugins. How to bundle skills, subagents, hooks and MCP servers into one package you can share and install anywhere.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-08/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 8</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
