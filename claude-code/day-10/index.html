@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code Plugins and Marketplaces — Kowshik Kesavarapu</title>
+  <meta name="description" content="Install, manage and build Claude Code plugins: marketplaces, scopes, safety checks and a team plugin bundling a skill, agent and hook, in terminal and VS Code." />
+  <meta property="og:title" content="Day 10: Plugins and marketplaces" />
+  <meta property="og:description" content="One command installs a whole setup. Install, vet, build and share Claude Code plugins." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-10.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-10/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-10/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 10: Claude Code Plugins and Marketplaces",
+  "description": "Install, manage and build Claude Code plugins: marketplaces, scopes, safety checks and a team plugin bundling a skill, agent and hook, in terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-10/",
+  "image": "https://kowshik.co.in/claude-code/day-10.png",
+  "datePublished": "2026-10-21",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-21" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 10: Claude Code Plugins and Marketplaces",
+      "item": "https://kowshik.co.in/claude-code/day-10/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+    <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 10 · Extending it</span>
+      <h1>One command.<br /><span class="cc-grad">A whole setup.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>27 min read</span>
+        <span>Oct 21, 2026</span>
+      </div>
+    </div>
+  </header>
+
+    <main class="cc-wrap">
+    <article class="cc-article" id="day-10">
+
+      <div class="cc-callout">
+        <p><strong>Roadmap row today: Plugins, packaging it all up.</strong> Day 7 gave Claude your tools (MCP), Day 8 gave it know-how (skills) and Day 9 gave it helpers and rules (subagents and hooks). A <b>plugin</b> is the box that carries all of those at once. This article is about <i>using</i> plugins, trusting them, and building your own. Publishing a skill as a plugin is covered in the <a href="../day-08/publish-skills/">Day 8 companion page</a>, so here we go wider: the whole picture, for the terminal and for VS Code.</p>
+      </div>
+
+      <h2><span class="num">01</span>The big picture: one box, one command</h2>
+      <p><b>What.</b> A plugin is a folder that Claude Code installs and loads as <b>one unit</b>. Inside can be skills, subagents, hooks, MCP servers and a few other things. Instead of setting up each piece by hand, you run one install command and everything arrives together, with a name, a version and a way to update.</p>
+      <p><b>Why it matters.</b> Until now every extra you added lived in its own place: a skill folder, an agent file, a hooks block in settings, an MCP entry. That is fine for you on one project. It falls apart the moment you want the same setup on a second project, on a teammate's laptop, or after you reinstall your machine. A plugin turns "my setup" into something you can hand over.</p>
+      <p><b>How this article is organised.</b></p>
+      <div class="cc-loop">
+        <div><b>Part 1: Use plugins</b><span>Sections 02 to 12. What plugins and marketplaces are, installing in the terminal and in VS Code, scopes, language-server plugins, managing, cost and safety.</span></div>
+        <div><b>Part 2: Build a plugin</b><span>Sections 13 to 16. A first plugin in five minutes, the folder layout, converting your existing setup, and a real team plugin with a skill, a helper and a hook.</span></div>
+        <div><b>Part 3: Share and fix</b><span>Sections 17 to 22. Team rollout, organisation controls, troubleshooting, a command cheat sheet, questions and exercises.</span></div>
+      </div>
+
+      <h2><span class="num">02</span>What a plugin is, in plain words</h2>
+      <p><b>What.</b> Think of a phone. The phone is Claude Code. An <b>app</b> is a plugin: something you add, that brings its own screens and abilities, that you can switch off or delete, and that updates itself. The difference is that a plugin app is made of the parts you already know from this series.</p>
+      <div class="cc-loop">
+        <div><b>Skills (Day 8)</b><span>Instructions Claude loads when relevant, also runnable as a slash command. Example: <code>/my-plugin:review</code>.</span></div>
+        <div><b>Subagents (Day 9)</b><span>Helpers with their own context and tools that Claude can hand work to.</span></div>
+        <div><b>Hooks (Day 9)</b><span>Commands that run on lifecycle events, such as after every file edit.</span></div>
+        <div><b>MCP servers (Day 7)</b><span>Tool servers Claude connects to while the plugin is enabled.</span></div>
+        <div><b>Language servers</b><span>Give Claude live error checking and go-to-definition for a language (section 08).</span></div>
+        <div><b>A manifest</b><span>One small file, <code>.claude-plugin/plugin.json</code>, that names the plugin and describes it.</span></div>
+      </div>
+      <p><b>Plugin or standalone?</b> Everything above works on its own without a plugin. Keep it standalone while the setup serves only you or one project. Make or install a plugin when you want several pieces <b>packaged as one</b>, installed in many projects, shared with a team, or released with versions.</p>
+
+      <h2><span class="num">03</span>Marketplaces: where plugins come from</h2>
+      <p><b>What.</b> A marketplace is a <b>catalog</b>: a file named <code>marketplace.json</code> in a Git repository that lists plugins and where to fetch each one. It is not a hosted store. You add a marketplace once, then install plugins from it by name, written <code>plugin-name@marketplace-name</code>, for example <code>commit-commands@claude-plugins-official</code>.</p>
+      <p><b>Why it matters.</b> The marketplace is what makes installs and updates one command, and it tells you who publishes the catalog. Knowing the three kinds helps you decide how much to trust a plugin.</p>
+      <div class="cc-loop">
+        <div><b>Official: claude-plugins-official</b><span>Added for you the first time you start an interactive terminal session. Holds plugins Anthropic maintains (such as <code>commit-commands</code>, <code>code-review</code>, <code>feature-dev</code>, the language-server plugins) plus plugins from partner tool vendors and other authors.</span></div>
+        <div><b>Community: claude-community</b><span>Third-party plugins that authors submitted to Anthropic. Not added automatically. Add it with <code>/plugin marketplace add anthropics/claude-plugins-community</code>.</span></div>
+        <div><b>Demo: claude-code-plugins</b><span>A small set of examples from the <code>anthropics/claude-code</code> repository. Most are also in the official one, so install those from the official marketplace to avoid two copies.</span></div>
+        <div><b>Third-party</b><span>Everything else: a coworker's repo, your company's, an open-source author's. Anthropic does not review these, so read section 12 before you add one.</span></div>
+      </div>
+      <p>One more name to know: <b>Claude Marketplace</b> at claude.com/marketplace is a website for browsing, not something you add with <code>/plugin marketplace add</code>. Its plugin pages have a <b>Claude Code</b> button that copies the install command for you.</p>
+
+      <h2><span class="num">04</span>Install your first plugin in the terminal</h2>
+      <p><b>What and why.</b> We will install <code>commit-commands</code>, a small official plugin that adds commands for committing, pushing and opening pull requests (it pairs with Day 6). It is a safe first choice because everything it adds is a skill. <b>How:</b> start Claude Code in a project, then:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — in a Claude Code session</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># 1. open the plugin's details page (nothing is installed yet)</span>
+<span class="y">&gt;</span> <span class="s">/plugin install</span> commit-commands@claude-plugins-official
+
+<span class="c"># or browse instead: the Discover tab lists plugins, type to search</span>
+<span class="y">&gt;</span> <span class="s">/plugin</span></pre>
+      </div>
+      <p>In a session, <code>/plugin install</code> does <b>not</b> install straight away. It opens the <code>/plugin</code> panel on that plugin so you can review it and pick a scope first. The panel has four tabs you will use: <b>Discover</b> (browse), <b>Installed</b> (manage), <b>Marketplaces</b> (catalogs) and <b>Errors</b> (what failed to load).</p>
+      <div class="cc-loop">
+        <div><b>Step 1: read the details</b><span>The <b>Will install</b> section lists the commands, agents, skills, hooks and servers it adds. For official plugins you also see a <b>Context cost</b> estimate (more in section 11).</span></div>
+        <div><b>Step 2: choose a scope</b><span>Three choices, explained in section 05: for you everywhere, for everyone on this repo, or for you in this repo only.</span></div>
+        <div><b>Step 3: read the summary</b><span>"Plugin is now active" means you can use it. "Run /reload-plugins to apply" means one reload is needed. "Needs configuration" means a bundled server wants settings first. "Couldn't be loaded" means look in the Errors tab.</span></div>
+        <div><b>Step 4: check it works</b><span>Type <code>/</code> and look for <code>/commit-commands:commit</code>. Or in a normal shell run <code>claude plugin list</code> and read its Version, Scope and Status lines.</span></div>
+      </div>
+      <p>Then use it: <code>/commit-commands:commit</code> writes a commit message from your changes. If the install fails with <code>Marketplace "claude-plugins-official" not found</code>, add the marketplace by hand (section 07).</p>
+      <p><b>No session open?</b> You can install from any shell, for example in a setup script: <code>claude plugin install commit-commands@claude-plugins-official</code>. It installs at user scope unless you add <code>--scope project</code> or <code>--scope local</code>, and the plugin loads the next time you start Claude Code (or after <code>/reload-plugins</code>).</p>
+
+      <h2><span class="num">05</span>Scopes: who gets the plugin</h2>
+      <p><b>What.</b> The scope you pick when installing decides who the plugin is turned on for, and which settings file records it.</p>
+      <div class="cc-loop">
+        <div><b>User scope</b><span>On for you in every project on this machine. Recorded in <code>enabledPlugins</code> in <code>~/.claude/settings.json</code>. Default for most personal tools.</span></div>
+        <div><b>Project scope</b><span>On for everyone who works in this repository. Recorded in <code>.claude/settings.json</code>, which you commit. Use it for team standards.</span></div>
+        <div><b>Local scope</b><span>On for you in this repository only. Recorded in <code>.claude/settings.local.json</code>. Use it to try something without affecting teammates.</span></div>
+      </div>
+      <p><b>Why it matters.</b> Choosing project scope is how a team gets the same setup without a wiki page of instructions. One catch worth knowing: committing the entry <i>turns the plugin on</i> for teammates but does <b>not download it</b> to their machines, so each person also runs <code>claude plugin install &lt;name&gt;@&lt;marketplace&gt; --scope project</code> once. When the same plugin is set at several scopes, local beats project, and project beats user.</p>
+
+      <h2><span class="num">06</span>Install a plugin in VS Code</h2>
+      <p><b>What and why.</b> Most readers of this series live in VS Code, and the extension has its own plugin screen, so you never need a terminal. <b>How:</b></p>
+      <div class="cc-loop">
+        <div><b>1. Open Manage plugins</b><span>In the Claude Code panel, type <code>/plugins</code> in the prompt box.</span></div>
+        <div><b>2. Install</b><span>On the <b>Plugins</b> tab, search for <code>commit-commands</code> and click <b>Install</b>. If the tab is empty, open the <b>Marketplaces</b> tab and add <code>anthropics/claude-plugins-official</code> first.</span></div>
+        <div><b>3. Choose a scope</b><span><b>Install for you</b>, <b>Install for this project</b> or <b>Install locally</b>. Same three scopes as the terminal.</span></div>
+        <div><b>4. Use it</b><span>Changes apply to open sessions with no restart. Type <code>/</code> in the panel and pick <code>commit-commands:commit</code>.</span></div>
+      </div>
+      <p>Because the terminal and the VS Code extension read the <b>same settings files</b>, a plugin you install at user scope in either one is available in the other. The integrated terminal (<code>Ctrl+`</code>) is also handy for the shell commands in this article. Two places behave differently: cloud sessions (including claude.ai/code in the browser) do not load your local plugins at all, and non-interactive <code>claude -p</code> runs cannot run <code>/plugin</code> (plugins you already installed still load, so manage them from a shell).</p>
+
+      <h2><span class="num">07</span>Add a marketplace that is not built in</h2>
+      <p><b>What and why.</b> A coworker or an open-source author publishes a plugin in their own marketplace. Claude Code has to know that catalog before you can install from it. You add it once. <b>How:</b> inside a session use <code>/plugin marketplace add</code> (the short form <code>/plugin market add</code> also works). From a shell use <code>claude plugin marketplace add</code>. The source can be any of these:</p>
+      <div class="cc-loop">
+        <div><b>GitHub repository</b><span><code>owner/repo</code>. Add <code>#v1.2.0</code> after it to pin a tag or branch. Example: <code>/plugin marketplace add anthropics/claude-plugins-community</code>.</span></div>
+        <div><b>Git repo on another host</b><span>The full clone URL, such as an https GitLab address. Add <code>#ref</code> to pin.</span></div>
+        <div><b>Local folder</b><span>A path that holds <code>.claude-plugin/marketplace.json</code>. Start it with <code>./</code> or <code>../</code>, otherwise <code>name/name</code> is read as a GitHub repo.</span></div>
+        <div><b>Hosted file</b><span>The <code>https://</code> address of a <code>marketplace.json</code>.</span></div>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — add, then install</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># one step: add the marketplace and install a plugin from it</span>
+<span class="s">claude plugin install</span> deploy-helper --marketplace your-org/plugins
+
+<span class="c"># or two steps</span>
+<span class="s">claude plugin marketplace add</span> your-org/plugins
+<span class="s">claude plugin install</span> deploy-helper@plugins
+
+<span class="c"># see what you have added, and where each one came from</span>
+<span class="s">claude plugin marketplace list</span></pre>
+      </div>
+      <p>The one-step form needs a recent Claude Code (the in-session form v2.1.275 or later, the shell form v2.1.292 or later). Run <code>claude --version</code> and update if yours is older. Include <code>https://</code> on every URL. For a <b>private</b> repository, Claude Code uses the git credentials already on your machine and never prompts, so sign in first (for example <code>gh auth login</code> for HTTPS, or an SSH key that works without a passphrase prompt).</p>
+
+      <h2><span class="num">08</span>Code intelligence plugins: a plugin you will actually keep</h2>
+      <p><b>What.</b> A code intelligence plugin connects Claude Code to a <b>language server</b>, the same technology behind red squiggles and go-to-definition in your editor. <b>Why it matters.</b> After every edit Claude then sees the type errors and missing imports its own change introduced, without running a build, and can look up symbols precisely instead of searching text. For a beginner this is one of the highest-value plugins because it catches mistakes early.</p>
+      <p><b>How.</b> The plugin does <i>not</i> include the language server. Install the binary first, then the plugin. Official plugins exist for C and C++, C#, Go, Java, Kotlin, Lua, PHP, Python, Ruby, Rust, Swift and TypeScript or JavaScript. For TypeScript:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — TypeScript example</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># 1. the language server (needs Node.js)</span>
+<span class="s">npm install -g</span> typescript-language-server typescript
+<span class="s">Get-Command</span> typescript-language-server     <span class="c"># confirm it is on PATH</span>
+
+<span class="c"># 2. the plugin, inside Claude Code</span>
+<span class="y">&gt;</span> <span class="s">/plugin install</span> typescript-lsp@claude-plugins-official</pre>
+      </div>
+      <p>Other languages follow the same pattern: <code>pyright-lsp</code> (Python), <code>gopls-lsp</code> (Go), <code>rust-analyzer-lsp</code> (Rust) and so on, each with its own binary listed in the plugin's README. The server starts the first time Claude edits a matching file. You know it works when a line like <code>Found 1 new diagnostic issues in 1 files</code> appears under an edit (press <code>Ctrl+O</code> to read them). If it does not, open <code>/plugin</code>, check the <b>Errors</b> tab, and look for <code>Executable not found in $PATH</code>, which names the binary to install. These plugins work in terminal sessions, not in cloud sessions. Claude Code may also pop up an <b>LSP plugin recommendation</b> offering the plugin when it sees the binary on your machine.</p>
+
+      <h2><span class="num">09</span>Using what you installed</h2>
+      <p><b>What and why.</b> Everything a plugin adds is <b>prefixed with the plugin's name</b>, so two plugins can both have a <code>review</code> skill without a clash. Knowing the naming tells you where to look when something is missing. <b>How:</b></p>
+      <div class="cc-loop">
+        <div><b>Skills</b><span><code>/plugin-name:skill-name</code>, for example <code>/commit-commands:commit</code>. Claude can also pick a skill on its own from its description, as on Day 8.</span></div>
+        <div><b>Subagents</b><span>Named <code>plugin-name:agent-name</code>. Ask for one in words, or use <code>@agent-plugin-name:agent-name</code>. They appear in the agents list next to your own.</span></div>
+        <div><b>Hooks</b><span>Run automatically on their events. They are not tied to the plugin's skills: once the plugin is enabled, its hooks fire in every session. Browse them with <code>/hooks</code>.</span></div>
+        <div><b>MCP servers</b><span>Listed in <code>/mcp</code> as <code>plugin:plugin-name:server</code>. Their tools are named <code>mcp__plugin_&lt;plugin&gt;_&lt;server&gt;__&lt;tool&gt;</code>, which is the name to use in a permission rule (Day 5).</span></div>
+        <div><b>Executables</b><span>If a plugin has a <code>bin/</code> folder, those programs are added to the PATH of Claude's shell, so Claude's Bash commands can run them.</span></div>
+      </div>
+
+      <h2><span class="num">10</span>Manage: update, switch off, remove</h2>
+      <p><b>What and why.</b> Plugins are not install-and-forget. You will want to turn one off for a while, update it, or remove it. <b>How:</b> open <code>/plugin</code> and press <b>Tab</b> to reach the <b>Installed</b> tab. Type to filter, press <b>Space</b> to enable or disable the selected plugin, and <b>Enter</b> to open its details with <b>Update now</b> and <b>Uninstall</b>. When you close the panel with pending changes, Claude Code reloads plugins for you.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — the same from a shell</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude plugin list</span>                                        <span class="c"># what is installed, with scope and status</span>
+<span class="s">claude plugin disable</span> commit-commands@claude-plugins-official
+<span class="s">claude plugin enable</span>  commit-commands@claude-plugins-official
+<span class="s">claude plugin update</span>  commit-commands@claude-plugins-official
+<span class="s">claude plugin uninstall</span> commit-commands@claude-plugins-official --scope user
+<span class="s">claude plugin details</span> commit-commands                   <span class="c"># what it adds and what it costs</span>
+
+<span class="c"># in a running session, after editing a plugin or changing settings</span>
+<span class="y">&gt;</span> <span class="s">/reload-plugins</span></pre>
+      </div>
+      <div class="cc-loop">
+        <div><b>Updates</b><span>Marketplaces with auto-update on refresh themselves after a session starts. It is on by default for the official marketplace and off for community, third-party and local ones, so turn it on per marketplace under the <b>Marketplaces</b> tab. The running session keeps the version it loaded and the next session picks up the new one.</span></div>
+        <div><b>No "update all"</b><span>There is no single command for every plugin. On the Marketplaces tab, choose a marketplace and <b>Update marketplace</b> to refresh it and update the plugins you installed from it.</span></div>
+        <div><b>Removing a marketplace</b><span>Removing it uninstalls every plugin you installed from it. The tab lists them before you confirm.</span></div>
+        <div><b>Dependencies</b><span>A plugin can depend on others. Installing it installs them too. After you uninstall, auto-installed dependencies stay until you run <code>claude plugin prune</code>.</span></div>
+      </div>
+
+      <h2><span class="num">11</span>What a plugin costs you</h2>
+      <p><b>What.</b> An enabled plugin is part of <b>every session</b>, even ones where you never touch it. For each skill and agent that Claude may use on its own, a short name and description sits in Claude's context on every turn. Its hooks fire on their events and its servers run alongside the session. <b>Why it matters.</b> Those tokens count toward your usage and take room in the context window you learned to protect on Day 5. Ten plugins you forgot about can quietly make every session a little worse.</p>
+      <p><b>How to keep it lean.</b> Before installing, read the <b>Context cost</b> numbers on an official plugin's page: <i>Every turn</i> is what it adds to each message, <i>When invoked</i> is what its skills and agents add once loaded. After installing, run <code>claude plugin details &lt;name&gt;</code> in a shell. The <b>Always-on</b> line is the per-session token cost, and the rows below show which skill or agent contributes most. On the <b>Installed</b> tab, plugins you have not used recently are grouped under <b>Not used recently</b>. Disable or uninstall those. Disabling is the gentle option: the plugin stays installed but stops costing anything.</p>
+
+      <h2><span class="num">12</span>Is it safe? Vet a plugin before you install</h2>
+      <p><b>What.</b> A plugin can run code on your computer with <b>your</b> permissions. Hooks are shell commands, MCP and language servers are programs Claude Code starts, and a <code>bin/</code> folder puts executables on the PATH. Skills and agents are instructions that steer what Claude does with its tools. <b>Why it matters.</b> Claude Code's permission rules and sandbox cover the tool calls Claude makes, not the code a plugin's hooks and servers run by themselves. So the trust decision is made when you install, and a marketplace's name tells you who publishes the <i>catalog</i>, not what each plugin does. Auto-update also means files you reviewed can change later.</p>
+      <p><b>How.</b> A five-minute check that catches most problems:</p>
+      <div class="cc-loop">
+        <div><b>1. Who publishes it?</b><span>Run <code>claude plugin marketplace list</code> to see the source each marketplace was added from. Official and community names are only accepted for repositories under <code>github.com/anthropics/</code>, so a third party cannot pose as them.</span></div>
+        <div><b>2. Read the Will install pane</b><span>In <code>/plugin</code>, open the plugin. It lists the commands, agents, skills, hooks and servers it adds. A plugin that "only formats code" but adds a network server deserves a question.</span></div>
+        <div><b>3. Read what the hooks run</b><span>The pane shows that a hook exists, not what it executes. Open the plugin's repository (use <b>View on GitHub</b> or <b>Open homepage</b>) and read <code>hooks/hooks.json</code>, <code>.mcp.json</code> and everything in <code>bin/</code>.</span></div>
+        <div><b>4. List what it contains</b><span>Clone the repo, then run <code>claude --plugin-dir &lt;folder&gt; plugin details &lt;name&gt;</code> to print a component inventory without starting a session.</span></div>
+        <div><b>5. Start narrow</b><span>Install at local scope first, or on a throwaway project, before giving it user scope everywhere.</span></div>
+      </div>
+      <p><b>Changed your mind?</b> <code>claude plugin uninstall &lt;plugin&gt;</code> with the same <code>--scope</code> you installed it at. Its cached files linger for 14 days, and you can delete the folder under <code>~/.claude/plugins/cache/</code> yourself to clear them now. If you no longer trust the author, remove the marketplace too.</p>
+
+      <h2><span class="num">13</span>Build your first plugin in five minutes</h2>
+      <p><b>What and why.</b> Building one teaches you the layout, and it is far less work than it sounds: a plugin is a folder, one small JSON file and your existing Markdown. We will make a plugin with a single greeting skill and run it <b>without installing anything</b>, using the <code>--plugin-dir</code> flag, which loads a folder for one session only. <b>How:</b></p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — create the folders</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">mkdir</span> my-first-plugin\.claude-plugin
+<span class="s">mkdir</span> my-first-plugin\skills\hello</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>my-first-plugin/.claude-plugin/plugin.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"name"</span>: <span class="p">"my-first-plugin"</span>,
+  <span class="s">"description"</span>: <span class="p">"A greeting plugin to learn the basics"</span>,
+  <span class="s">"version"</span>: <span class="p">"1.0.0"</span>,
+  <span class="s">"author"</span>: { <span class="s">"name"</span>: <span class="p">"Your Name"</span> }
+}</pre>
+      </div>
+      <p>Only <code>name</code> is required. It also becomes the prefix on everything the plugin adds, so do not use spaces. <code>version</code> is optional: set it and users stay on that version until you change it. Now the skill:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>my-first-plugin/skills/hello/SKILL.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">hello</span>
+<span class="s">description:</span> <span class="p">Greet the user with a friendly message</span>
+<span class="s">disable-model-invocation:</span> <span class="p">true</span>
+<span class="c">---</span>
+
+Greet the user warmly and ask how you can help them today.</pre>
+      </div>
+      <p>The <code>disable-model-invocation: true</code> line means only you can run it, Claude will not trigger it by itself (remove the line for a skill Claude may use on its own). Then check it, run Claude with the plugin loaded, and try it:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — validate and run</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude plugin validate</span> .\my-first-plugin     <span class="c"># prints: Validation passed</span>
+<span class="s">claude --plugin-dir</span> .\my-first-plugin       <span class="c"># loads it for this session only</span>
+
+<span class="y">&gt;</span> <span class="s">/my-first-plugin:hello</span></pre>
+      </div>
+      <p>Edit the skill while the session is open, then run <code>/reload-plugins</code> to see the change. You can pass <code>--plugin-dir</code> more than once to load several plugins, or point it at a folder that contains several plugin folders. <b>In VS Code:</b> create the folders with the Explorer's <b>New Folder</b> and <b>New File</b>, run the commands in the integrated terminal, and use <code>code my-first-plugin</code> to open it as its own window. JSON files get colour and warnings for stray commas, which saves a common mistake.</p>
+      <p><b>Let Claude scaffold it.</b> Install Anthropic's <code>plugin-dev</code> plugin from the official marketplace, then run <code>/plugin-dev:create-plugin</code> followed by a description of what you want. Claude walks you through designing, creating and validating it. And if you only want a personal plugin that loads in every session with no flag, <code>claude plugin init my-tool</code> scaffolds one under <code>~/.claude/skills/</code>.</p>
+
+      <h2><span class="num">14</span>The layout: what goes where</h2>
+      <p><b>What and why.</b> Each kind of component lives in a fixed place under the plugin's root folder. If a piece does not show up, nine times out of ten it is in the wrong folder. <b>How to read this:</b></p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>A plugin folder</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>my-plugin\
+  .claude-plugin\
+    <span class="s">plugin.json</span>          <span class="c">manifest: ONLY this file goes in here</span>
+  skills\
+    review\
+      <span class="s">SKILL.md</span>           <span class="c">one folder per skill</span>
+  agents\
+    <span class="s">security-reviewer.md</span> <span class="c">one file per subagent</span>
+  hooks\
+    <span class="s">hooks.json</span>           <span class="c">hooks, same shape as settings.json</span>
+  scripts\
+    protect_files.py       <span class="c">your own helper scripts (any name)</span>
+  <span class="s">.mcp.json</span>                <span class="c">MCP servers</span>
+  bin\                     <span class="c">optional: programs added to PATH</span></pre>
+      </div>
+      <div class="cc-loop">
+        <div><b>Skills</b><span><code>skills/&lt;name&gt;/SKILL.md</code>. The older flat <code>commands/</code> folder still loads, but use <code>skills/</code> for anything new.</span></div>
+        <div><b>Agents</b><span><code>agents/&lt;name&gt;.md</code>, using the same frontmatter as Day 9 (<code>name</code>, <code>description</code>, <code>tools</code>, <code>model</code> and more). Plugin agents ignore <code>hooks</code>, <code>mcpServers</code> and <code>permissionMode</code> in that header; declare hooks and servers at plugin level instead.</span></div>
+        <div><b>Hooks</b><span><code>hooks/hooks.json</code> with a top-level <code>"hooks"</code> key, exactly the object you would put in a settings file. You can copy a hook over unchanged.</span></div>
+        <div><b>MCP servers</b><span><code>.mcp.json</code> at the plugin root, same shape as a project <code>.mcp.json</code> from Day 7.</span></div>
+        <div><b>Paths</b><span>Use <code>${CLAUDE_PLUGIN_ROOT}</code> in hook commands and server settings to point at files inside the plugin. Every version is installed to its own folder, so never hard-code a path. For files that must survive updates (caches, <code>node_modules</code>), use <code>${CLAUDE_PLUGIN_DATA}</code>.</span></div>
+      </div>
+      <p><b>The classic mistake:</b> putting <code>skills/</code>, <code>agents/</code> or <code>hooks/</code> <i>inside</i> <code>.claude-plugin/</code>. Only <code>plugin.json</code> belongs there. Everything else sits next to that folder at the plugin root.</p>
+
+      <h2><span class="num">15</span>Convert your existing setup into a plugin</h2>
+      <p><b>What and why.</b> If you followed Days 7 to 9 you already have skills, agents and hooks under <code>.claude/</code>. You can move them into a plugin without rewriting them, and then reuse them in other projects. <b>How,</b> run these from the project root:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — copy into a plugin</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">mkdir</span> my-plugin\.claude-plugin
+<span class="s">mkdir</span> my-plugin\hooks
+
+<span class="c"># copy whichever folders you have</span>
+<span class="s">Copy-Item</span> -Recurse .claude\skills my-plugin\
+<span class="s">Copy-Item</span> -Recurse .claude\agents my-plugin\</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>my-plugin/.claude-plugin/plugin.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"name"</span>: <span class="p">"my-plugin"</span>,
+  <span class="s">"description"</span>: <span class="p">"Migrated from standalone configuration"</span>,
+  <span class="s">"version"</span>: <span class="p">"1.0.0"</span>
+}</pre>
+      </div>
+      <p>Then create <code>my-plugin/hooks/hooks.json</code> and paste in the <code>hooks</code> object from your <code>.claude/settings.json</code> (the format is identical). Test with <code>claude --plugin-dir .\my-plugin</code>. Your skill <code>/deploy</code> is now also <code>/my-plugin:deploy</code>, and the agent <code>reviewer</code> also exists as <code>my-plugin:reviewer</code>. <b>Watch out:</b> while the originals are still in <code>.claude/</code>, skills and agents coexist because of the prefix, but <b>hooks have no prefix, so a hook in both places runs twice</b>. Once the plugin works, delete the originals and remove the <code>hooks</code> object from your settings.</p>
+
+      <h2><span class="num">16</span>A real example: one team-standards plugin</h2>
+      <p><b>What and why.</b> Let us put Days 8 and 9 into one plugin you could give a teammate: a review skill, a read-only reviewer helper, and a hook that refuses edits to your <code>.env</code>. Install it, and a new teammate gets the same guardrails on their first day. <b>How:</b> the folder is</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>team-standards</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>team-standards\
+  .claude-plugin\plugin.json
+  skills\review\SKILL.md
+  agents\code-reviewer.md
+  hooks\hooks.json
+  scripts\protect_files.py</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude-plugin/plugin.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"name"</span>: <span class="p">"team-standards"</span>,
+  <span class="s">"description"</span>: <span class="p">"Review skill, read-only reviewer and a guard for secret files"</span>,
+  <span class="s">"version"</span>: <span class="p">"1.0.0"</span>
+}</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>skills/review/SKILL.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">review</span>
+<span class="s">description:</span> <span class="p">Review my uncommitted changes with the team's standards</span>
+<span class="s">disable-model-invocation:</span> <span class="p">true</span>
+<span class="c">---</span>
+
+Use the code-reviewer agent on my uncommitted changes.
+Then summarise its findings as: must fix, should fix, nice to have.</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>agents/code-reviewer.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> <span class="p">code-reviewer</span>
+<span class="s">description:</span> <span class="p">Reviews code changes for bugs, security issues and missing tests.</span>
+<span class="s">tools:</span> <span class="p">Read, Grep, Glob, Bash</span>
+<span class="s">model:</span> <span class="p">sonnet</span>
+<span class="c">---</span>
+
+You are a senior code reviewer. Run git diff, review only the changed code,
+and report must fix, should fix and nice to have, each with file, line and fix.
+Never edit files.</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>hooks/hooks.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"hooks"</span>: {
+    <span class="s">"PreToolUse"</span>: [
+      {
+        <span class="s">"matcher"</span>: <span class="p">"Edit|Write"</span>,
+        <span class="s">"hooks"</span>: [
+          {
+            <span class="s">"type"</span>: <span class="p">"command"</span>,
+            <span class="s">"command"</span>: <span class="p">"python \"${CLAUDE_PLUGIN_ROOT}/scripts/protect_files.py\""</span>
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>scripts/protect_files.py</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">import</span> json, sys
+
+event = json.load(sys.stdin)
+path = event.get("tool_input", {}).get("file_path", "").replace("\\", "/")
+
+<span class="s">for</span> pattern <span class="s">in</span> (".env", "package-lock.json", ".git/"):
+    <span class="s">if</span> pattern <span class="s">in</span> path:
+        print(f"Blocked by team-standards: {path} is protected", file=sys.stderr)
+        sys.exit(2)
+sys.exit(0)</pre>
+      </div>
+      <p>This is the Day 9 protect-files recipe, now shipped inside the plugin. Notice the hook points at the script with <code>${CLAUDE_PLUGIN_ROOT}</code>, so it works wherever the plugin is installed. On macOS and Linux the Python command is often <code>python3</code>, so change it there if <code>python</code> is not found. Test it:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — try it</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude plugin validate</span> .\team-standards
+<span class="s">claude --plugin-dir</span> .\team-standards
+
+<span class="y">&gt;</span> <span class="s">/team-standards:review</span>              <span class="c"># the helper reviews your diff</span>
+<span class="y">&gt;</span> add a comment to my .env file          <span class="c"># refused by the hook</span></pre>
+      </div>
+      <p>Want the plugin to carry a tool connection too? Add a <code>.mcp.json</code> at its root. A server declared as <code>db</code> in a plugin called <code>team-standards</code> appears in <code>/mcp</code> as <code>plugin:team-standards:db</code>. Once you are happy, <code>claude plugin eval</code> can run test cases with and without the plugin to check that it really changes Claude's behaviour.</p>
+
+      <h2><span class="num">17</span>Share it with your team</h2>
+      <p><b>What and why.</b> A plugin on your laptop helps you. A plugin in a marketplace helps everyone. <b>How.</b> You have three routes, from smallest to largest:</p>
+      <div class="cc-loop">
+        <div><b>Send the folder</b><span>Zip the plugin folder and send it. A teammate loads it with <code>claude --plugin-dir .\team-standards.zip</code>. No publishing needed, good for two or three people and for testing.</span></div>
+        <div><b>Your own marketplace</b><span>Put the plugin in a Git repo with a <code>.claude-plugin/marketplace.json</code> that lists it. Teammates run <code>/plugin marketplace add your-org/your-marketplace</code> once and then install by name, and they receive your updates. Day 8's <a href="../day-08/publish-skills/">publish-a-skill page</a> shows the two JSON files, validation and the versioning rules step by step.</span></div>
+        <div><b>Per-repository setup</b><span>Run <code>claude plugin marketplace add your-org/your-marketplace --scope project</code> once in the project and commit the <code>.claude/settings.json</code> it writes. Install the plugin at project scope too. Teammates who trust the folder get the marketplace registered, and each runs <code>claude plugin install team-standards@your-marketplace --scope project</code> once.</span></div>
+      </div>
+      <p><b>Versions.</b> Claude Code only downloads a new copy of a plugin when its <code>version</code> changes, so bump it on every release you want users to receive. Never rename a published plugin, because installs are recorded under the old name.</p>
+
+      <h2><span class="num">18</span>For organisations: managed controls</h2>
+      <p><b>What and why.</b> If you work in a company, plugins are also a governance question. Administrators can use <b>managed settings</b> to allow or block marketplace sources, force-install chosen plugins on every machine, switch off <code>--plugin-dir</code>, and limit hooks to approved ones. As an individual you rarely touch this, but if a plugin you expect is missing or cannot be removed on a work machine, a managed policy is the likely reason. The Managed scope in the Installed tab marks plugins your organisation installed.</p>
+
+      <h2><span class="num">19</span>When a plugin does not work</h2>
+      <p><b>What and why.</b> Plugins have several layers (settings, files on disk, the running session), so the fix depends on which layer failed. <b>How:</b> work through these in order.</p>
+      <div class="cc-loop">
+        <div><b>1. Validate</b><span>In a shell run <code>claude plugin validate &lt;path&gt;</code>. It checks the manifest and the header of every skill and agent. Add <code>--strict</code> to fail on warnings too.</span></div>
+        <div><b>2. Reload</b><span>Edited files on disk? Run <code>/reload-plugins</code> in the session.</span></div>
+        <div><b>3. Read the Errors tab</b><span>Run <code>/plugin</code> and open <b>Errors</b>. It names the exact problem, for example a path in your manifest that does not exist.</span></div>
+        <div><b>4. Check the list</b><span><code>claude plugin list</code> shows Status for every plugin. Add <code>--plugin-dir &lt;path&gt;</code> before <code>plugin list</code> to include one you are developing.</span></div>
+        <div><b>Skills missing</b><span>The <code>skills/</code> folder is inside <code>.claude-plugin/</code> by mistake, or a skill folder has no <code>SKILL.md</code>.</span></div>
+        <div><b>Hook never fires</b><span>Check the matcher, then read the debug log, which shows which hooks matched and their exit codes. A hook that exits 0 prints nothing in the transcript.</span></div>
+        <div><b>MCP server not there</b><span>Run <code>/mcp</code>. It should list <code>plugin:&lt;plugin&gt;:&lt;server&gt;</code> as connected.</span></div>
+        <div><b>Enabled for the project but not installed</b><span>A committed project-scope entry does not download the plugin. Run <code>claude plugin install &lt;name&gt;@&lt;marketplace&gt; --scope project</code>.</span></div>
+        <div><b>Marketplace not found</b><span>Add it by hand, for example <code>/plugin marketplace add anthropics/claude-plugins-official</code>.</span></div>
+        <div><b>--plugin-dir loads nothing</b><span>You pointed it at a marketplace root. It needs a folder that has <code>.claude-plugin/plugin.json</code>, one plugin at a time.</span></div>
+      </div>
+
+      <h2><span class="num">20</span>Cheat sheet: I want this, so run that</h2>
+      <div class="cc-loop">
+        <div><b>"Browse plugins"</b><span><code>/plugin</code>, Discover tab. VS Code: <code>/plugins</code>.</span></div>
+        <div><b>"Install one"</b><span><code>/plugin install name@marketplace</code>, or in a shell <code>claude plugin install name@marketplace</code>.</span></div>
+        <div><b>"Add a marketplace"</b><span><code>/plugin marketplace add owner/repo</code>.</span></div>
+        <div><b>"See what I have"</b><span><code>claude plugin list</code> and <code>claude plugin marketplace list</code>.</span></div>
+        <div><b>"Switch one off"</b><span><code>claude plugin disable name@marketplace</code>, or Space on the Installed tab.</span></div>
+        <div><b>"What does it cost?"</b><span><code>claude plugin details name</code>, the Always-on line.</span></div>
+        <div><b>"Update it"</b><span><code>claude plugin update name@marketplace</code>, or Update marketplace in the Marketplaces tab.</span></div>
+        <div><b>"Remove it"</b><span><code>claude plugin uninstall name@marketplace --scope user</code>.</span></div>
+        <div><b>"Try a plugin folder"</b><span><code>claude --plugin-dir .\folder</code>, then <code>/reload-plugins</code> after edits.</span></div>
+        <div><b>"Check my plugin"</b><span><code>claude plugin validate .\folder</code>.</span></div>
+        <div><b>"Make a personal one"</b><span><code>claude plugin init my-tool</code>.</span></div>
+      </div>
+
+      <h2><span class="num">21</span>Questions beginners ask</h2>
+      <div class="cc-loop">
+        <div><b>Plugin, skill or MCP server: which do I need?</b><span>They are different sizes of the same idea. A skill is know-how, an MCP server is a tool connection, a plugin is a package that can hold either plus agents and hooks. Start with a skill, and make a plugin when you need to share or reuse the set.</span></div>
+        <div><b>Is the VS Code extension a "plugin"?</b><span>No. The VS Code extension and the JetBrains plugin are ways to run Claude Code inside an editor. A Claude Code plugin is the package of skills, agents, hooks and servers this article is about. The confusing shared word is just a naming coincidence.</span></div>
+        <div><b>Do plugins cost money?</b><span>Installing is free, but an enabled plugin adds context tokens to each session (section 11), which counts toward your usage. Also check whether a partner plugin needs an account with that vendor.</span></div>
+        <div><b>Does a plugin work for my whole team automatically?</b><span>Only after each person installs it. Project scope turns it on for the repo, but every teammate still runs the install once on their machine.</span></div>
+        <div><b>I installed a plugin and see no new command.</b><span>Run <code>/reload-plugins</code>, then type <code>/</code> and look for <code>/plugin-name:skill</code>. Then check the Errors tab.</span></div>
+        <div><b>Can I use a plugin from another tool's ecosystem?</b><span>Only ones published as Claude Code plugins, from a marketplace you added. Claude.ai and Cowork can install the same format, but a different set of components loads there.</span></div>
+        <div><b>Is it safe to turn on auto-update?</b><span>It is on by default for the official marketplace only. Updates replace files you may have reviewed, so for third-party marketplaces leave it off unless you trust the author, and update by hand after reading the change.</span></div>
+      </div>
+
+      <h2><span class="num">22</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Install</b><span>Add <code>commit-commands</code> from the official marketplace, in the terminal or with <code>/plugins</code> in VS Code, and run <code>/commit-commands:commit</code> on a small change.</span></div>
+        <div><b>Inspect</b><span>Run <code>claude plugin details</code> on it and read the Always-on number. Read its <b>Will install</b> pane before you hit install on the next one.</span></div>
+        <div><b>Add the eyes</b><span>Install the language-server plugin for the language you code in and ask Claude to introduce, then fix, a type error. Watch the diagnostics line appear.</span></div>
+        <div><b>Build</b><span>Create <code>my-first-plugin</code>, validate it and run it with <code>--plugin-dir</code>. Then add the protect-files hook from the team-standards example.</span></div>
+        <div><b>Clean</b><span>Open the Installed tab, find anything under "Not used recently" and disable it.</span></div>
+      </div>
+      <p>That finishes the extending-Claude-Code block of the series: MCP for tools, skills for know-how, subagents and hooks for helpers and rules, and plugins to package and share them all.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-09/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 9</a>
+      <a href="../day-08/publish-skills/" class="cc-btn">Extra: publish your skill <i class="fas fa-arrow-right"></i></a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
