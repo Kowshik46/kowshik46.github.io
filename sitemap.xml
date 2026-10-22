@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kowshik.co.in/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-22</lastmod>
   </url>
   <url>
     <loc>https://kowshik.co.in/about.html</loc>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://kowshik.co.in/claude-code/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-22</lastmod>
   </url>
   <url>
     <loc>https://kowshik.co.in/claude-code/day-01/</loc>
@@ -54,6 +54,10 @@
   </url>
   <url>
     <loc>https://kowshik.co.in/claude-code/day-10/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-22</lastmod>
+  </url>
+  <url>
+    <loc>https://kowshik.co.in/claude-code/day-11/</loc>
+    <lastmod>2026-10-22</lastmod>
   </url>
 </urlset>
