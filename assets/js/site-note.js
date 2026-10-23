@@ -10,7 +10,7 @@
     e.preventDefault();
     var d = new FormData(f);
     btn.disabled = true; msg.textContent = "Sending…";
-    fetch("https://mytaeovzlriyrqnydaas.supabase.co/functions/v1/report", {
+    fetch("https://mytaeovzlriyrqnydaas.supabase.co/functions/v1/note", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
