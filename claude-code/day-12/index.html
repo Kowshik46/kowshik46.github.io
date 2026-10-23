@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code Models, Cost and Parallel Sessions — Kowshik Kesavarapu</title>
+  <meta name="description" content="Pick the right Claude Code model, set effort, read /usage, cut token costs and run parallel sessions with git worktrees, in the terminal and VS Code." />
+  <meta property="og:title" content="Day 12: Models, Cost and Parallel Sessions" />
+  <meta property="og:description" content="Choose the right model and effort, understand what Claude Code costs, and run parallel sessions without collisions." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-12.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-12/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-12/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 12: Claude Code Models, Cost and Parallel Sessions",
+  "description": "Pick the right Claude Code model, set effort, read /usage, cut token costs and run parallel sessions with git worktrees, in the terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-12/",
+  "image": "https://kowshik.co.in/claude-code/day-12.png",
+  "datePublished": "2026-10-23",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-23" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 12: Claude Code Models, Cost and Parallel Sessions",
+      "item": "https://kowshik.co.in/claude-code/day-12/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+      <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 12 · Going further</span>
+      <h1>Pick the right model.<br /><span class="cc-grad">Spend less. Run in parallel.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>27 min read</span>
+        <span>Oct 23, 2026</span>
+      </div>
+    </div>
+  </header>
+
+    <main class="cc-wrap">
+    <article class="cc-article" id="day-12">
+
+      <div class="cc-callout">
+        <p><strong>Beyond the roadmap: the dials you have not touched yet.</strong> Days 1 to 11 taught you what Claude Code can do. Today is about how <i>much</i> it does for how <i>little</i>: which model to pick, how hard it should think, what each session costs, and how to run several jobs side by side without them colliding. None of it is exotic. Most people simply never open these settings, and pay for it in slow answers, surprise limits and tangled branches.</p>
+      </div>
+
+      <h2><span class="num">01</span>The big picture: four dials</h2>
+      <p><b>What.</b> Every Claude Code session is shaped by four dials. You have been using them on their default positions all along.</p>
+      <div class="cc-loop">
+        <div><b>Dial 1: Model</b><span>Which Claude does the work. A bigger model reasons better and costs more; a smaller one is faster and cheaper. Sections 02 to 05.</span></div>
+        <div><b>Dial 2: Effort and thinking</b><span>How long the model reasons before it answers. More effort helps hard problems and wastes time and tokens on easy ones. Section 06.</span></div>
+        <div><b>Dial 3: Context</b><span>How much text rides along with every message. This is the biggest driver of cost, and you steer it with Day 5 habits. Sections 07 to 11.</span></div>
+        <div><b>Dial 4: Parallelism</b><span>How many sessions run at once, each in its own copy of your code. Sections 12 to 16.</span></div>
+      </div>
+      <p><b>Why it matters.</b> A one-line rename does not need your biggest model thinking at full effort. A tricky design decision does. Matching the dial to the job is the difference between an assistant that feels instant and cheap, and one that feels slow and burns through your plan limit by lunchtime.</p>
+
+      <h2><span class="num">02</span>What a "model" is, and the aliases you can type</h2>
+      <p><b>What.</b> A model is the specific version of Claude doing the thinking. Anthropic ships a family: a fast small one (<b>Haiku</b>), a balanced everyday one (<b>Sonnet</b>), a stronger one for complex reasoning (<b>Opus</b>), and a top tier for the hardest, longest tasks (<b>Fable</b>). New versions arrive regularly, so Claude Code lets you type a short <b>alias</b> that always means "the latest of that kind" instead of a long version name.</p>
+      <div class="cc-loop">
+        <div><b>sonnet</b><span>Latest Sonnet. The daily-driver choice for writing and fixing code.</span></div>
+        <div><b>opus</b><span>Latest Opus. For complex reasoning: architecture, tricky bugs, big refactors.</span></div>
+        <div><b>haiku</b><span>Latest Haiku. Fast and cheap, for simple, mechanical jobs.</span></div>
+        <div><b>fable</b> and <b>best</b><span><code>fable</code> is the top tier where your account has it. <code>best</code> means "the strongest I can use": Fable where available, otherwise Opus.</span></div>
+        <div><b>opusplan</b><span>A hybrid: Opus while you are in plan mode, Sonnet when it starts executing. Section 04.</span></div>
+        <div><b>sonnet[1m]</b> and <b>opus[1m]</b><span>The same models with a one million token context window. Section 05.</span></div>
+        <div><b>default</b><span>Not a model: it clears your override and goes back to what your account normally gets.</span></div>
+      </div>
+      <p><b>Why aliases.</b> Because model names change. If you write <code>sonnet</code> in a script or setting, it keeps working when the next Sonnet appears. If you pin a full name you stay on that exact version, which is what you want only when you need identical behaviour over time.</p>
+
+      <h2><span class="num">03</span>How to switch models: terminal and VS Code</h2>
+      <p><b>What and why.</b> You can set the model in several places. They stack, and the more specific one wins. Knowing the order saves you from "why is it still using Opus?" confusion.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell: four ways to pick a model</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># 1. inside a running session (highest priority)</span>
+/model sonnet
+/model              <span class="c"># no name: opens a picker</span>
+
+<span class="c"># 2. at startup</span>
+<span class="s">claude</span> --model opus
+
+<span class="c"># 3. an environment variable for this shell</span>
+$env:ANTHROPIC_MODEL = "sonnet"
+
+<span class="c"># 4. a saved default in your settings file</span>
+<span class="c">#    ~/.claude/settings.json  →  { "model": "sonnet" }</span></pre>
+      </div>
+      <p><b>How, step by step in the picker.</b> Type <code>/model</code> and press Enter. Use the arrow keys to move between models. Press <b>Enter</b> to switch <i>and save it as your default</i>, or press <b>s</b> to switch for this session only. Use <b>s</b> when you are trying something for one task and do not want it to follow you around.</p>
+      <p><b>In VS Code.</b> Click the model name at the bottom of the prompt box, or open the command menu with <code>/</code> and choose <b>Switch model…</b>. It is the same picker. When the model supports effort levels, the picker shows an <b>Effort</b> row and the model button shows your selected level. Typing <code>/model</code> works in the chat box too.</p>
+      <p><b>A note for scripts.</b> In headless runs (Day 11) add <code>--model sonnet</code> to the <code>claude -p</code> command. Subagents (Day 9) can also carry their own model, so a reviewer can run on a cheaper model than your main session.</p>
+
+      <h2><span class="num">04</span>Which model for which job</h2>
+      <p><b>What.</b> There is no single best model, only a best fit. Use this as a starting rule and adjust from experience.</p>
+      <div class="cc-loop">
+        <div><b>Everyday coding: Sonnet</b><span>Writing a function, fixing a clear bug, adding tests, explaining code, small refactors. It handles most work well and costs less than Opus. This is a sensible default.</span></div>
+        <div><b>Hard thinking: Opus (or Fable)</b><span>Designing a system, a bug you cannot localise, a migration across many files, reviewing a risky change. Reach for it when Sonnet goes in circles.</span></div>
+        <div><b>Simple and mechanical: Haiku</b><span>Renaming, formatting, summarising a log, running a checklist. Great for subagents that do narrow work and for scripts that run often.</span></div>
+        <div><b>Plan hard, build cheap: opusplan</b><span>Plan mode (Day 4) is where reasoning matters most and it uses few tokens, so Opus plans. Then Claude switches to Sonnet to write the code. You get strong plans without paying Opus rates for every edit. Set it with <code>/model opusplan</code>.</span></div>
+      </div>
+      <p><b>Why this works.</b> Most of the tokens in a session go into reading files and writing edits, not into the one hard decision at the start. Put the expensive model on the decision and the cheap one on the typing. A good habit: start on Sonnet, and only switch up when you hit a wall, then switch back.</p>
+      <p><b>Subagents.</b> Remember Day 9? A reviewer subagent can be pinned to a cheaper model with <code>model: haiku</code> in its frontmatter. Cheap model for the narrow chores, strong model for the conversation.</p>
+
+      <h2><span class="num">05</span>Context window size, and the 1M option</h2>
+      <p><b>What.</b> The <b>context window</b> is how much text the model can hold in mind at once: your conversation, files it has read, tool output, your CLAUDE file. Think of it as the size of the desk. When the desk is full, Claude Code <b>compacts</b>: it summarises older material to free space (Day 5).</p>
+      <p><b>Why it matters.</b> A bigger desk lets Claude work across a large codebase or a very long task without forgetting early details. But a bigger desk is not free: every message re-sends what is on it (section 08). More room is a tool for big jobs, not a reason to stop clearing.</p>
+      <p><b>How.</b> Add <code>[1m]</code> to an alias, for example <code>/model sonnet[1m]</code> or <code>/model opus[1m]</code>. Some newer models already have a one million token window with no suffix, and the picker tells you what you have. To make compaction happen earlier than the maximum, set the window you want, for example <code>/autocompact 200k</code> (or the <code>--autocompact</code> flag). A smaller auto-compact window keeps long sessions leaner.</p>
+
+      <h2><span class="num">06</span>Effort and thinking: how hard it reasons</h2>
+      <p><b>What.</b> Before answering, the model can "think": work through the problem in a hidden scratchpad. <b>Effort</b> is the dial for how much. The levels are <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> and <code>max</code>, and which ones exist depends on the model.</p>
+      <p><b>Why it matters.</b> Thinking tokens are billed like output, and they take time. At high effort a simple question can pause for a long moment for no benefit. At low effort a tricky bug may get a shallow answer. Matching effort to difficulty is the cheapest speed-up you can make.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell: effort and thinking controls</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># in a session</span>
+/effort             <span class="c"># opens a slider</span>
+/effort low         <span class="c"># set a level directly</span>
+/effort auto        <span class="c"># clear your saved level</span>
+
+<span class="c"># at startup</span>
+<span class="s">claude</span> --effort high
+
+<span class="c"># one hard turn: put this word anywhere in your prompt</span>
+<span class="c"># "ultrathink: why does the split lose a cent?"</span>
+
+<span class="c"># turn thinking on or off for this session: Alt+T</span>
+<span class="c"># read the thinking text: Ctrl+O (verbose mode)</span></pre>
+      </div>
+      <p><b>How to use it.</b> Low or medium for renames, formatting, quick questions, boilerplate. High for normal feature work and debugging. The top levels for the genuinely hard problem, and drop back afterwards. In the <code>/model</code> picker you can also move the effort slider with the left and right arrow keys. In VS Code use the <b>Effort</b> row in the model picker.</p>
+      <p><b>One honest caveat.</b> On some of the newest models thinking is always on and cannot be switched off; you tune it with effort instead. If a setting such as <code>MAX_THINKING_TOKENS</code> seems to do nothing, that is why. The model picker shows what your model supports.</p>
+
+      <h2><span class="num">07</span>How Claude Code is billed, in plain words</h2>
+      <p><b>What.</b> Everything Claude reads and writes is counted in <b>tokens</b>, roughly three quarters of a word each. On the API you pay per token. On a Pro, Max, Team or Enterprise plan the same tokens draw down your <b>plan limit</b> (a rolling five-hour window plus a weekly one), and you can add <b>usage credits</b> to keep going past it.</p>
+      <p><b>Why costs surprise people.</b> You do not pay once for your question. Claude Code sends the <i>whole conversation so far</i> with every request, and each tool call is another request. So a one-line follow-up at the end of a long session carries everything above it. Two things soften this: <b>prompt caching</b> (repeated material is re-read at a much cheaper rate) and <b>compaction</b>.</p>
+      <div class="cc-loop">
+        <div><b>Long context</b><span>The longer the conversation, the more every message weighs. This is the number one reason usage climbs.</span></div>
+        <div><b>Cache misses</b><span>The cache expires after a while. Come back from a long break and your first message re-processes the whole context at full price.</span></div>
+        <div><b>Thinking</b><span>High effort means more output tokens before the answer even starts.</span></div>
+        <div><b>Helpers</b><span>Each subagent has its own context and its own requests. Scheduled loops and background sessions keep sending context even when you are away.</span></div>
+        <div><b>Compaction</b><span><code>/compact</code> has to read the whole conversation to summarise it, so compacting a huge session is itself a big request. <code>/clear</code> is free.</span></div>
+      </div>
+
+      <h2><span class="num">08</span>See what you are spending</h2>
+      <p><b>What and why.</b> You cannot manage what you cannot see. Claude Code has three views, from a quick glance to a deep look.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell: the three views</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>/usage      <span class="c"># session totals: tokens, estimated cost, per model; plan limits on subscriptions</span>
+/context    <span class="c"># what is filling the context window right now</span>
+/insights   <span class="c"># a report on how you work: friction points, suggestions</span></pre>
+      </div>
+      <p><b>/usage.</b> At the top is the <b>Session</b> block: total tokens per model and an estimated dollar figure computed from list prices. Treat the dollars as an estimate; the Claude Console is the authority for API billing. If you are on a subscription it also shows plan usage bars and a breakdown of which skills, subagents, plugins and MCP servers used the most, with recommendations. Press <b>d</b> or <b>w</b> to flip between the last 24 hours and the last 7 days. It also shows a <b>Prompt cache</b> line, so you can see how much of your input came from cache.</p>
+      <p><b>/context.</b> A picture of what is on the desk: your CLAUDE file, MCP tool names, skills, conversation. If one thing is surprisingly large, that is your first cleanup target.</p>
+      <p><b>In VS Code.</b> Run <code>/usage</code> in the chat box to open the <b>Account &amp; usage</b> dialog, with a Day and Week toggle. A small clock icon beside the context indicator estimates how long your prompt cache has left before it expires, which tells you whether the next message will be cheap or expensive.</p>
+      <p><b>Always visible.</b> You can show context use and cost in your status line (the bar at the bottom of the terminal) by configuring it in settings, so the numbers are in view all day.</p>
+
+      <h2><span class="num">09</span>Ten habits that cut tokens without cutting quality</h2>
+      <p><b>What.</b> None of these reduce what Claude can do. They only stop you paying to carry things you no longer need. Each pairs a habit with the reason.</p>
+      <div class="cc-loop">
+        <div><b>1. Clear between unrelated tasks</b><span><code>/clear</code> starts fresh. Old context taxes every later message. Use <code>/rename</code> first so you can find the old session again with <code>/resume</code>.</span></div>
+        <div><b>2. Compact with instructions</b><span><code>/compact Focus on the failing tests and the files we changed</code> keeps what matters. You can also add a "Compact instructions" section to your CLAUDE file.</span></div>
+        <div><b>3. Be specific</b><span>"Add input validation to the login function in auth.py" reads one file. "Improve the codebase" triggers a broad hunt.</span></div>
+        <div><b>4. Plan first</b><span>Plan mode (<code>Shift+Tab</code>) catches a wrong direction before it costs a pile of edits (Day 4).</span></div>
+        <div><b>5. Stop and rewind early</b><span>Press <code>Esc</code> when it heads the wrong way. <code>/rewind</code> or double <code>Esc</code> restores the conversation and code to a checkpoint. In VS Code hover a message and use the rewind button.</span></div>
+        <div><b>6. Keep the CLAUDE file lean</b><span>It loads every session. Aim for under about 200 lines; move rarely-needed procedures into skills (Day 8), which load only when used.</span></div>
+        <div><b>7. Trim MCP servers</b><span>Run <code>/mcp</code> and disable servers you are not using. Where a plain command exists (<code>gh</code>, <code>aws</code>), the command costs less context than a server.</span></div>
+        <div><b>8. Push noisy work into subagents</b><span>Test runs and log digging stay in the helper's context; only the summary comes back (Day 9).</span></div>
+        <div><b>9. Filter with hooks</b><span>A hook can grep a 10,000-line log down to the error lines before Claude sees it (Day 9).</span></div>
+        <div><b>10. Give a way to check</b><span>Name the test command or the expected output. Claude then verifies its own work instead of you asking for a fix round.</span></div>
+      </div>
+
+      <h2><span class="num">10</span>Why a session you left open all day gets expensive</h2>
+      <p><b>What.</b> Two quiet effects. First, the cache has a limited lifetime, so the first message after a long break is billed as if it were a brand new, full-size request. Second, anything that keeps firing while you are away (a scheduled <code>/loop</code>, background work, messages from other sessions) keeps re-sending the whole context.</p>
+      <p><b>How to act on it.</b> Before lunch or an overnight break, either <code>/clear</code> (if the task is done), or write down where you are and <code>/clear</code>, then pick up fresh. Resuming a named session with <code>claude --resume</code> restores the conversation, so you can still continue. Stop loops you no longer need. If you want continuity <i>and</i> a small context, <code>/compact</code> before you leave rather than after you return.</p>
+
+      <h2><span class="num">11</span>Limits and safety nets</h2>
+      <p><b>What.</b> Three kinds of ceiling exist. Knowing which one you hit tells you what to do.</p>
+      <div class="cc-loop">
+        <div><b>A plan limit</b><span>"You've hit your session limit" on a subscription. It is shared across models, so switching with <code>/model</code> will not fix it. Options: wait for the reset time it shows, or turn on usage credits with <code>/usage-credits</code>.</span></div>
+        <div><b>A spend limit</b><span>Set on usage credits (by you, or by your organisation). Raise it in your settings, or wait for the reset.</span></div>
+        <div><b>A budget you set yourself</b><span>For unattended jobs, <code>claude -p ... --max-budget-usd 2</code> stops a run at a dollar figure, and <code>--max-turns</code> caps the number of steps (Day 11).</span></div>
+      </div>
+      <p><b>A model-specific message</b> such as "You've hit your Opus limit" is different: switching to another family with <code>/model</code> keeps you working.</p>
+
+      <h2><span class="num">12</span>Parallel work, part one: resume and continue</h2>
+      <p><b>What.</b> Before running things side by side, learn to pick up one thing later. Claude Code saves every conversation on your machine.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell: coming back to work</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude</span> --continue        <span class="c"># the most recent session in this folder</span>
+<span class="s">claude</span> --resume          <span class="c"># pick from a list</span>
+/resume                  <span class="c"># the same list, from inside a session</span>
+/rename billsplitter-api <span class="c"># give this session a findable name</span>
+<span class="s">claude</span> --from-pr 12      <span class="c"># sessions linked to pull request 12</span></pre>
+      </div>
+      <p><b>Why.</b> Re-explaining a task costs more than resuming it, and a named session is easy to find a week later. Claude Code links a session to a pull request when it creates one, so <code>--from-pr</code> brings back exactly the conversation behind that PR. In VS Code, the past conversations list in the panel does the same job; click one to resume it.</p>
+
+      <h2><span class="num">13</span>Parallel work, part two: git worktrees</h2>
+      <p><b>What.</b> A <b>git worktree</b> is a second folder with its own copy of your files on its own branch, sharing the same repository history. Normally one folder holds one branch at a time. With worktrees, you can have <code>main</code> in one folder, <code>feature-auth</code> in another and a bug fix in a third, all at once.</p>
+      <p><b>Why it matters.</b> Two Claude sessions editing the same folder step on each other: one changes a file while the other is mid-thought, and branches get mixed. Give each session its own worktree and they cannot collide. You can start a long refactor in one terminal, and keep fixing a small bug in another.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell: two isolated sessions</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># terminal 1</span>
+<span class="s">claude</span> --worktree feature-auth
+
+<span class="c"># terminal 2 (a different name = a different, isolated copy)</span>
+<span class="s">claude</span> -w fix-rounding
+
+<span class="c"># no name? Claude invents one, like bright-running-fox</span>
+<span class="s">claude</span> --worktree</pre>
+      </div>
+      <p><b>What happens.</b> Claude creates the folder under <code>.claude/worktrees/&lt;name&gt;/</code> in your repository and checks out a new branch called <code>worktree-&lt;name&gt;</code>, then starts the session in it. Requirements: the folder must be a git repository with at least one commit, and you should have run <code>claude</code> there once to accept the trust prompt.</p>
+      <p><b>Three tidy-up steps.</b></p>
+      <div class="cc-loop">
+        <div><b>1. Ignore the folder</b><span>Add <code>.claude/worktrees/</code> to your <code>.gitignore</code> so worktree contents do not show up as untracked files in your main checkout.</span></div>
+        <div><b>2. Bring your secrets along</b><span>A worktree is a fresh checkout, so a gitignored <code>.env</code> file is missing. List such files in a <code>.worktreeinclude</code> file at the project root (same syntax as <code>.gitignore</code>) and Claude copies them into every new worktree.</span></div>
+        <div><b>3. Install dependencies</b><span>Each worktree needs its own <code>npm install</code> or equivalent. Ask Claude to do it as the first prompt.</span></div>
+      </div>
+
+      <h2><span class="num">14</span>Finishing and cleaning up worktrees</h2>
+      <p><b>What.</b> When you exit a worktree session, Claude checks whether anything would be lost. If the worktree is clean and the session was unnamed, it is removed automatically. If there is work in it, you get a choice: <b>keep</b> (folder and branch stay) or <b>remove</b> (both are deleted, work included). Read the prompt before you answer.</p>
+      <p><b>How to continue later.</b> Claude prints a ready-made command such as <code>claude --worktree feature-auth --resume</code>. Then the normal flow from Day 6 applies: commit on that branch, push, open a pull request, merge, and remove the worktree.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell: managing worktrees yourself</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>git worktree list                          <span class="c"># what exists</span>
+git worktree add ..\proj-hotfix -b hotfix  <span class="c"># make one by hand, on a new branch</span>
+git worktree remove ..\proj-hotfix         <span class="c"># delete one you finished with</span>
+<span class="s">claude</span> --worktree "#1234"                  <span class="c"># branch from pull request 1234</span></pre>
+      </div>
+      <p><b>Good to know.</b> Claude's permission approvals saved from a worktree apply back to the main checkout. Plugins installed at project scope (Day 10) load in worktrees too. And inside a worktree session, Claude Code blocks edits that would reach into the main checkout, so one session cannot quietly modify another's files.</p>
+
+      <h2><span class="num">15</span>Parallel work in VS Code, and with subagents</h2>
+      <p><b>VS Code.</b> Open another conversation with <b>Open in New Tab</b> or <b>Open in New Window</b> from the Command Palette (<code>Ctrl+Shift+P</code>, type "Claude Code"), or press <code>Ctrl+Shift+Esc</code>. Each conversation keeps its own history and context. A small coloured dot on the spark icon shows status: <b>blue</b> means a permission request is waiting, <b>orange</b> means Claude finished while the tab was hidden. Keep your main session in the sidebar and open side tasks as tabs. To give a VS Code session its own worktree, start it with <code>claude --worktree</code> in the integrated terminal.</p>
+      <p><b>Subagents.</b> Day 9 subagents split work <i>inside</i> one session. They can also run in their own worktrees so parallel edits do not clash: say "use worktrees for your agents", or put <code>isolation: worktree</code> in a custom subagent's frontmatter. A worktree with no changes is removed when the subagent finishes.</p>
+      <div class="cc-loop">
+        <div><b>One session, several steps</b><span>Plain chat. Simple, cheapest. Use for most work.</span></div>
+        <div><b>One session, helpers</b><span>Subagents. Keep verbose work out of your context.</span></div>
+        <div><b>Several sessions, same repo</b><span>Worktrees. Separate branches and files, you drive each one.</span></div>
+        <div><b>Helpers that edit in parallel</b><span>Subagents with <code>isolation: worktree</code>.</span></div>
+      </div>
+
+      <h2><span class="num">16</span>Parallel costs more: use it with a plan</h2>
+      <p><b>What.</b> Three sessions running at once use roughly three sessions' worth of tokens, and each has its own context. Parallel work saves your <i>time</i>, not your tokens.</p>
+      <p><b>How to keep it sane.</b> Run at most two or three at once, since you must still read and review every result. Put the cheaper model on the routine one (<code>claude -w docs --model haiku</code>), keep prompts focused, and finish and close a worktree before starting another. If you cannot review three branches carefully, you are running too many.</p>
+
+      <h2><span class="num">17</span>A real day, using all four dials</h2>
+      <p><b>The bill splitter again.</b> Here is how the project from the capstone might run with these dials set deliberately.</p>
+      <div class="cc-loop">
+        <div><b>Morning: plan</b><span><code>/model opusplan</code>, plan mode on. Opus works out how to handle the leftover cent; execution switches to Sonnet.</span></div>
+        <div><b>Build: low effort</b><span><code>/effort medium</code>. Writing tests and small functions does not need deep reasoning.</span></div>
+        <div><b>Stuck: one hard turn</b><span>"ultrathink: why does 110.00 over 3 lose a cent in the percent mode?" Then back to medium.</span></div>
+        <div><b>Side task: worktree</b><span>In a second terminal, <code>claude -w docs --model haiku</code> writes the README while the first session continues.</span></div>
+        <div><b>Before lunch</b><span><code>/usage</code> to check, <code>/rename</code> then <code>/clear</code>. After lunch, <code>/resume</code> the named session if needed.</span></div>
+        <div><b>End of day</b><span><code>/insights</code> to see where the friction was, and tune tomorrow's defaults.</span></div>
+      </div>
+
+      <h2><span class="num">18</span>Which dial for which problem</h2>
+      <div class="cc-loop">
+        <div><b>"It is slow."</b><span>Lower effort, or a smaller model. Check <code>/context</code> for a bloated window.</span></div>
+        <div><b>"It keeps getting it wrong."</b><span>Raise effort, or switch to Opus for this task. Give it a test to check against.</span></div>
+        <div><b>"I hit my limit early."</b><span><code>/usage</code> to see who used it. Clear old sessions, trim MCP servers, use Sonnet.</span></div>
+        <div><b>"I forgot what we decided."</b><span><code>/resume</code> a named session, or write decisions in your CLAUDE file.</span></div>
+        <div><b>"Two jobs keep clashing."</b><span>Worktrees, one per job.</span></div>
+        <div><b>"My bill is a surprise."</b><span>Add <code>--max-budget-usd</code> to scripts, show cost in the status line, and review <code>/usage</code> weekly.</span></div>
+      </div>
+
+      <h2><span class="num">19</span>When something goes wrong</h2>
+      <div class="cc-loop">
+        <div><b>The model I typed is not offered</b><span>Your plan or provider may not include it. Open <code>/model</code> to see the list, or check <code>/status</code> for your account.</span></div>
+        <div><b>Settings seem ignored</b><span>A flag beats an environment variable, which beats a settings file. Run <code>/model</code> to see what is active.</span></div>
+        <div><b>--worktree exits with a trust error</b><span>Run <code>claude</code> once in the folder and accept the trust prompt, then retry.</span></div>
+        <div><b>"Failed to resolve base branch HEAD"</b><span>The repository has no commits yet. Make an initial commit first.</span></div>
+        <div><b>.env is missing in the worktree</b><span>Add it to <code>.worktreeinclude</code>, or copy it by hand.</span></div>
+        <div><b>Cannot remove a worktree</b><span><code>git worktree remove --force &lt;path&gt;</code> if it has changes you do not need; <code>git worktree unlock</code> first if git says it is locked.</span></div>
+        <div><b>Estimated cost looks off</b><span>The dollar figure is computed at list price. Check the Claude Console usage page for real API billing.</span></div>
+      </div>
+
+      <h2><span class="num">20</span>Cheat sheet</h2>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell: everything on one screen</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># model</span>
+/model sonnet | opus | haiku | opusplan | sonnet[1m]
+<span class="s">claude</span> --model sonnet
+
+<span class="c"># effort and thinking</span>
+/effort low | medium | high | xhigh | max | auto
+<span class="s">claude</span> --effort high      <span class="c"># Alt+T toggles thinking, "ultrathink" for one turn</span>
+
+<span class="c"># see and shrink spend</span>
+/usage   /context   /insights
+/clear   /compact Focus on ...   /rename name   /resume
+/rewind  (or Esc Esc)
+
+<span class="c"># limits</span>
+/usage-credits
+<span class="s">claude</span> -p "..." --max-budget-usd 2 --max-turns 10
+
+<span class="c"># parallel</span>
+<span class="s">claude</span> --continue | --resume | --from-pr 12
+<span class="s">claude</span> --worktree name   <span class="c"># or -w name</span>
+git worktree list | remove</pre>
+      </div>
+
+      <h2><span class="num">21</span>Questions beginners ask</h2>
+      <div class="cc-loop">
+        <div><b>Should I always use the biggest model?</b><span>No. It is slower and costs more, and for routine work Sonnet is usually as good. Use the strong model for the hard parts.</span></div>
+        <div><b>Does switching model lose my conversation?</b><span>No. The conversation continues; the next reply comes from the new model.</span></div>
+        <div><b>Is /usage the same as my bill?</b><span>No. On the API it is an estimate at list price. On a subscription, plan usage matters more than dollars.</span></div>
+        <div><b>Do worktrees copy my whole project?</b><span>They check out your tracked files again but share the git history, so they are light. Dependencies and ignored files are not copied unless you set <code>.worktreeinclude</code> or install them.</span></div>
+        <div><b>Can I run Claude in a worktree without git?</b><span>Not by default. Other version control systems need creation and cleanup hooks.</span></div>
+        <div><b>How many sessions at once?</b><span>As many as you can review carefully. Two or three is plenty for most people.</span></div>
+        <div><b>Is turning thinking off a good idea?</b><span>Usually lower the effort instead. On the newest models thinking cannot be turned off at all.</span></div>
+      </div>
+
+      <h2><span class="num">22</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>1. Read your own numbers (5 min)</b><span>Run <code>/usage</code> and <code>/context</code> in your biggest session. Note which model, how many tokens, and what fills the window.</span></div>
+        <div><b>2. Pick a default (5 min)</b><span>Open <code>/model</code>, choose Sonnet and press Enter to save it. Keep Opus for the hard task of the week.</span></div>
+        <div><b>3. Try opusplan (15 min)</b><span>Plan a small feature with <code>/model opusplan</code> and compare the result with your usual flow.</span></div>
+        <div><b>4. Two worktrees (20 min)</b><span>In a repo with a commit, run <code>claude -w one</code> and <code>claude -w two</code> in two terminals, make a small change in each, then exit and look at <code>git worktree list</code>.</span></div>
+        <div><b>5. Run /insights (5 min)</b><span>Read the report and change one habit this week.</span></div>
+      </div>
+
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-11/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 11</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
