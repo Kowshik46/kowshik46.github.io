@@ -177,3 +177,10 @@
 .cc-tradeoff h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
 .cc-tradeoff ul { margin: 0; padding-left: 1.1rem; color: rgba(232,232,240,0.78); line-height: 1.7; }
 @media (max-width: 640px) { .cc-quick-grid { grid-template-columns: 1fr; } }
+.cc-report { margin-top: 0.5rem; font-size: 0.9rem; }
+.cc-report summary { cursor: pointer; color: var(--accent-hi); }
+.cc-report form { display: grid; gap: 0.7rem; margin-top: 0.8rem; max-width: 560px; }
+.cc-report label { display: grid; gap: 0.25rem; color: var(--faint); font-size: 0.85rem; }
+.cc-report textarea, .cc-report input { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; font: inherit; }
+.cc-report .cc-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.cc-report-msg { margin: 0 !important; min-height: 1.2em; }

@@ -118,7 +118,18 @@ claude "explain this project"</pre>
         <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         <p>Install steps and the extension change often. If a command differs on your machine, run claude update and check the setup page.</p>
         <p>Official docs: <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Set up Claude Code</a> · <a href="https://code.claude.com/docs/en/vs-code" target="_blank" rel="noopener">Use it in VS Code</a> · <a href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener">Quickstart</a></p>
-        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+3%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-03%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%203%3A%20broken%20step">email me</a>.</p>
+        <details class="cc-report">
+          <summary><i class="fas fa-bug"></i> Something not working? Report a broken step</summary>
+          <form id="cc-report">
+            <label>What broke? <textarea name="what_broke" rows="3" maxlength="2000" required placeholder="The command I ran and what happened"></textarea></label>
+            <label>What did you expect? (optional) <textarea name="expected" rows="2" maxlength="2000"></textarea></label>
+            <label>Output of <code>claude --version</code> (optional) <input name="version" maxlength="60" /></label>
+            <label>Your email, only if you want a reply (optional) <input name="email" type="email" maxlength="200" /></label>
+            <input class="cc-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button type="submit" class="cc-btn solid">Send report</button>
+            <p class="cc-report-msg" role="status"></p>
+          </form>
+        </details>
       </aside>
 
       <h2 id="full-guide"><span class="num">01</span>Pick your way in</h2>
@@ -315,9 +326,10 @@ claude "explain this project"</pre>
 
   <footer class="cc-foot">
     © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
-    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data). If you send a step report, the text you type and your optional email are stored so I can fix the article.</small>
   </footer>
 
   <script src="../../assets/js/site.js" defer></script>
+  <script src="../../assets/js/report.js" defer></script>
 </body>
 </html>
