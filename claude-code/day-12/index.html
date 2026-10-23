@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build a Real Project with Claude Code — Kowshik Kesavarapu</title>
+  <meta name="description" content="Build one small app from scratch with everything in this series: CLAUDE.md, plan mode, git, MCP, a skill, a subagent, a hook and a plugin, in terminal and VS Code." />
+  <meta property="og:title" content="Day 12: Build a real project" />
+  <meta property="og:description" content="Ten days of Claude Code in one project: plan it, build it, review it and package it." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-12.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-12/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="../series.css" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-12/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Kowshik Kesavarapu" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Day 12: Build a Real Project with Claude Code",
+  "description": "Build one small app from scratch with everything in this series: CLAUDE.md, plan mode, git, MCP, a skill, a subagent, a hook and a plugin, in terminal and VS Code.",
+  "url": "https://kowshik.co.in/claude-code/day-12/",
+  "image": "https://kowshik.co.in/claude-code/day-12.png",
+  "datePublished": "2026-10-23",
+  "author": {
+    "@type": "Person",
+    "name": "Kowshik Kesavarapu",
+    "url": "https://kowshik.co.in/"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Claude Code, Properly",
+    "url": "https://kowshik.co.in/claude-code/"
+  }
+}
+  </script>
+  <meta name="author" content="Kowshik Kesavarapu" />
+  <meta property="article:published_time" content="2026-10-23" />
+  <meta property="article:author" content="https://kowshik.co.in/about.html" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kowshik.co.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Claude Code, Properly",
+      "item": "https://kowshik.co.in/claude-code/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Day 12: Build a Real Project with Claude Code",
+      "item": "https://kowshik.co.in/claude-code/day-12/"
+    }
+  ]
+}
+  </script>
+</head>
+<body class="cc">
+
+  <nav class="nav">
+    <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
+    <ul class="nav-links">
+      <li><a href="../../">Projects</a></li>
+      <li><a href="../" class="active">Claude Code</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </nav>
+
+    <header class="cc-hero cc-hero-article">
+    <div class="cc-wrap">
+      <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
+      <span class="cc-pill">Day 12 · Putting it together</span>
+      <h1>Ten days.<br /><span class="cc-grad">One real project.</span></h1>
+      <div class="cc-meta">
+        <span>By <b>Kowshik Kesavarapu</b></span>
+        <span>24 min read</span>
+        <span>Oct 23, 2026</span>
+      </div>
+    </div>
+  </header>
+
+    <main class="cc-wrap">
+    <article class="cc-article" id="day-12">
+
+      <div class="cc-callout">
+        <p><strong>Roadmap row today: a capstone.</strong> Every row on the roadmap is now covered, and Day 11 added running Claude Code from scripts and GitHub Actions, so today is the one where it all comes together. We build one small, real app from an empty folder and use <b>something from every day so far</b>: the install (Day 3), a CLAUDE file (Day 2), plan mode and prompts (Day 4), context and permissions (Day 5), git and pull requests (Day 6), MCP (Day 7), a skill (Day 8), a subagent and a hook (Day 9) and finally a plugin (Day 10). Nothing new to learn: the point is to see <i>when</i> to reach for each tool.</p>
+      </div>
+
+      <h2><span class="num">01</span>The big picture: tools are easy, the order is the skill</h2>
+      <p><b>What.</b> Ten days gave you ten tools. This article is one continuous walkthrough that uses them in the order a real project needs them. We build a tiny app called <b>billsplit</b>, a command that splits a restaurant bill between friends, tip included, without losing a single cent.</p>
+      <p><b>Why it matters.</b> Reading about a hammer, a saw and a level does not teach you to build a shelf. Beginners often know every feature and still do not know <b>what to do first</b>. The answer is the same on almost every project: write down the rules, plan before you build, build in small steps with tests, save your work, then slowly add automation for whatever annoyed you along the way.</p>
+      <p><b>How this article is organised.</b> Ten stages, each one maps to a day, and each says what you do, why you do it at that moment, and how, in the terminal and in VS Code.</p>
+      <div class="cc-loop">
+        <div><b>Stage 1: Set up</b><span>Day 3. Folder, git, start Claude Code.</span></div>
+        <div><b>Stage 2: Write the rules</b><span>Day 2. A CLAUDE file with <code>/init</code>.</span></div>
+        <div><b>Stage 3: Plan first</b><span>Day 4. Plan mode, then approve.</span></div>
+        <div><b>Stage 4: Set the guardrails</b><span>Day 5. Permissions and keeping context clean.</span></div>
+        <div><b>Stage 5: Build with tests</b><span>Days 4 and 5. Small steps, tests first.</span></div>
+        <div><b>Stage 6: Save and share</b><span>Day 6. Branch, commit, pull request.</span></div>
+        <div><b>Stage 7: Connect GitHub</b><span>Day 7. MCP, so Claude reads your issues.</span></div>
+        <div><b>Stage 8: Automate a habit</b><span>Day 8. A skill for the check you repeat.</span></div>
+        <div><b>Stage 9: Add a reviewer and a safety net</b><span>Day 9. A subagent and a hook.</span></div>
+        <div><b>Stage 10: Package it</b><span>Day 10. Turn the setup into a plugin.</span></div>
+      </div>
+
+      <h2><span class="num">02</span>What we are building, and what you need</h2>
+      <p><b>What.</b> <code>billsplit</code> is a small Python command: <code>python -m billsplit 100 3 --tip 10</code> prints what each of three people owes for a 100 bill with a 10 percent tip. The interesting part is money maths: 110.00 split three ways is 36.666..., and real shares must add back up to exactly 110.00. That detail is a classic bug, which makes it a good thing for Claude to plan, test and review.</p>
+      <p><b>Why this project.</b> It is small enough to finish in one sitting, has a real edge case (leftover cents), and is easy to test. The same steps work for a website, an API or a script. Swap in your own idea if you prefer.</p>
+      <p><b>You need:</b></p>
+      <div class="cc-loop">
+        <div><b>Claude Code</b><span>Installed and signed in. If not, do Day 3 first (terminal or VS Code extension).</span></div>
+        <div><b>Python 3.9+</b><span>Check with <code>python --version</code> (on macOS and Linux, <code>python3 --version</code>).</span></div>
+        <div><b>Git and a GitHub account</b><span>Check with <code>git --version</code>. A free account is enough.</span></div>
+        <div><b>VS Code (optional)</b><span>Every stage also says what to click. The terminal parts also run in the VS Code integrated terminal, <code>Ctrl+`</code>.</span></div>
+      </div>
+
+      <h2><span class="num">03</span>Stage 1: Set up the folder (Day 3)</h2>
+      <p><b>What and why.</b> Claude Code works inside a folder. It reads the files there and its changes land there. Starting from a clean, git-tracked folder means every change Claude makes is something you can see and undo. <b>How:</b></p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="ps">PS C:\dev&gt;</span> mkdir billsplit
+<span class="ps">PS C:\dev&gt;</span> cd billsplit
+<span class="ps">PS C:\dev\billsplit&gt;</span> git init
+<span class="ps">PS C:\dev\billsplit&gt;</span> python -m venv .venv
+<span class="ps">PS C:\dev\billsplit&gt;</span> .\.venv\Scripts\Activate.ps1
+<span class="ps">PS C:\dev\billsplit&gt;</span> pip install pytest
+<span class="ps">PS C:\dev\billsplit&gt;</span> claude</pre>
+      </div>
+      <p>On macOS and Linux use <code>source .venv/bin/activate</code> in place of the activate line. If PowerShell refuses to run the activate script, run <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code> once.</p>
+      <p><b>In VS Code:</b> use <b>File, Open Folder</b> and choose <code>billsplit</code>, open the integrated terminal with <code>Ctrl+`</code> for the commands above (skip the last <code>claude</code> line), then open the Claude Code panel from the Spark icon in the top right of the editor. It works on the folder you have open.</p>
+      <p>Add one file before you move on so the virtual environment never reaches git: create <code>.gitignore</code> containing the two lines <code>.venv/</code> and <code>__pycache__/</code>.</p>
+
+      <h2><span class="num">04</span>Stage 2: Write down the rules (Day 2)</h2>
+      <p><b>What.</b> A CLAUDE file (<code>CLAUDE.md</code>) is a plain text file in your project that Claude reads at the start of every session. <b>Why now.</b> It is the cheapest thing you will do all day and it pays back on every prompt after it. Claude forgets everything between sessions, so anything you do not write down you will explain again tomorrow. <b>How:</b> ask Claude to draft it, then trim it.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — in a Claude Code session</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="y">&gt;</span> <span class="s">/init</span></pre>
+      </div>
+      <p>On an empty project <code>/init</code> has little to find, so replace what it wrote with the few things only you know. Keep it short. Here is the whole file for billsplit:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>CLAUDE.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre># billsplit
+
+A command-line tool that splits a restaurant bill between people.
+
+## Rules
+- Python 3.9+, standard library only. The only extra is pytest for tests.
+- Money is ALWAYS whole cents (integers). Never use float for stored amounts.
+- Shares must add up to exactly the total plus tip. No cent is lost.
+- Code lives in billsplit/, tests in tests/.
+
+## Commands
+- Run the app: python -m billsplit 100 3 --tip 10
+- Run tests: python -m pytest -q
+
+## Working agreement
+- Write or update a test for every behaviour change.
+- Keep functions small. Do not add dependencies without asking.</pre>
+      </div>
+      <p><b>Check it worked:</b> run <code>/memory</code> in the session and you should see the file listed as loaded. <b>In VS Code</b> the same <code>/init</code> works in the panel's prompt box. Remember the Day 2 rule: say what Claude cannot guess (rules, commands), not what it can read from the code.</p>
+
+      <h2><span class="num">05</span>Stage 3: Plan before you build (Day 4)</h2>
+      <p><b>What.</b> Plan mode lets Claude read and think but not change anything. It writes a plan, you read it, and only then does it start editing. <b>Why now.</b> A wrong idea costs seconds to fix in a plan and minutes to undo in code. For a feature with a hidden trap (our leftover cents), a plan is where that trap shows up. <b>How:</b> press <code>Shift+Tab</code> until the status bar says plan mode (in VS Code, use the mode picker at the bottom of the prompt box, or start from the shell with <code>claude --permission-mode plan</code>). Then give a clear ask:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — plan mode</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="y">&gt;</span> Plan billsplit as described in CLAUDE.md. Behaviour: total, number of
+  people and optional tip percent in, each person's share out, in cents.
+  List the edge cases (rounding, zero people, negative numbers), the files you
+  would create and the tests you would write. Do not write code yet.</pre>
+      </div>
+      <p>Read the plan like a reviewer. Does it name the leftover-cents problem? Does it use integers? If something is off, answer in plain words (<code>use whole cents, not floats</code>) and let it revise. When the plan is right, approve it. In the terminal the approval prompt offers to start building, and in VS Code you press the approve button on the plan. That is the whole Day 4 habit: <b>explore, plan, then build</b>.</p>
+
+      <h2><span class="num">06</span>Stage 4: Set the guardrails and keep context clean (Day 5)</h2>
+      <p><b>What and why.</b> Two things stop a long session from going wrong. <b>Permissions</b> decide what Claude may do without asking, so you are not clicking "yes" on every test run, and so secrets stay out of reach. <b>Context</b> is Claude's working memory: the fuller it is with old, unrelated chat, the worse it performs. <b>How:</b> create <code>.claude/settings.json</code> (VS Code: New File in the Explorer) with this:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest *)",
+      "Bash(python -m billsplit *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "deny": [ "Read(./.env)", "Read(./.env.*)" ]
+  }
+}</pre>
+      </div>
+      <p>The allow list is safe on purpose: it runs the tests and the app and reads git state, nothing that writes or deletes. The deny list blocks reading secret files even if a prompt asks. You can edit rules any time with <code>/permissions</code>. For context, build two habits: run <code>/context</code> now and then to see how full the window is, and run <code>/clear</code> when you finish a task and start another. Rules in the CLAUDE file survive a <code>/clear</code>, because they reload.</p>
+
+      <h2><span class="num">07</span>Stage 5: Build in small steps, with tests (Days 4 and 5)</h2>
+      <p><b>What.</b> Instead of one giant request, you ask for one small thing, check it, then ask for the next. <b>Why.</b> Small steps are easy to review, easy to undo, and keep the context focused. Tests give Claude (and you) a way to prove each step works instead of hoping. <b>How:</b> switch out of plan mode (<code>Shift+Tab</code> to accept-edits or default) and run these prompts one at a time:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — step by step</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># step 1: tests first, so "done" has a definition</span>
+<span class="y">&gt;</span> Create tests/test_core.py with tests for a split_bill(total_cents,
+  people, tip_percent=0) function: an even split, leftover cents never lost,
+  tip added, and zero people raising ValueError. Run them and show they fail.
+
+<span class="c"># step 2: the function</span>
+<span class="y">&gt;</span> Now write billsplit/core.py so those tests pass. Run the tests.
+
+<span class="c"># step 3: the command line</span>
+<span class="y">&gt;</span> Add billsplit/__main__.py using argparse so
+  "python -m billsplit 100 3 --tip 10" prints one line per person.</pre>
+      </div>
+      <p>The heart of the result looks like this. Notice the <code>divmod</code> line: it hands the leftover cents to the first people, which is exactly the trap the plan warned about.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>billsplit/core.py</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>def split_bill(total_cents, people, tip_percent=0):
+    <span class="c">"""Return cents owed per person. Shares sum to total plus tip."""</span>
+    if people &lt; 1:
+        raise ValueError("people must be at least 1")
+    if total_cents &lt; 0 or tip_percent &lt; 0:
+        raise ValueError("total and tip cannot be negative")
+    grand = round(total_cents * (100 + tip_percent) / 100)
+    base, extra = divmod(grand, people)
+    return [base + 1 if i &lt; extra else base for i in range(people)]</pre>
+      </div>
+      <p>Run <code>python -m pytest -q</code> and then <code>python -m billsplit 100 3 --tip 10</code>. You should see <code>Person 1: 36.67</code>, <code>Person 2: 36.67</code>, <code>Person 3: 36.66</code>, which adds up to exactly 110.00. <b>In VS Code</b>, Claude's edits show as diffs in the editor: accept or reject each one, and open the Testing panel if you want a green tick view. If a step goes wrong, <code>Esc Esc</code> (or the rewind button in VS Code) takes you back to before it.</p>
+
+      <h2><span class="num">08</span>Stage 6: Save and share your work (Day 6)</h2>
+      <p><b>What and why.</b> Git is your safety net and your history. A good commit is one finished idea with a clear message, and a pull request is how others review it. Do this as soon as the first step works, not at the end of the day. <b>How:</b> make a branch, ask for a commit, push, and open a pull request.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — git with Claude</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="y">&gt;</span> Create a branch called feature/split-core, and commit what we have
+  with a clear message. Do not add the .venv folder.
+
+<span class="c"># first push needs a GitHub repo. Create an empty one named billsplit, then:</span>
+<span class="y">&gt;</span> Add the GitHub repo https://github.com/YOUR-NAME/billsplit as origin
+  and push the branch.
+
+<span class="y">&gt;</span> Open a pull request for this branch. Explain what changed and how to test it.</pre>
+      </div>
+      <p>Opening a pull request from Claude needs the GitHub CLI (<code>gh auth login</code> once) or the GitHub connection from Stage 7. Always read the diff before you accept a commit: run <code>/diff</code> or <code>git diff</code>. Never let a commit contain secrets or the virtual environment folder. If you would rather not use the command line for git, VS Code's Source Control panel does the same steps with buttons.</p>
+
+      <h2><span class="num">09</span>Stage 7: Let Claude read your GitHub issues (Day 7)</h2>
+      <p><b>What.</b> MCP (Model Context Protocol) is the standard plug that lets Claude use outside tools. The GitHub server lets it read issues and pull requests directly instead of you pasting text in. <b>Why now.</b> Your project now lives on GitHub, so the next feature request is probably an issue there. <b>How:</b> create a GitHub fine-grained token with read access to this one repository, then:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>claude mcp add --transport http github https://api.githubcopilot.com/mcp/ --header "Authorization: Bearer YOUR_GITHUB_PAT"
+claude mcp list</pre>
+      </div>
+      <p>Inside Claude Code, <code>/mcp</code> should show <b>github</b> as Connected. Then try: <code>read issue 1 on my billsplit repo and propose a plan</code>. Keep the token read-only and scoped to one repo, never paste it into a file you commit, and leave write actions on the ask list (Day 7). In VS Code, run the same <code>claude mcp add</code> in the integrated terminal and check the result with <code>/mcp</code> in the panel. Open the repo and file an issue first, such as "add a --round-up option", so Claude has something real to read.</p>
+
+      <h2><span class="num">10</span>Stage 8: Turn a repeated check into a skill (Day 8)</h2>
+      <p><b>What.</b> A skill is a folder with a <code>SKILL.md</code> file: instructions Claude loads when needed and that you can also run as a slash command. <b>Why now.</b> By now you have typed "run the tests, then try the app with three sample bills" more than once. Anything you type twice belongs in a skill. <b>How:</b> create <code>.claude/skills/check-split/SKILL.md</code>:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/skills/check-split/SKILL.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> check-split
+<span class="s">description:</span> Run the tests and try billsplit on sample bills to prove the shares add up
+<span class="s">disable-model-invocation:</span> true
+<span class="c">---</span>
+
+1. Run python -m pytest -q and report the result.
+2. Run python -m billsplit for these bills and check the shares add up
+   to total plus tip each time:
+   - 100 with 3 people, no tip
+   - 100 with 3 people, 10 percent tip
+   - 0.01 with 2 people
+3. Finish with PASS or FAIL and one line on why.</pre>
+      </div>
+      <p>Now <code>/check-split</code> runs the same careful check every time, from the terminal or the VS Code panel. Because of <code>disable-model-invocation: true</code> it only runs when <i>you</i> type it, which is right for something that executes commands.</p>
+
+      <h2><span class="num">11</span>Stage 9: Add a reviewer and a safety net (Day 9)</h2>
+      <p><b>What and why.</b> Two pieces here. A <b>subagent</b> is a helper with its own fresh context and limited tools: a reviewer that reads your diff <i>without</i> the bias of having written it. A <b>hook</b> is a rule that runs automatically on an event, so it cannot be forgotten: here, run the tests after every Python file Claude edits. <b>How:</b> the reviewer is one file, <code>.claude/agents/code-reviewer.md</code>:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/agents/code-reviewer.md</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c">---</span>
+<span class="s">name:</span> code-reviewer
+<span class="s">description:</span> Reviews code changes for bugs, money-rounding mistakes and missing tests.
+<span class="s">tools:</span> Read, Grep, Glob, Bash
+<span class="s">model:</span> sonnet
+<span class="c">---</span>
+
+You are a careful reviewer. Run git diff and review only the changed code.
+Pay special attention to money handling: floats, rounding and lost cents.
+Report must fix, should fix and nice to have, each with file, line and fix.
+Never edit files.</pre>
+      </div>
+      <p>Use it by asking <code>use the code-reviewer agent on my changes</code>. For the safety net, add a small script and a hook. The script reads the event from stdin, ignores anything that is not a Python file, runs the tests, and exits with code 2 on failure so Claude is told and fixes it:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/hooks/run_tests.py</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">import</span> json, subprocess, sys
+
+event = json.load(sys.stdin)
+path = event.get("tool_input", {}).get("file_path", "")
+<span class="s">if not</span> path.endswith(".py"):
+    sys.exit(0)
+
+result = subprocess.run([sys.executable, "-m", "pytest", "-q", "-x"],
+                        capture_output=True, text=True)
+<span class="s">if</span> result.returncode != 0:
+    print(result.stdout[-1500:], file=sys.stderr)
+    sys.exit(2)
+sys.exit(0)</pre>
+      </div>
+      <p>Then register it by adding a <code>hooks</code> block next to <code>permissions</code> in <code>.claude/settings.json</code>:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json (add this)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "python .claude/hooks/run_tests.py" }
+        ]
+      }
+    ]
+  }</pre>
+      </div>
+      <p>Type <code>/hooks</code> to confirm it is listed under <code>PostToolUse</code>. On macOS and Linux write <code>python3</code> if <code>python</code> is not found. Test it by asking Claude to change the rounding in a way that breaks a test: the hook feeds the failure back and Claude repairs its own mistake. Remember the Day 9 warning: a hook runs with your permissions, so only keep hooks you understand.</p>
+
+      <h2><span class="num">12</span>Stage 10: Package the setup as a plugin (Day 10)</h2>
+      <p><b>What and why.</b> Right now the skill, reviewer and hook live in this one project. A plugin turns them into one installable unit, so your next project, or a teammate, gets all three with one command. <b>How:</b> create a folder next to the project and copy the pieces in.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>billsplit-kit</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>billsplit-kit\
+  .claude-plugin\plugin.json
+  skills\check-split\SKILL.md
+  agents\code-reviewer.md
+  hooks\hooks.json
+  scripts\run_tests.py</pre>
+      </div>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude-plugin/plugin.json and hooks/hooks.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  "name": "billsplit-kit",
+  "description": "Check skill, money-aware reviewer and a test-after-edit hook",
+  "version": "1.0.0"
+}
+
+<span class="c">// hooks/hooks.json: same shape as your settings, new script path</span>
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command",
+            "command": "python \"${CLAUDE_PLUGIN_ROOT}/scripts/run_tests.py\"" }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+      <p>Validate and try it, from a shell in a fresh project:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>PowerShell — validate and load</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">claude plugin validate</span> .\billsplit-kit
+<span class="s">claude --plugin-dir</span> .\billsplit-kit
+
+<span class="y">&gt;</span> <span class="s">/billsplit-kit:check-split</span>
+<span class="y">&gt;</span> use the billsplit-kit:code-reviewer agent on my changes</pre>
+      </div>
+      <p><b>Watch out for duplicates.</b> Once the plugin works, remove the originals from <code>.claude/</code> (especially the hook), otherwise the hook fires twice. To share it, put the folder in a Git repo with a marketplace file as in Day 10 and your team installs it with <code>/plugin marketplace add</code> and <code>/plugin install</code>.</p>
+
+      <h2><span class="num">13</span>The loop you will use every day</h2>
+      <p><b>What and why.</b> After one run through, the stages collapse into a short loop. This is the habit worth keeping, because it works on any project size. <b>How:</b></p>
+      <div class="cc-loop">
+        <div><b>Rules</b><span>Is the CLAUDE file current? Add any rule you had to repeat.</span></div>
+        <div><b>Plan</b><span>New feature or risky change: plan mode first.</span></div>
+        <div><b>Build</b><span>Tests, then code, in small steps. <code>/clear</code> between tasks.</span></div>
+        <div><b>Check</b><span><code>/check-split</code> style skill, plus the reviewer subagent.</span></div>
+        <div><b>Save</b><span>Commit small, open a pull request, read the diff.</span></div>
+        <div><b>Automate</b><span>Annoyed twice? Make it a skill, a hook or an agent.</span></div>
+      </div>
+      <p>The last step is what turns Claude Code from a chatbot into <b>your</b> setup: every irritation becomes a file, and the plugin is how those files travel.</p>
+
+      <h2><span class="num">14</span>Which tool for which problem</h2>
+      <div class="cc-loop">
+        <div><b>"It keeps forgetting our rules"</b><span>CLAUDE file (Day 2).</span></div>
+        <div><b>"It built the wrong thing"</b><span>Plan mode and clearer prompts (Day 4).</span></div>
+        <div><b>"It got slow and confused"</b><span><code>/context</code>, <code>/compact</code> or <code>/clear</code> (Day 5).</span></div>
+        <div><b>"It keeps asking permission"</b><span>Allow rules in settings (Day 5).</span></div>
+        <div><b>"I need to undo or share"</b><span>Git and pull requests (Day 6).</span></div>
+        <div><b>"It needs data from another tool"</b><span>An MCP server (Day 7).</span></div>
+        <div><b>"I keep typing the same instructions"</b><span>A skill (Day 8).</span></div>
+        <div><b>"I want a second opinion"</b><span>A subagent (Day 9).</span></div>
+        <div><b>"This must happen every time"</b><span>A hook (Day 9).</span></div>
+        <div><b>"My teammate needs all of it"</b><span>A plugin (Day 10).</span></div>
+      </div>
+
+      <h2><span class="num">15</span>When something goes wrong</h2>
+      <div class="cc-loop">
+        <div><b>Claude does not follow the CLAUDE file</b><span>Run <code>/memory</code> to confirm it loaded, and shorten it. Long files get ignored.</span></div>
+        <div><b>The hook never fires</b><span>Run <code>/hooks</code>. Check the event is <code>PostToolUse</code>, the matcher is <code>Edit|Write</code> and the script path is right.</span></div>
+        <div><b>Tests pass in the terminal, fail in the hook</b><span>The hook may run with a different Python. Use the venv's Python path in the command, for example <code>.venv\Scripts\python</code>.</span></div>
+        <div><b>MCP shows Failed</b><span>Token expired or wrong scope. Re-add the server with a new token and run <code>/mcp</code>.</span></div>
+        <div><b>Skill or agent not found</b><span>Check the folder name matches <code>name:</code>, restart the session if you created <code>.claude/skills</code> just now.</span></div>
+        <div><b>Plugin loads but hooks run twice</b><span>The same hook is still in <code>.claude/settings.json</code>. Delete the original.</span></div>
+        <div><b>Git push rejected</b><span>The remote already has commits. Ask Claude to fetch and rebase, and read the result before pushing.</span></div>
+      </div>
+
+      <h2><span class="num">16</span>Cheat sheet: the whole series on one screen</h2>
+      <div class="cc-loop">
+        <div><b>Start</b><span><code>claude</code>, VS Code: Spark icon. <code>/init</code> for a CLAUDE file.</span></div>
+        <div><b>Plan</b><span><code>Shift+Tab</code> to plan mode, or <code>claude --permission-mode plan</code>.</span></div>
+        <div><b>Context</b><span><code>/context</code>, <code>/compact</code>, <code>/clear</code>.</span></div>
+        <div><b>Permissions</b><span><code>/permissions</code>, or <code>.claude/settings.json</code>.</span></div>
+        <div><b>Undo</b><span><code>Esc Esc</code> or <code>/rewind</code>, <code>/diff</code> to review.</span></div>
+        <div><b>MCP</b><span><code>claude mcp add</code>, <code>claude mcp list</code>, <code>/mcp</code>.</span></div>
+        <div><b>Skills</b><span><code>.claude/skills/name/SKILL.md</code>, run with <code>/name</code>.</span></div>
+        <div><b>Agents</b><span><code>.claude/agents/name.md</code>, <code>/agents</code>.</span></div>
+        <div><b>Hooks</b><span><code>hooks</code> in settings, <code>/hooks</code> to check.</span></div>
+        <div><b>Plugins</b><span><code>/plugin</code>, <code>claude plugin validate</code>, <code>claude --plugin-dir</code>.</span></div>
+      </div>
+
+      <h2><span class="num">17</span>Questions beginners ask</h2>
+      <div class="cc-loop">
+        <div><b>Do I need all ten stages for every project?</b><span>No. A tiny script needs a CLAUDE file, git and a test. Add the rest when a real annoyance shows up. Stages 8 to 10 are for things you repeat.</span></div>
+        <div><b>Why write tests before code?</b><span>They define "done". Claude can run them and fix itself, so you review results instead of guessing.</span></div>
+        <div><b>Can I use another language?</b><span>Yes. Change the commands in the CLAUDE file, the allow rules and the hook script. The stages stay the same.</span></div>
+        <div><b>Is the GitHub token safe to give Claude?</b><span>Use a fine-grained token limited to one repository and read-only permissions, and revoke it when you stop. Never commit it.</span></div>
+        <div><b>Can I do this entirely in VS Code?</b><span>Almost. The panel handles prompts, plan mode, <code>/init</code>, <code>/mcp</code>, <code>/hooks</code> and <code>/plugins</code>. The terminal is only needed for commands like <code>claude mcp add</code> and <code>claude plugin validate</code>, and VS Code has one built in.</span></div>
+        <div><b>What if I get stuck halfway?</b><span>Stop at any stage. Each one leaves the project working and committed, so you can pick up the next day.</span></div>
+      </div>
+
+      <h2><span class="num">18</span>Try this today</h2>
+      <div class="cc-loop">
+        <div><b>Build</b><span>Follow stages 1 to 6 and get billsplit running with passing tests and a commit.</span></div>
+        <div><b>Break it on purpose</b><span>Ask Claude to switch the maths to floats. Watch the test and the hook catch it.</span></div>
+        <div><b>Review</b><span>Run the code-reviewer subagent on your diff and fix one must-fix.</span></div>
+        <div><b>Automate one thing</b><span>Pick the thing you retyped most and turn it into a skill.</span></div>
+        <div><b>Share</b><span>Package your favourite pieces as a plugin and install it in a second project.</span></div>
+      </div>
+      <p>That closes the first loop of the series: from installing Claude Code to shipping a small project with a reviewer, a safety net and a plugin to carry it all. Once the project is stable, Day 11 shows how to run the same checks from scripts and GitHub Actions without you at the keyboard. Whatever you build next, use the same order.</p>
+    </article>
+
+    <nav class="cc-pager">
+      <a href="../day-11/" class="cc-btn"><i class="fas fa-arrow-left"></i> Day 11</a>
+      <a href="../" class="cc-btn">All articles <i class="fas fa-arrow-right"></i></a>
+    </nav>
+
+
+    <section class="cc-follow">
+      <h2>Follow along</h2>
+      <p>A new article lands every day. I post the short version on LinkedIn.</p>
+      <div class="cc-jump" style="margin-top:0;">
+        <a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn solid"><i class="fab fa-linkedin"></i> Follow on LinkedIn</a>
+        <a href="https://github.com/Kowshik46" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-github"></i> Kowshik46 on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cc-foot">
+    © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data).</small>
+  </footer>
+
+  <script src="../../assets/js/site.js" defer></script>
+</body>
+</html>
