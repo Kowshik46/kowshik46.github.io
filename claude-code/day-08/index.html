@@ -93,7 +93,7 @@
       <h1>Teach it once.<br /><span class="cc-grad">Reuse it forever.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>18 min read</span>
+        <span>5 min quick start + 18 min full guide</span>
         <span>Oct 18, 2026</span>
       </div>
     </div>
@@ -102,11 +102,32 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-8">
 
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>What a skill is and how it differs from CLAUDE.md, a prompt or a command</li><li>How to write one: folder, SKILL.md, a description that triggers it</li><li>Arguments, tool pre-approval and sharing skills</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>The description is the line that decides whether the skill ever runs. Write it like a trigger.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">.claude/skills/my-skill/SKILL.md
+---
+name: my-skill
+description: Use when the user asks to ...
+---</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        
+        <p>Official docs: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a> · <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory and CLAUDE.md</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+8%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-08%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%208%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
       <div class="cc-callout">
         <p><strong>Companion page:</strong> after you read this, see <a href="publish-skills/">how to publish your skill as open source</a>: GitHub repo, license, plugin, marketplace and updates, with create-launcher as the example.</p>
       </div>
 
-      <h2><span class="num">01</span>What a skill is, and why you want one</h2>
+      <h2 id="full-guide"><span class="num">01</span>What a skill is, and why you want one</h2>
       <p><b>What.</b> A skill is a folder with one file in it, <code>SKILL.md</code>. The file has two parts: a short header that says what the skill is for, and plain Markdown instructions that say how to do it. Think of it as a written procedure you hand to a new teammate, except the teammate is Claude.</p>
       <p><b>Why.</b> Look at the prompts you type more than once: "review this like we do", "write release notes in our style", "set this project up so I can run it". Each time you retype them you forget a detail, and each teammate words them differently, so results drift. A skill fixes the wording once, keeps it in a file you can edit and version, and makes the result repeatable.</p>
       <p><b>How it works.</b> Claude Code puts only the one-line <code>description</code> of every skill in the session. The full instructions load <i>only</i> when the skill is used. That is the key design: you can keep dozens of skills and pay almost nothing in context until one is needed. A skill runs in one of two ways. Claude <b>loads it on its own</b> when your request matches the description, or you <b>call it</b> with <code>/skill-name</code>.</p>

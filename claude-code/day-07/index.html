@@ -93,7 +93,7 @@
       <h1>Plug it into<br /><span class="cc-grad">your real tools.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>16 min read</span>
+        <span>5 min quick start + 16 min full guide</span>
         <span>Oct 17, 2026</span>
       </div>
     </div>
@@ -102,7 +102,25 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-7">
 
-      <h2><span class="num">01</span>What MCP actually is</h2>
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>What MCP is: host, client and server in plain words</li><li>How to connect a server (HTTP, stdio) and choose its scope</li><li>How to keep connected tools safe and cheap on context</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>An MCP server is a doorway to your data. Connect only the ones you trust, at the narrowest scope.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
+claude mcp list</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p>SSE servers are deprecated in favour of HTTP. From v2.1.265 Claude Code tries HTTP first and falls back to SSE.</p>
+        <p>Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> · <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+7%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-07%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%207%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
+      <h2 id="full-guide"><span class="num">01</span>What MCP actually is</h2>
       <p>So far Claude Code has worked with your files, your shell and git. <b>MCP</b> (Model Context Protocol) is the open standard that lets it reach everything else: your error tracker, your database, your issue board, a browser. In one line: <b>MCP is a standard way for an AI app to discover and use tools and data that live outside it.</b></p>
       <p>The payoff is that questions you used to answer by tab-hopping become one prompt: <code>what broke in prod since yesterday's deploy, and which commit caused it?</code> Claude reads the error, finds the code and proposes the fix, all in one session.</p>
 
@@ -359,6 +377,11 @@
 }</pre>
       </div>
       <p>If you see <code>spawn claude ENOENT</code>, the app cannot find <code>claude</code> on its PATH. Put the full path to it in <code>command</code>.</p>
+
+      <aside class="cc-tradeoff">
+        <h3>When not to use MCP</h3>
+        <ul><li>Use plain CLI when a command already does the job. Claude can run gh, git or psql directly, and a CLI adds no extra context. A server's tool list loads into every session.</li><li>Skip a server you would not give a new teammate access to. Anything it can read can reach the conversation, including text an attacker planted in an issue or web page.</li><li>Prefer one narrow server over a big all-purpose one, and drop it from sessions that do not need it.</li></ul>
+      </aside>
 
       <h2><span class="num">12</span>Try this today</h2>
       <div class="cc-loop">

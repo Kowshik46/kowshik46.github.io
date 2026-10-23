@@ -93,7 +93,7 @@
       <h1>Let it commit.<br /><span class="cc-grad">You review.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>11 min read</span>
+        <span>5 min quick start + 11 min full guide</span>
         <span>Oct 16, 2026</span>
       </div>
     </div>
@@ -102,7 +102,25 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-6">
 
-      <h2><span class="num">01</span>Git is your safety net</h2>
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>Why a clean git tree is your safety net</li><li>How to review a diff, write a commit and open a pull request with Claude</li><li>How worktrees let two jobs run without colliding</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Commit before you start, review the diff before you commit.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">git status
+&gt; Commit these changes with a clear message, then open a pull request.</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        
+        <p>Official docs: <a href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener">Common workflows</a> · <a href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Git worktrees</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+6%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-06%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%206%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
+      <h2 id="full-guide"><span class="num">01</span>Git is your safety net</h2>
       <p>Claude Code edits many files fast. That is the point, and also the risk. Git is what turns "it changed things" into "I can see exactly what changed and undo it". Used well, Claude does the tedious parts (staging, commit messages, PR descriptions, a first review) and you keep the decisions.</p>
       <p>You do not need a special setup. Claude runs the same <code>git</code> commands you do, so it works in any repository. For pull requests it uses the <b>GitHub CLI</b> (<code>gh</code>), which we set up in section 05.</p>
 

@@ -93,7 +93,7 @@
       <h1>Delegate the work.<br /><span class="cc-grad">Automate the rules.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>34 min read</span>
+        <span>5 min quick start + 34 min full guide</span>
         <span>Oct 20, 2026</span>
       </div>
     </div>
@@ -102,11 +102,30 @@
     <main class="cc-wrap">
     <article class="cc-article" id="day-9">
 
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>Subagents: a helper with its own context and its own rules</li><li>Hooks: rules that run every time, whether or not Claude remembers them</li><li>When to use which, and how they work together</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Subagents delegate the thinking. Hooks enforce the rules. A rule that must always hold belongs in a hook, not in a prompt.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">{ "hooks": { "PreToolUse": [ { "matcher": "Bash",
+  "hooks": [ { "type": "command", "command": ".claude/hooks/guard.sh" } ] } ] } }
+# the script exits 2 to block</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p>The `if` field and the prompt, agent and http hook types are newer; check the hooks reference if your version rejects them. Exit code 1 is not a block. Only exit 2 (or a deny decision) stops the action.</p>
+        <p>Official docs: <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Subagents</a> · <a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a> · <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Hooks guide</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+9%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-09%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%209%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
       <div class="cc-callout">
         <p><strong>Two roadmap rows in one day:</strong> subagents (Part 1) and hooks (Part 2). They fit together. Subagents decide <i>who</i> does the work. Hooks decide which rules <i>always</i> run, no matter who does it. A reader asked for hooks, so here they are.</p>
       </div>
 
-      <h2><span class="num">01</span>The big picture: helpers and guardrails</h2>
+      <h2 id="full-guide"><span class="num">01</span>The big picture: helpers and guardrails</h2>
       <p><b>What.</b> Two features that make Claude Code feel less like a chat and more like a small team with house rules. A <b>subagent</b> is a separate Claude with its own fresh context that you hand a job to. A <b>hook</b> is a command of yours that Claude Code runs automatically at a fixed moment, such as right after every file edit.</p>
       <p><b>Why they belong together.</b> Everything so far (CLAUDE.md, skills, prompts) <i>asks</i> Claude to behave. Asking works almost always, but "almost" is not good enough for "never touch the .env file" or "always format the code". A hook does not ask, it simply runs. And a subagent keeps big, noisy jobs out of your main conversation, which protects the context you learned to manage on Day 5.</p>
       <div class="cc-loop">
@@ -746,6 +765,11 @@ You answer data questions. Only run SELECT queries.</pre>
         <div><b>Why does my hook run but nothing happens?</b><span>Exit 0 with no output means "no objection". A <code>PreToolUse</code> hook only blocks on exit 2, or on JSON with <code>permissionDecision: "deny"</code>.</span></div>
         <div><b>Can one hook break my session?</b><span>A slow hook delays every matching action, and a command that errors shows a hook error. Failures usually do not stop Claude, apart from the cases where you set a hook to block on failure. Test a new hook on a throwaway project first.</span></div>
       </div>
+
+      <aside class="cc-tradeoff">
+        <h3>When not to use these</h3>
+        <ul><li>Use a separate session, not a subagent, when the work is long, needs your back-and-forth, or you want to steer it. A subagent runs on its own and reports back once.</li><li>Skip a subagent for small tasks. It starts with an empty context and has its own requests, so a quick edit can cost more than doing it inline.</li><li>Do not put judgment calls in hooks. Hooks are for rules you can state as code (block this path, run that formatter). Slow or noisy hooks run on every matching action.</li><li>A hook runs with your permissions. Read any hook script before you enable it, including one from a plugin.</li></ul>
+      </aside>
 
       <h2><span class="num">31</span>Try this today</h2>
       <div class="cc-loop">

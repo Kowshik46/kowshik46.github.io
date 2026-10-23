@@ -93,7 +93,7 @@
       <h1>Pick the right model.<br /><span class="cc-grad">Spend less. Run in parallel.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>27 min read</span>
+        <span>5 min quick start + 27 min full guide</span>
         <span>Oct 23, 2026</span>
       </div>
     </div>
@@ -102,11 +102,30 @@
     <main class="cc-wrap">
     <article class="cc-article" id="day-12">
 
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>Which model, which effort level and which context size for which job</li><li>What a session really costs and ten habits that cut it</li><li>Parallel work with resume and git worktrees, and what it costs</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Match the dial to the job: small model and low effort for mechanical work, bigger model and more effort only for hard reasoning.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">/model opusplan
+/effort medium
+claude --worktree feature-search</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p>Minimum versions: Fable 5.1 v2.1.257, Opus 5.5 v2.1.280, Sonnet 5.5 v2.1.284, Haiku 5.5 v2.1.293. Run claude update if an alias is not recognised.</p>
+        <p>Official docs: <a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration</a> · <a href="https://code.claude.com/docs/en/costs" target="_blank" rel="noopener">Costs</a> · <a href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Git worktrees</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+12%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-12%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%2012%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
       <div class="cc-callout">
         <p><strong>Beyond the roadmap: the dials you have not touched yet.</strong> Days 1 to 11 taught you what Claude Code can do. Today is about how <i>much</i> it does for how <i>little</i>: which model to pick, how hard it should think, what each session costs, and how to run several jobs side by side without them colliding. None of it is exotic. Most people simply never open these settings, and pay for it in slow answers, surprise limits and tangled branches.</p>
       </div>
 
-      <h2><span class="num">01</span>The big picture: four dials</h2>
+      <h2 id="full-guide"><span class="num">01</span>The big picture: four dials</h2>
       <p><b>What.</b> Every Claude Code session is shaped by four dials. You have been using them on their default positions all along.</p>
       <div class="cc-loop">
         <div><b>Dial 1: Model</b><span>Which Claude does the work. A bigger model reasons better and costs more; a smaller one is faster and cheaper. Sections 02 to 05.</span></div>
@@ -196,7 +215,7 @@ $env:ANTHROPIC_MODEL = "sonnet"
 
       <h2><span class="num">07</span>How Claude Code is billed, in plain words</h2>
       <p><b>What.</b> Everything Claude reads and writes is counted in <b>tokens</b>, roughly three quarters of a word each. On the API you pay per token. On a Pro, Max, Team or Enterprise plan the same tokens draw down your <b>plan limit</b> (a rolling five-hour window plus a weekly one), and you can add <b>usage credits</b> to keep going past it.</p>
-      <p><b>Why costs surprise people.</b> You do not pay once for your question. Claude Code sends the <i>whole conversation so far</i> with every request, and each tool call is another request. So a one-line follow-up at the end of a long session carries everything above it. Two things soften this: <b>prompt caching</b> (repeated material is re-read at a much cheaper rate) and <b>compaction</b>.</p>
+      <p><b>Why costs surprise people.</b> You do not pay once for your question. Claude Code sends the <i>whole conversation so far</i> with every request, and each tool call is another request. So a one-line follow-up at the end of a long session carries everything above it. Keep two ideas apart. <b>Context</b> is what is sent in each request, and it fills the window whether or not it is cached. <b>Prompt caching</b> only changes the billing: repeated material at the start of the conversation is billed at a much cheaper rate, but it still counts toward the window. <b>Compaction</b> is what actually shrinks the context.</p>
       <div class="cc-loop">
         <div><b>Long context</b><span>The longer the conversation, the more every message weighs. This is the number one reason usage climbs.</span></div>
         <div><b>Cache misses</b><span>The cache expires after a while. Come back from a long break and your first message re-processes the whole context at full price.</span></div>
@@ -389,6 +408,11 @@ git worktree list | remove</pre>
         <div><b>How many sessions at once?</b><span>As many as you can review carefully. Two or three is plenty for most people.</span></div>
         <div><b>Is turning thinking off a good idea?</b><span>Usually lower the effort instead. On the newest models thinking cannot be turned off at all.</span></div>
       </div>
+
+      <aside class="cc-tradeoff">
+        <h3>When parallel costs more than it saves</h3>
+        <ul><li>Parallel sessions save your waiting time, not tokens. Three sessions use at least three sessions' worth of tokens, and each one reloads the project context.</li><li>Do not split work that touches the same files. You trade a speed-up for merge conflicts.</li><li>Do not run more sessions than you can review. If you cannot read the diffs as fast as they arrive, the extra speed is wasted.</li><li>One focused session with /clear between tasks beats several drifting ones.</li></ul>
+      </aside>
 
       <h2><span class="num">22</span>Try this today</h2>
       <div class="cc-loop">

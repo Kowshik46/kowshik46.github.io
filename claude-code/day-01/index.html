@@ -93,7 +93,7 @@
       <h1>Anyone can use it.<br /><span class="cc-grad">Using it well is different.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>6 min read</span>
+        <span>5 min quick start + 6 min full guide</span>
         <span>Oct 11, 2026</span>
       </div>
     </div>
@@ -102,7 +102,24 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-1">
 
-      <h2><span class="num">01</span>What Claude Code actually is</h2>
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>What Claude Code is and what it can touch on your machine</li><li>Why getting a result is not the same as getting a result you can trust</li><li>The explore, plan, build, verify loop</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Ask it to prove the change works, then read the diff yourself.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">Add a failing test for the bug first, fix it, then run the tests and show me the result.</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        
+        <p>Official docs: <a href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener">Quickstart</a> · <a href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener">Common workflows</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+1%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-01%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%201%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
+      <h2 id="full-guide"><span class="num">01</span>What Claude Code actually is</h2>
       <p>Claude Code is Anthropic's AI coding agent. Unlike a chatbot where you copy and paste code back and forth, it works <strong>inside your project</strong>. It reads your files, edits them, runs commands, runs your tests and explains what it did. You describe the outcome you want in plain English, and it does the work in front of you.</p>
       <p>It started in the terminal, and that is still where it is most powerful, but you can also use it in VS Code, JetBrains IDEs, a desktop app and the browser.</p>
 

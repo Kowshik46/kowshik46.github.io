@@ -93,7 +93,7 @@
       <h1>Set it up once.<br /><span class="cc-grad">Use it anywhere.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>10 min read</span>
+        <span>5 min quick start + 10 min full guide</span>
         <span>Oct 13, 2026</span>
       </div>
     </div>
@@ -102,7 +102,26 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-3">
 
-      <h2><span class="num">01</span>Pick your way in</h2>
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>The two ways in: the terminal CLI and the VS Code extension</li><li>How to install, sign in and run a first safe session on Windows, macOS or Linux</li><li>What to check when it does not start</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Install once, run claude --version, then start with a read-only question.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">claude --version
+claude doctor
+claude "explain this project"</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p>Install steps and the extension change often. If a command differs on your machine, run claude update and check the setup page.</p>
+        <p>Official docs: <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Set up Claude Code</a> · <a href="https://code.claude.com/docs/en/vs-code" target="_blank" rel="noopener">Use it in VS Code</a> · <a href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener">Quickstart</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+3%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-03%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%203%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
+      <h2 id="full-guide"><span class="num">01</span>Pick your way in</h2>
       <p>Claude Code is the same engine whichever door you use. Pick the one that matches how you already work, and know you can switch later because they share your conversation history.</p>
       <div class="cc-gaps">
         <div class="cc-gap">

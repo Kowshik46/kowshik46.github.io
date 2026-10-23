@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Day 2: Give Claude Code Good Context — Kowshik Kesavarapu</title>
-  <meta name="description" content="Claude Code starts every session knowing nothing about your project. How to fix that with a CLAUDE.md file and clear asks, with a template you can copy." />
+  <meta name="description" content="A new Claude Code session doesn't carry over your last chat, so it can't know your project's rules. Fix that with a CLAUDE.md file and clear asks, with a template." />
   <meta property="og:title" content="Day 2: Give Claude Code good context" />
   <meta property="og:description" content="A CLAUDE.md file and clear asks stop it guessing." />
   <meta property="og:image" content="https://kowshik.co.in/claude-code/day-02.png" />
@@ -25,7 +25,7 @@
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "Day 2: Give Claude Code Good Context",
-  "description": "Claude Code starts every session knowing nothing about your project. How to fix that with a CLAUDE.md file and clear asks, with a template you can copy.",
+  "description": "A new Claude Code session doesn't carry over your last chat, so it can't know your project's rules. Fix that with a CLAUDE.md file and clear asks, with a template.",
   "url": "https://kowshik.co.in/claude-code/day-02/",
   "image": "https://kowshik.co.in/claude-code/day-02.png",
   "datePublished": "2026-10-12",
@@ -93,7 +93,7 @@
       <h1>It only knows<br /><span class="cc-grad">what you tell it.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>5 min read</span>
+        <span>5 min quick start + full guide</span>
         <span>Oct 12, 2026</span>
       </div>
     </div>
@@ -102,8 +102,26 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-2">
 
-      <h2><span class="num">01</span>Why context is everything</h2>
-      <p>Every Claude Code session starts blank. It can read your files, but it doesn't know your preferences, your team's rules or the command you use to run the tests. When it doesn't know, it guesses, and a confident guess in the wrong framework or style costs you a round of fixes.</p>
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>Why a new session does not remember your last chat</li><li>What goes in a CLAUDE.md file, and what to leave out</li><li>How to write an ask with a file, a definition of done and a constraint</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Write down what is always true in CLAUDE.md. Say what is true today in the prompt.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">/init
+# then trim to: commands, conventions, things to avoid</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        
+        <p>Official docs: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">How Claude remembers your project</a> · <a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Best practices</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+2%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-02%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%202%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
+      <h2 id="full-guide"><span class="num">01</span>Why context is everything</h2>
+      <p>A new Claude Code session does not automatically carry over your previous conversation. It can read your files, but unless something tells it, it doesn't know your preferences, your team's rules or the command you use to run the tests. Continuity comes from what is written down: <code>CLAUDE.md</code> (and auto memory, if you have it on) is loaded at the start of every session. When it doesn't know, it guesses, and a confident guess in the wrong framework or style costs you a round of fixes.</p>
       <p>Two habits remove most of the guessing: a <code>CLAUDE.md</code> file for what is always true about your project, and clear asks for what is true about this one task.</p>
 
       <h2><span class="num">02</span>CLAUDE.md: a briefing it reads every session</h2>

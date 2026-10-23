@@ -93,7 +93,7 @@
       <h1>Keep it sharp.<br /><span class="cc-grad">Stay in control.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>11 min read</span>
+        <span>5 min quick start + 11 min full guide</span>
         <span>Oct 15, 2026</span>
       </div>
     </div>
@@ -102,8 +102,27 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-5">
 
-      <h2><span class="num">01</span>Why long sessions go wrong</h2>
-      <p>Claude has no memory between sessions, but inside one session it re-reads the whole conversation on every message: your prompts, every file it opened, every command output. That history is the <b>context window</b>, and it is finite. As it fills, answers get slower, costlier and less accurate. Claude starts forgetting early instructions and repeating itself.</p>
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>Why long sessions get slower and less accurate</li><li>How to see and shrink the context with /context, /compact and /clear</li><li>How permissions work, and how to stop approving the same command</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Start a fresh session per task and allow the safe, repeated commands once.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">/context   # what is filling the window
+/compact   # summarise and keep going
+/clear     # new task, empty context</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p>The --autocompact flag needs Claude Code v2.1.221 or later.</p>
+        <p>Official docs: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> · <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Permission modes</a> · <a href="https://code.claude.com/docs/en/costs" target="_blank" rel="noopener">Costs</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+5%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-05%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%205%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
+      <h2 id="full-guide"><span class="num">01</span>Why long sessions go wrong</h2>
+      <p>A new session does not automatically carry the previous conversation (only <code>CLAUDE.md</code> and memory do), but inside one session every request sends the whole conversation again: your prompts, every file it opened, every command output. That history is the <b>context window</b>, and it is finite. As it fills, answers get slower and less accurate, and each request carries more tokens. (What those tokens cost is a separate question: prompt caching can make repeated material cheaper to bill, but it does not shrink the window. Day 12 covers the cost side.) Claude starts forgetting early instructions and repeating itself.</p>
       <p>The second half of this article is the other side of control: <b>permissions</b>. Claude Code asks before it edits files or runs commands. Set that up well and you stop clicking "yes" on the same prompt fifty times, without handing over the keys.</p>
 
       <h2><span class="num">02</span>What fills the context</h2>

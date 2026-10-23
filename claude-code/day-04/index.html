@@ -93,7 +93,7 @@
       <h1>Ask clearly.<br /><span class="cc-grad">Plan before you build.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>11 min read</span>
+        <span>5 min quick start + 11 min full guide</span>
         <span>Oct 14, 2026</span>
       </div>
     </div>
@@ -102,7 +102,25 @@
   <main class="cc-wrap">
     <article class="cc-article" id="day-4">
 
-      <h2><span class="num">01</span>Why the same tool gives different results</h2>
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>Prompts that work the first time</li><li>Plan mode: read-only thinking before any edit</li><li>The slash commands and shortcuts worth learning first</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>For anything bigger than one file, plan first (Shift+Tab to plan mode), approve the plan, then build.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">Shift+Tab   # switch to plan mode
+&gt; Plan how to add pagination to /orders. Do not edit anything yet.</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        
+        <p>Official docs: <a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode and shortcuts</a> · <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands</a> · <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Permission modes</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+4%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-04%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%204%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
+      <h2 id="full-guide"><span class="num">01</span>Why the same tool gives different results</h2>
       <p>Two people use Claude Code on the same project. One gets a clean, working change. The other gets a mess and blames the tool. The difference is almost never the model. It is how they ask, whether they let it think first, and how well they steer once it is running.</p>
       <p>Today covers all three: <b>clear asks</b>, <b>plan before you build</b>, and the <b>commands and shortcuts</b> that keep you in control. Everything works the same in the terminal and in the VS Code panel unless a note says otherwise.</p>
 

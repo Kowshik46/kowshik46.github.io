@@ -93,7 +93,7 @@
       <h1>One command.<br /><span class="cc-grad">A whole setup.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>27 min read</span>
+        <span>5 min quick start + 27 min full guide</span>
         <span>Oct 21, 2026</span>
       </div>
     </div>
@@ -102,11 +102,29 @@
     <main class="cc-wrap">
     <article class="cc-article" id="day-10">
 
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>What a plugin is and what a marketplace is</li><li>How to install, scope, update and remove plugins in the terminal and VS Code</li><li>How to vet a plugin and build and share your own</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Installing a plugin means running someone else's instructions, commands and hooks with your access. Read it first.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">claude plugin install commit-commands@claude-plugins-official
+claude plugin list</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        
+        <p>Official docs: <a href="https://code.claude.com/docs/en/plugins/overview" target="_blank" rel="noopener">Plugins overview</a> · <a href="https://code.claude.com/docs/en/plugins/install" target="_blank" rel="noopener">Install and manage plugins</a> · <a href="https://code.claude.com/docs/en/plugins/create" target="_blank" rel="noopener">Create plugins</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+10%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-10%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%2010%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
       <div class="cc-callout">
         <p><strong>Roadmap row today: Plugins, packaging it all up.</strong> Day 7 gave Claude your tools (MCP), Day 8 gave it know-how (skills) and Day 9 gave it helpers and rules (subagents and hooks). A <b>plugin</b> is the box that carries all of those at once. This article is about <i>using</i> plugins, trusting them, and building your own. Publishing a skill as a plugin is covered in the <a href="../day-08/publish-skills/">Day 8 companion page</a>, so here we go wider: the whole picture, for the terminal and for VS Code.</p>
       </div>
 
-      <h2><span class="num">01</span>The big picture: one box, one command</h2>
+      <h2 id="full-guide"><span class="num">01</span>The big picture: one box, one command</h2>
       <p><b>What.</b> A plugin is a folder that Claude Code installs and loads as <b>one unit</b>. Inside can be skills, subagents, hooks, MCP servers and a few other things. Instead of setting up each piece by hand, you run one install command and everything arrives together, with a name, a version and a way to update.</p>
       <p><b>Why it matters.</b> Until now every extra you added lived in its own place: a skill folder, an agent file, a hooks block in settings, an MCP entry. That is fine for you on one project. It falls apart the moment you want the same setup on a second project, on a teammate's laptop, or after you reinstall your machine. A plugin turns "my setup" into something you can hand over.</p>
       <p><b>How this article is organised.</b></p>
@@ -539,6 +557,11 @@ sys.exit(0)</pre>
         <div><b>Can I use a plugin from another tool's ecosystem?</b><span>Only ones published as Claude Code plugins, from a marketplace you added. Claude.ai and Cowork can install the same format, but a different set of components loads there.</span></div>
         <div><b>Is it safe to turn on auto-update?</b><span>It is on by default for the official marketplace only. Updates replace files you may have reviewed, so for third-party marketplaces leave it off unless you trust the author, and update by hand after reading the change.</span></div>
       </div>
+
+      <aside class="cc-tradeoff">
+        <h3>When not to use a plugin</h3>
+        <ul><li>Do not install a plugin for something one skill or a CLAUDE.md line already does. Each plugin adds always-on context; run claude plugin details name to see what it costs.</li><li>Do not install from a marketplace you cannot trace to a publisher. Check the source, then read the hooks and commands before enabling.</li><li>Keep your own setup as plain files until you have a second person or project that needs it. Package it when sharing starts to hurt.</li></ul>
+      </aside>
 
       <h2><span class="num">22</span>Try this today</h2>
       <div class="cc-loop">

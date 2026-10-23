@@ -93,7 +93,7 @@
       <h1>Run it without you.<br /><span class="cc-grad">Keep the guardrails.</span></h1>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>25 min read</span>
+        <span>5 min quick start + 25 min full guide</span>
         <span>Oct 22, 2026</span>
       </div>
     </div>
@@ -102,11 +102,28 @@
     <main class="cc-wrap">
     <article class="cc-article" id="day-11">
 
+      <aside class="cc-quick" aria-label="5-minute quick start">
+        <p class="cc-quick-tag">5-minute quick start</p>
+        <div class="cc-quick-grid">
+          <div><h3>You will learn</h3><ul><li>Headless mode: claude -p for scripts, pipes and cron</li><li>How to get output a program can read, and how to cap cost and turns</li><li>GitHub Actions: @claude on issues, automatic review, scheduled jobs</li></ul></div>
+          <div><h3>The one thing to remember</h3><p>Unattended means no one to click approve. Give it the least it needs and cap the budget and turns.</p></div>
+        </div>
+        <h3>A working example</h3>
+        <pre class="cc-quick-code">git diff | claude -p "review this diff for bugs" --max-turns 3 --max-budget-usd 1</pre>
+        <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
+      </aside>
+      <aside class="cc-verify" aria-label="Verification and sources">
+        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p>--permission-prompts needs v2.1.259 or later; the --max-budget-usd cap on subagents needs v2.1.217 or later. Use claude-code-action@v1, not @beta.</p>
+        <p>Official docs: <a href="https://code.claude.com/docs/en/headless" target="_blank" rel="noopener">Run Claude Code programmatically</a> · <a href="https://code.claude.com/docs/en/github-actions" target="_blank" rel="noopener">GitHub Actions</a> · <a href="https://code.claude.com/docs/en/cli-reference" target="_blank" rel="noopener">CLI reference</a></p>
+        <p>Something not working? <a href="https://github.com/Kowshik46/kowshik46.github.io/issues/new?title=Day+11%3A+broken+step&body=Page%3A+https%3A%2F%2Fkowshik.co.in%2Fclaude-code%2Fday-11%2F%0A%0AWhat+I+ran%3A%0AWhat+I+expected%3A%0AWhat+happened+(and+my+claude+--version)%3A" target="_blank" rel="noopener"><i class="fab fa-github"></i> Report a broken step</a> or <a href="mailto:kesav.koushik@gmail.com?subject=Claude%20Code%20Day%2011%3A%20broken%20step">email me</a>.</p>
+      </aside>
+
       <div class="cc-callout">
         <p><strong>Beyond the roadmap: Claude Code without you in the room.</strong> Days 1 to 10 were about working <i>with</i> Claude Code in a conversation. Today it runs on its own: from a script, from a build, or on GitHub when someone comments on a pull request. Same tools, same rules from Day 5, no chat window. The big rule of the day is simple: the less you watch, the tighter the guardrails must be.</p>
       </div>
 
-      <h2><span class="num">01</span>The big picture: from conversation to command</h2>
+      <h2 id="full-guide"><span class="num">01</span>The big picture: from conversation to command</h2>
       <p><b>What.</b> Until now you typed to Claude Code and read its answers. <b>Headless mode</b> (also called print mode) turns it into an ordinary command: you give it a prompt, it does the work, prints the result and exits. That makes it something a script, a scheduled job or a build server can call, just like <code>git</code> or <code>npm</code>.</p>
       <p><b>Why it matters.</b> Plenty of useful work does not need you watching: explain this failing build log, check my diff for typos, review every pull request, write a daily summary of what changed. Doing these by hand is easy to forget. Automating them means they happen every time, for every teammate.</p>
       <div class="cc-loop">
@@ -533,6 +550,11 @@ claude -p "Continue that review" --resume $id</pre>
         <div><b>Is it safe on a public repository?</b><span>It can be, if only people with write access can trigger it, permissions are minimal and a human merges. GitHub also withholds secrets from fork pull requests.</span></div>
         <div><b>Can I schedule it on my own computer?</b><span>Yes. Put the <code>claude -p</code> command in a script and run it from cron on Linux and macOS, or from Task Scheduler on Windows. Use <code>--bare</code>, a budget cap, and a key from an environment variable.</span></div>
       </div>
+
+      <aside class="cc-tradeoff">
+        <h3>What never to automate without approval</h3>
+        <ul><li>Anything that merges, deploys, deletes data, spends money or sends messages to other people. Let Claude propose, and let a person press the button.</li><li>Anything that reads untrusted text (issues from strangers, web pages, logs) while holding write access. Keep read and write in separate jobs.</li><li>Open-ended runs with no budget, turn limit or timeout. A loop that fails quietly can bill all night.</li><li>Do not use --dangerously-skip-permissions outside a throwaway sandbox.</li></ul>
+      </aside>
 
       <h2><span class="num">23</span>Try this today</h2>
       <div class="cc-loop">
