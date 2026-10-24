@@ -1,9 +1,10 @@
-// Day 13 quiz: tap an option for instant feedback, a live score, a results card with a reading list,
-// and a certificate. Without JavaScript the page still works with the "Show the answer" boxes.
+// Claude Quiz: a start screen, then one question at a time with instant feedback, a progress bar,
+// a results card with a reading list, and a certificate. Without JavaScript every question is listed
+// with a "Show the answer" box instead.
 (function () {
   var qs = [].slice.call(document.querySelectorAll(".cc-q[data-answer]"));
   if (!qs.length) return;
-  var TOTAL = qs.length, KEY = "cc-quiz-day13";
+  var TOTAL = qs.length, KEY = "cc-claude-quiz";
   var STAGES = { basics: "Basics", control: "Control", extend: "Extend", operate: "Operate" };
   var DAYS = { "01": "Using it vs. using it well", "02": "Context and CLAUDE.md", "03": "Setup: terminal and VS Code",
     "04": "Prompts, plan mode and shortcuts", "05": "Context, permissions and control", "06": "Git, commits and reviews",
@@ -17,7 +18,7 @@
     { min: 0, title: "Brave Explorer", line: "Took the quiz anyway. Day 1 is waiting." }
   ];
   var band = function (s) { for (var i = 0; i < BANDS.length; i++) if (s >= BANDS[i].min) return BANDS[i]; };
-  var L = "ABCD";
+  var L = "ABCD", body = document.body;
   var state = {};
   try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { state = {}; }
   var save = function () { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
@@ -28,12 +29,18 @@
     utm_source: p.get("utm_source"), utm_campaign: p.get("utm_campaign"), referrer: document.referrer || null };
     sessionStorage.setItem(KEY + "-src", JSON.stringify(src)); } catch (e) {}
 
-  document.body.classList.add("cc-quiz-js");
-  var bar = document.createElement("div");
-  bar.className = "cc-scorebar";
-  bar.setAttribute("role", "status");
-  document.body.appendChild(bar);
+  body.classList.add("cc-quiz-js");
 
+  // Quiz header: exit, position, stage, score and a progress bar.
+  var bar = document.createElement("div");
+  bar.className = "cc-qbar";
+  bar.innerHTML = '<div class="cc-qbar-row"><button type="button" class="cc-qbar-exit" aria-label="Exit the quiz"><i class="fas fa-times"></i> Exit</button>' +
+    '<span class="cc-qbar-pos"></span><span class="cc-qbar-score"></span></div><div class="cc-qbar-track"><i></i></div>';
+  var list = document.getElementById("questions");
+  list.parentNode.insertBefore(bar, list);
+  bar.querySelector(".cc-qbar-exit").addEventListener("click", function () { exit(); });
+
+  var cur = 0;
   qs.forEach(function (q, i) {
     q.dataset.i = i;
     [].slice.call(q.querySelectorAll(".cc-opts li")).forEach(function (li, j) {
@@ -42,24 +49,55 @@
       li.addEventListener("click", function () { pick(q, j); });
       li.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(q, j); } });
     });
-    if (state[i] != null) mark(q, state[i], false);
+    var nx = document.createElement("button");
+    nx.type = "button"; nx.className = "cc-btn solid cc-next";
+    nx.innerHTML = i === TOTAL - 1 ? 'See my result <i class="fas fa-trophy"></i>' : 'Next question <i class="fas fa-arrow-right"></i>';
+    nx.addEventListener("click", function () { go(i + 1); });
+    q.appendChild(nx);
+    if (state[i] != null) mark(q, state[i]);
   });
 
-  function pick(q, j) {
-    if (q.classList.contains("done")) return;
-    state[q.dataset.i] = j; save();
-    mark(q, j, true);
+  // Start buttons: resume where you left off, or show the result if you already finished.
+  var starts = [].slice.call(document.querySelectorAll(".cc-start"));
+  function label() {
+    var n = score().n;
+    starts.forEach(function (b) {
+      b.innerHTML = n === 0 ? '<i class="fas fa-play"></i> Start the quiz' : n < TOTAL ? '<i class="fas fa-play"></i> Resume the quiz (' + n + "/" + TOTAL + ")" : '<i class="fas fa-trophy"></i> See my result';
+    });
   }
-  function mark(q, j, live) {
+  starts.forEach(function (b) { b.addEventListener("click", function (e) { e.preventDefault(); begin(); }); });
+  label();
+
+  function first() { for (var i = 0; i < TOTAL; i++) if (state[i] == null) return i; return TOTAL; }
+  function begin() { body.classList.remove("review"); body.classList.add("quiz-on"); go(first()); }
+  function exit() { body.classList.remove("quiz-on", "review", "finished"); label(); window.scrollTo(0, 0); }
+  function go(i) {
+    cur = i;
+    qs.forEach(function (q, k) { q.classList.toggle("cur", k === i); });
+    body.classList.toggle("finished", i >= TOTAL);
+    if (i >= TOTAL) result(score());
+    update();
+    window.scrollTo(0, 0);
+    var q = qs[i]; if (q) { var f = q.classList.contains("done") ? q.querySelector(".cc-next") : q.querySelector(".cc-opts li"); if (f) f.focus({ preventScroll: true }); }
+  }
+
+  function pick(q, j) {
+    if (q.classList.contains("done") || body.classList.contains("review")) return;
+    state[q.dataset.i] = j; save();
+    mark(q, j);
+    update();
+    q.querySelector(".cc-next").focus({ preventScroll: true });
+  }
+  function mark(q, j) {
     var ans = Number(q.dataset.answer), lis = q.querySelectorAll(".cc-opts li");
     q.classList.add("done", j === ans ? "right" : "wrong");
     lis[ans].classList.add("is-right");
     if (j !== ans) lis[j].classList.add("is-wrong");
     var d = q.querySelector(".cc-ans"); if (d) d.open = true;
     var v = q.querySelector(".cc-verdict") || q.insertBefore(document.createElement("p"), d);
+    var cheers = ["Correct! +1", "Nailed it. +1", "Yes! +1", "Spot on. +1"];
     v.className = "cc-verdict " + (j === ans ? "ok" : "no");
-    v.textContent = j === ans ? "Correct! +1" : "Not quite. You picked " + L[j] + ", the answer is " + L[ans] + ".";
-    update(live);
+    v.textContent = j === ans ? cheers[q.dataset.i % cheers.length] : "Not quite. You picked " + L[j] + ", the answer is " + L[ans] + ".";
   }
   function score() {
     var s = 0, n = 0, st = {}, miss = {};
@@ -70,16 +108,24 @@
     });
     return { s: s, n: n, st: st, miss: miss };
   }
-  function update(live) {
-    var r = score();
-    bar.innerHTML = "<b>" + r.s + "</b> right · " + r.n + " of " + TOTAL + " answered" +
-      (r.n === TOTAL ? ' · <a href="#score">See your result</a>' : "");
-    bar.classList.toggle("show", r.n > 0);
-    if (r.n === TOTAL) result(r, live);
+  function update() {
+    var r = score(), q = qs[cur];
+    bar.querySelector(".cc-qbar-pos").textContent = cur >= TOTAL ? "Finished" : "Question " + (cur + 1) + " of " + TOTAL + " · " + STAGES[q.dataset.stage];
+    bar.querySelector(".cc-qbar-score").innerHTML = "Score <b>" + r.s + "</b>";
+    bar.querySelector(".cc-qbar-track i").style.width = (cur >= TOTAL ? 100 : (cur + (q && q.classList.contains("done") ? 1 : 0)) / TOTAL * 100) + "%";
   }
 
+  // Keyboard: A to D (or 1 to 4) picks, Enter or the right arrow moves on.
+  document.addEventListener("keydown", function (e) {
+    if (!body.classList.contains("quiz-on") || cur >= TOTAL || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^(INPUT|TEXTAREA)$/.test((e.target || {}).tagName)) return;
+    var q = qs[cur], k = e.key.toUpperCase(), j = "ABCD".indexOf(k); if (j < 0) j = "1234".indexOf(k);
+    if (j >= 0 && !q.classList.contains("done")) { e.preventDefault(); pick(q, j); }
+    else if ((e.key === "ArrowRight" || e.key === "Enter") && q.classList.contains("done") && e.target.tagName !== "BUTTON") { e.preventDefault(); go(cur + 1); }
+  });
+
   var box = document.getElementById("cc-result");
-  function result(r, live) {
+  function result(r) {
     if (!box) return;
     var b = band(r.s), days = Object.keys(r.miss).sort();
     box.hidden = false;
@@ -94,11 +140,23 @@
           return '<li><a href="../day-' + d + '/">Day ' + Number(d) + ": " + DAYS[d] + "</a> <span>" + r.miss[d] + " missed</span></li>";
         }).join("") + "</ul>"
       : "<h3>Nothing to revisit</h3><p>Full marks. Pick a hook from Day 9 or the Day 12 dials and build something real this week.</p>";
-    if (live) box.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   var again = document.getElementById("cc-again");
   if (again) again.addEventListener("click", function () {
-    state = {}; save(); location.hash = ""; location.reload();
+    state = {}; save();
+    qs.forEach(function (q) {
+      q.classList.remove("done", "right", "wrong");
+      [].forEach.call(q.querySelectorAll(".cc-opts li"), function (li) { li.classList.remove("is-right", "is-wrong"); });
+      var v = q.querySelector(".cc-verdict"); if (v) v.remove();
+      var d = q.querySelector(".cc-ans"); if (d) d.open = false;
+    });
+    var o = document.getElementById("cc-cert-out"); if (o) { o.hidden = true; o.innerHTML = ""; }
+    begin();
+  });
+  var review = document.getElementById("cc-review");
+  if (review) review.addEventListener("click", function () {
+    body.classList.remove("quiz-on", "finished"); body.classList.add("review");
+    document.getElementById("questions").scrollIntoView();
   });
 
   // ----- certificate -----
@@ -120,7 +178,7 @@
     var tz = ""; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (x) {}
     fetch("https://mytaeovzlriyrqnydaas.supabase.co/functions/v1/award", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quiz: "day-13", name: name, score: r.s, total: TOTAL, title: b.title, stages: stages,
+      body: JSON.stringify({ quiz: "claude-quiz", name: name, score: r.s, total: TOTAL, title: b.title, stages: stages,
         utm_source: src.utm_source, utm_campaign: src.utm_campaign, referrer: src.referrer, browser: browser, tz: tz,
         website: new FormData(form).get("website") })
     }).then(function (res) { return res.ok ? res.json() : null; }).catch(function () { return null; })
@@ -143,7 +201,7 @@
       x.strokeStyle = "rgba(165,180,252,0.45)"; x.lineWidth = 3; x.strokeRect(40, 40, 1120, 1120);
       x.strokeStyle = "rgba(165,180,252,0.18)"; x.lineWidth = 1.5; x.strokeRect(56, 56, 1088, 1088);
       x.textAlign = "center";
-      x.fillStyle = "#a5b4fc"; x.font = "600 26px " + F; spaced("CLAUDE CODE SERIES · DAY 13", 600, 150, 5);
+      x.fillStyle = "#a5b4fc"; x.font = "600 26px " + F; spaced("CLAUDE QUIZ · " + TOTAL + " QUESTIONS", 600, 150, 5);
       x.fillStyle = "#e8e8f0"; x.font = "800 64px " + F; x.fillText("Certificate of Not Just", 600, 250);
       x.fillText("Pressing Enter", 600, 325);
       x.fillStyle = "rgba(232,232,240,0.6)"; x.font = "400 28px " + F; x.fillText("This certifies that", 600, 410);
@@ -153,7 +211,7 @@
       g = x.createLinearGradient(600 - w / 2, 0, 600 + w / 2, 0); g.addColorStop(0, "#818cf8"); g.addColorStop(1, "#f472b6");
       x.fillStyle = g; x.fillText(name, 600, 520);
       x.fillStyle = "rgba(232,232,240,0.6)"; x.font = "400 28px " + F;
-      x.fillText("took the 25-question Claude Code quiz and scored", 600, 590);
+      x.fillText("took the Claude Quiz on Claude Code and scored", 600, 590);
       x.fillStyle = "#fff"; x.font = "800 120px " + F; x.fillText(r.s + "/" + TOTAL, 600, 725);
       // title badge
       x.font = "700 38px " + F; var tw = x.measureText(b.title).width + 80;
@@ -168,7 +226,7 @@
       x.textAlign = "left"; x.fillStyle = "rgba(232,232,240,0.5)"; x.font = "400 20px " + F; x.fillText("Issued by", 100, 1022);
       x.fillStyle = "#fff"; x.font = "700 28px " + F; x.fillText("Kowshik Kesavarapu", 100, 1060);
       x.fillStyle = "#a5b4fc"; x.font = "500 24px " + F; x.fillText("github.com/Kowshik46", 100, 1098);
-      x.textAlign = "right"; x.fillStyle = "#a5b4fc"; x.font = "600 24px " + F; x.fillText("kowshik.co.in/claude-code/day-13", 1100, 1060);
+      x.textAlign = "right"; x.fillStyle = "#a5b4fc"; x.font = "600 24px " + F; x.fillText("kowshik.co.in/claude-code/quiz", 1100, 1060);
       x.fillStyle = "rgba(232,232,240,0.5)"; x.font = "400 20px " + F;
       x.fillText((id ? id + " · " : "") + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }), 1100, 1098);
       show(c, name, r, b);
@@ -179,8 +237,8 @@
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go, go);
   }
   function show(c, name, r, b) {
-    var url = c.toDataURL("image/png"), page = "https://kowshik.co.in/claude-code/day-13/?utm_source=linkedin&utm_campaign=day-13-cert";
-    var text = "I scored " + r.s + "/" + TOTAL + " on the Claude Code quiz and I am officially a " + b.title + ". Think you can beat it? " + page;
+    var url = c.toDataURL("image/png"), page = "https://kowshik.co.in/claude-code/quiz/?utm_source=linkedin&utm_campaign=quiz-cert";
+    var text = "I scored " + r.s + "/" + TOTAL + " on the Claude Quiz and I am officially a " + b.title + ". Think you can beat it? " + page;
     out.hidden = false;
     out.innerHTML = '<img alt="Your Claude Code quiz certificate" width="1200" height="1200" />' +
       '<div class="cc-jump"><a class="cc-btn solid" download="claude-code-certificate.png"><i class="fas fa-download"></i> Download PNG</a>' +

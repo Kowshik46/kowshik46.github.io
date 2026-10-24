@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Claude Code Quiz: Test Days 1 to 12 — Kowshik Kesavarapu</title>
-  <meta name="description" content="A 25-question self-check quiz on Claude Code: context, permissions, MCP, skills, hooks, plugins, automation and cost, with answers and links back." />
-  <meta property="og:title" content="Day 13: Claude Code Quiz, Days 1 to 12" />
-  <meta property="og:description" content="25 questions to find what stuck from the first 12 days, with answers, explanations and links back." />
-  <meta property="og:image" content="https://kowshik.co.in/claude-code/day-13.png" />
-  <meta property="og:url" content="https://kowshik.co.in/claude-code/day-13/" />
+  <title>Claude Quiz: 25 Questions on Claude Code — Kowshik Kesavarapu</title>
+  <meta name="description" content="Claude Quiz: 25 questions on Claude Code, from context and permissions to MCP, hooks and cost. Instant feedback, a score and a certificate." />
+  <meta property="og:title" content="Claude Quiz: 25 questions. One certificate." />
+  <meta property="og:description" content="Tap through 25 Claude Code questions, see your score and print a certificate with your name. Every miss links to the article that fixes it." />
+  <meta property="og:image" content="https://kowshik.co.in/claude-code/quiz.png" />
+  <meta property="og:url" content="https://kowshik.co.in/claude-code/quiz/" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/x-icon" href="../../images/favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,17 +17,17 @@
   <link rel="stylesheet" href="../../style.css" />
   <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css" />
   <link rel="stylesheet" href="../series.css" />
-  <link rel="canonical" href="https://kowshik.co.in/claude-code/day-13/" />
+  <link rel="canonical" href="https://kowshik.co.in/claude-code/quiz/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Kowshik Kesavarapu" />
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Day 13: Claude Code Quiz, Test Days 1 to 12",
-  "description": "A 25-question self-check quiz on Claude Code: context, permissions, MCP, skills, hooks, plugins, automation and cost, with answers and links back.",
-  "url": "https://kowshik.co.in/claude-code/day-13/",
-  "image": "https://kowshik.co.in/claude-code/day-13.png",
+  "headline": "Claude Quiz: 25 Questions on Claude Code",
+  "description": "Claude Quiz: 25 questions on Claude Code, from context and permissions to MCP, hooks and cost. Instant feedback, a score and a certificate.",
+  "url": "https://kowshik.co.in/claude-code/quiz/",
+  "image": "https://kowshik.co.in/claude-code/quiz.png",
   "datePublished": "2026-10-24",
   "author": {
     "@type": "Person",
@@ -64,14 +64,14 @@
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "Day 13: Claude Code Quiz, Test Days 1 to 12",
-      "item": "https://kowshik.co.in/claude-code/day-13/"
+      "name": "Claude Quiz",
+      "item": "https://kowshik.co.in/claude-code/quiz/"
     }
   ]
 }
   </script>
 </head>
-<body class="cc">
+<body class="cc cc-quizpage">
 
   <nav class="nav">
     <a href="../../" class="nav-logo">Kowshik Kesavarapu</a>
@@ -86,38 +86,48 @@
     </div>
   </nav>
 
-      <header class="cc-hero cc-hero-article">
+      <header class="cc-hero cc-hero-article cc-quiz-hero">
     <div class="cc-wrap">
       <a href="../" class="cc-back"><i class="fas fa-arrow-left"></i> All articles</a>
-      <span class="cc-pill">Day 13 · Self-check</span>
-      <h1>Twelve days in.<br /><span class="cc-grad">What actually stuck?</span></h1>
+      <span class="cc-pill">Claude Quiz · Days 1 to 12</span>
+      <h1>Claude Quiz<br /><span class="cc-grad">25 questions. One certificate.</span></h1>
+      <p class="cc-lede">Think you know Claude Code? Tap through 25 questions on context, permissions, git, MCP, skills, hooks, plugins, automation and cost. You see right or wrong straight away, with the why. At the end you get your score, a reading list and a certificate with your name on it.</p>
+      <div class="cc-jump">
+        <a href="#questions" id="cc-start" class="cc-btn solid cc-start"><i class="fas fa-play"></i> Start the quiz</a>
+        <a href="#how" class="cc-btn">How it works</a>
+      </div>
       <div class="cc-meta">
         <span>By <b>Kowshik Kesavarapu</b></span>
-        <span>25 questions · about 15 minutes</span>
-        <span>Oct 23, 2026</span>
+        <span>25 questions · about 10 minutes</span>
+        <span>Free, no sign-up</span>
       </div>
     </div>
   </header>
 
     <main class="cc-wrap">
-    <article class="cc-article" id="day-13">
+    <article class="cc-article cc-quiz" id="quiz">
 
-      <aside class="cc-quick" aria-label="5-minute quick start">
-        <p class="cc-quick-tag">5-minute quick start</p>
-        <div class="cc-quick-grid">
-          <div><h3>You will learn</h3><ul><li>Which of Days 1 to 12 you could use tomorrow, and which only felt familiar</li><li>The exact day to revisit for every question you miss</li><li>A habit: let Claude Code quiz you on your own project</li></ul></div>
-          <div><h3>The one thing to remember</h3><p>Reading feels like knowing. Answering from memory is how you find out. Every wrong answer here is a map to one page.</p></div>
-        </div>
-        <h3>A working example</h3>
-        <pre class="cc-quick-code">&gt; Quiz me on this repo, one question at a time.
-&gt; Wait for my answer before you reveal the right one.</pre>
-        <p class="cc-quick-go">Short on time? Try just the first six questions. <a href="#full-guide">Jump to the quiz <i class="fas fa-arrow-down"></i></a> for all 25, grouped into four stages, with the what, why and how behind every answer, in the terminal and in VS Code.</p>
-      </aside>
+      <h2 id="how"><span class="num">01</span>How it works</h2>
+      <div class="cc-loop">
+        <div><b>Tap</b><span>One question at a time, four options. Your first pick counts, so no peeking.</span></div>
+        <div><b>Learn</b><span>Right or wrong, you get the what, why and how, with the terminal or VS Code command where it matters.</span></div>
+        <div><b>Score</b><span>After question 25: your score, a fun title, a stage breakdown and a reading list of the days you missed.</span></div>
+        <div><b>Certificate</b><span>Type your name and download a certificate to share. Tag me when you post it.</span></div>
+      </div>
+      <div class="cc-loop cc-stages">
+        <div><b>Basics</b><span>Days 1 to 4: install, context, prompts and plan mode.</span></div>
+        <div><b>Control</b><span>Days 5 and 6: context, permissions, git and reviews.</span></div>
+        <div><b>Extend</b><span>Days 7 to 10: MCP, skills, subagents, hooks and plugins.</span></div>
+        <div><b>Operate</b><span>Days 11 and 12: scripts, automation, models and cost.</span></div>
+      </div>
+      <p class="cc-new"><b>New to Claude Code?</b> Take it anyway. Every miss points you to the one article that explains it, so the quiz doubles as a map of the whole series. Or <a href="../day-01/">start with Day 1</a>.</p>
+      <div class="cc-jump cc-start-again"><a href="#questions" class="cc-btn solid cc-start"><i class="fas fa-play"></i> Start the quiz</a></div>
+
       <aside class="cc-verify" aria-label="Verification and sources">
         <p><b>Last verified 2026-10-24</b> against Days 1 to 12 and the official Claude Code docs (permissions and hooks pages re-checked for this quiz). Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         <p>Official docs: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> · <a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks</a> · <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP</a> · <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a> · <a href="https://code.claude.com/docs/en/headless" target="_blank" rel="noopener">Headless mode</a> · <a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration</a></p>
         <details class="cc-report">
-          <summary><i class="fas fa-bug"></i> Something not working? Report a broken step</summary>
+          <summary><i class="fas fa-bug"></i> Something not working? Report a wrong answer or a broken step</summary>
           <form id="cc-report">
             <label>What broke? <textarea name="what_broke" rows="3" maxlength="2000" required placeholder="The command I ran and what happened"></textarea></label>
             <label>What did you expect? (optional) <textarea name="expected" rows="2" maxlength="2000"></textarea></label>
@@ -130,20 +140,8 @@
         </details>
       </aside>
 
-      <div class="cc-callout">
-        <p><strong>No new feature today. A check on the twelve you have.</strong> 25 questions, four options each. Tap your pick and you see straight away if you got it, with a short explanation and a link to the day that covers it. Your score keeps count at the bottom of the screen. Finish all 25 to get your result, a personal reading list and a certificate with your name on it.</p>
-        <p><strong>New here?</strong> Take it anyway. Every miss points you to the one article that fixes it, so it doubles as a map of the whole series.</p>
-      </div>
-
-      <h2 id="full-guide"><span class="num">00</span>How to use this quiz</h2>
-      <div class="cc-loop">
-        <div><b>1. Pick once</b><span>Tap A, B, C or D. Your first pick counts, so no peeking: a guess you check is worth more than a re-read.</span></div>
-        <div><b>2. Read the why</b><span>Each answer opens with what, why and how, plus the terminal or VS Code command where it matters.</span></div>
-        <div><b>3. Get your result</b><span>After question 25: your score, a fun title, a stage breakdown and a reading list of the days you missed.</span></div>
-        <div><b>4. Try it for real</b><span>For each miss, run the command once in your own project, in the terminal or the VS Code panel.</span></div>
-      </div>
-
-      <h2 id="basics"><span class="num">01</span>Basics: Days 1 to 4</h2>
+      <div id="questions" class="cc-questions">
+      <h2 id="basics"><span class="num">02</span>Basics: Days 1 to 4</h2>
       <p class="cc-stage-note">Install, context, prompts and plan mode. 6 questions.</p>
       <section class="cc-q" aria-label="Question 1" data-answer="2" data-stage="basics" data-day="01">
         <h3><span class="cc-qn">Q1</span> What is the loop from Day 1 that works for a one-line fix and for a whole feature?</h3>
@@ -205,7 +203,7 @@
           <p class="cc-back-link">Covered on <a href="../day-04/">Day 4</a>.</p>
         </details>
       </section>
-      <h2 id="control"><span class="num">02</span>Control: Days 5 and 6</h2>
+      <h2 id="control"><span class="num">03</span>Control: Days 5 and 6</h2>
       <p class="cc-stage-note">Context, permissions, git and reviews. 6 questions.</p>
       <section class="cc-q" aria-label="Question 7" data-answer="2" data-stage="control" data-day="05">
         <h3><span class="cc-qn">Q7</span> The task has changed completely (from a bug fix to a new feature). Which command fits?</h3>
@@ -267,7 +265,7 @@
           <p class="cc-back-link">Covered on <a href="../day-06/">Day 6</a>.</p>
         </details>
       </section>
-      <h2 id="extend"><span class="num">03</span>Extend: Days 7 to 10</h2>
+      <h2 id="extend"><span class="num">04</span>Extend: Days 7 to 10</h2>
       <p class="cc-stage-note">MCP, skills, subagents, hooks and plugins. 7 questions.</p>
       <section class="cc-q" aria-label="Question 13" data-answer="3" data-stage="extend" data-day="07">
         <h3><span class="cc-qn">Q13</span> Where does a team-shared MCP server configuration live, and how should its token be stored?</h3>
@@ -339,7 +337,7 @@
           <p class="cc-back-link">Covered on <a href="../day-10/">Day 10</a>.</p>
         </details>
       </section>
-      <h2 id="operate"><span class="num">04</span>Operate: Days 11 and 12</h2>
+      <h2 id="operate"><span class="num">05</span>Operate: Days 11 and 12</h2>
       <p class="cc-stage-note">Scripts, automation, models, cost and parallel work. 6 questions.</p>
       <section class="cc-q" aria-label="Question 20" data-answer="3" data-stage="operate" data-day="11">
         <h3><span class="cc-qn">Q20</span> What does claude -p &quot;...&quot; do?</h3>
@@ -401,8 +399,9 @@
           <p class="cc-back-link">Covered on <a href="../day-12/">Day 12</a>.</p>
         </details>
       </section>
+      </div>
 
-      <h2 id="score"><span class="num">05</span>Your score</h2>
+      <h2 id="score"><span class="num">06</span>Your score</h2>
       <section id="cc-result" class="cc-result" hidden aria-live="polite">
         <p class="cc-r-kicker">Your result</p>
         <p class="cc-r-score"></p>
@@ -422,8 +421,9 @@
           </form>
           <div id="cc-cert-out" class="cc-cert-out" hidden></div>
         </div>
-        <div class="cc-jump"><button type="button" id="cc-again" class="cc-btn">Retake the quiz</button><a href="../day-01/" class="cc-btn">New here? Start with Day 1</a><a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-linkedin"></i> Follow for Day 14</a></div>
+        <div class="cc-jump"><button type="button" id="cc-review" class="cc-btn">Review my answers</button><button type="button" id="cc-again" class="cc-btn">Retake the quiz</button><a href="../day-01/" class="cc-btn">New here? Start with Day 1</a><a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-linkedin"></i> Follow for more</a></div>
       </section>
+      <div class="cc-bands">
       <p>Every right answer is a point out of 25. Here is what each score band means and what to do next.</p>
       <div class="cc-loop">
         <div><b>22 to 25: ready to teach it</b><span>You could set up a teammate. Pick the Day 12 dials or a Day 9 hook and build something real this week.</span></div>
@@ -431,19 +431,10 @@
         <div><b>9 to 15: good foundation</b><span>Re-read the 5-minute quick start on each day you missed. The full guide is there when you need it.</span></div>
         <div><b>0 to 8: start from Day 1</b><span>Do the Day 1 loop on a small task, then Days 2 to 5. Come back to this quiz next week.</span></div>
       </div>
-      <p><b>Which stage was weakest?</b> Basics: <a href="../day-01/">Day 1</a>, <a href="../day-02/">2</a>, <a href="../day-03/">3</a>, <a href="../day-04/">4</a>. Control: <a href="../day-05/">Day 5</a>, <a href="../day-06/">6</a>. Extend: <a href="../day-07/">Day 7</a>, <a href="../day-08/">8</a>, <a href="../day-09/">9</a>, <a href="../day-10/">10</a>. Operate: <a href="../day-11/">Day 11</a>, <a href="../day-12/">12</a>.</p>
-
       <aside class="cc-tradeoff">
         <h3>What a quiz can and cannot tell you</h3>
-        <ul><li>It checks that you remember the ideas, not that you can use them under pressure. The &quot;try it for real&quot; step is the real test.</li><li>Commands and settings change between releases. If an answer here disagrees with what your version does, trust <code>claude --version</code> and the official docs, then tell me with the report form at the top.</li><li>Multiple choice is easier than recall. For harder practice, ask Claude to quiz you without options.</li></ul>
+        <ul><li>It checks that you remember the ideas, not that you can use them under pressure. Running each missed command once in your own project is the real test.</li><li>Commands and settings change between releases. If an answer here disagrees with what your version does, trust <code>claude --version</code> and the official docs, then tell me with the report form.</li><li>Multiple choice is easier than recall. For harder practice, ask Claude Code to quiz you on your own repo without options.</li></ul>
       </aside>
-
-      <h2 id="try"><span class="num">06</span>Try this today</h2>
-      <div class="cc-loop">
-        <div><b>1. Retake the misses (10 min)</b><span>Open each missed day, read its 5-minute quick start and run one command from it.</span></div>
-        <div><b>2. Quiz yourself on your project (10 min)</b><span>Ask Claude to quiz you on your own repo, one question at a time, and answer before it reveals.</span></div>
-        <div><b>3. Fix one setting (10 min)</b><span>Add one deny rule (Day 5) or switch your default model to Sonnet (Day 12).</span></div>
-        <div><b>4. Tell me what was unclear (2 min)</b><span>If a question or answer confused you, use the report form. I will fix it.</span></div>
       </div>
 
     </article>
