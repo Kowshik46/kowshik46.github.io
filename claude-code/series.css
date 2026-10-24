@@ -280,4 +280,20 @@ button.cc-btn.solid { background: var(--accent); color: #fff; }
 .review .cc-qbar, .review .cc-next { display: none !important; }
 @keyframes cc-pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .quiz-on .cc-q.cur, .quiz-on.finished .cc-result { animation: none; } }
-.cc-jump + .cc-alt { color: var(--faint); font-size: 0.85rem; line-height: 1.6; margin-top: 0.9rem; max-width: 560px; }
+/* hub hero: pick your path */
+.cc-paths { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; max-width: 760px; }
+.cc-path { position: relative; display: flex; flex-direction: column; gap: 0.35rem; padding: 1.3rem 1.4rem 1.2rem; border-radius: 16px; border: 1px solid var(--border-hi); background: rgba(17,17,24,0.75); transition: transform .2s, border-color .2s, box-shadow .2s; }
+.cc-path:hover { transform: translateY(-3px); border-color: var(--accent-hi); box-shadow: 0 12px 32px rgba(99,102,241,0.18); }
+.cc-path-quiz { background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(244,114,182,0.12)); border-color: rgba(129,140,248,0.45); }
+.cc-path-quiz:hover { border-color: var(--pink); box-shadow: 0 12px 32px rgba(244,114,182,0.2); }
+.cc-path-i { width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: rgba(99,102,241,0.18); color: var(--accent-hi); font-size: 1.05rem; margin-bottom: 0.4rem; }
+.cc-path-quiz .cc-path-i { background: linear-gradient(135deg, #6366f1, #f472b6); color: #fff; }
+.cc-path-k { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); font-weight: 700; }
+.cc-path-t { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+.cc-path-d { font-size: 0.92rem; line-height: 1.55; color: var(--muted); }
+.cc-path-go { margin-top: 0.5rem; font-size: 0.9rem; font-weight: 600; color: var(--accent-hi); }
+.cc-path:hover .cc-path-go i { transform: translateX(3px); }
+.cc-path-go i { transition: transform .2s; }
+.cc-coming { display: inline-block; margin-top: 1.1rem; font-size: 0.88rem; color: var(--muted); }
+.cc-coming:hover { color: var(--text); }
+@media (max-width: 640px) { .cc-paths { grid-template-columns: 1fr; } }
