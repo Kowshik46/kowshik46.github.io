@@ -115,7 +115,7 @@ claude "explain this project"</pre>
         <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
       </aside>
       <aside class="cc-verify" aria-label="Verification and sources">
-        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p><b>Last verified 2026-10-24</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         <p>Install steps and the extension change often. If a command differs on your machine, run claude update and check the setup page.</p>
         <p>Official docs: <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Set up Claude Code</a> · <a href="https://code.claude.com/docs/en/vs-code" target="_blank" rel="noopener">Use it in VS Code</a> · <a href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener">Quickstart</a></p>
         <details class="cc-report">
@@ -178,6 +178,9 @@ claude "explain this project"</pre>
       </div>
       <p>Prefer a package manager? Windows has <code>winget install Anthropic.ClaudeCode</code>, macOS has <code>brew install --cask claude-code</code>, and Debian, Fedora and Alpine have apt, dnf and apk repositories. npm works too (<code>npm install -g @anthropic-ai/claude-code</code>, needs Node.js 22 or later). One difference matters: the native installer updates itself in the background, while winget, Homebrew and the Linux package managers do not, so run their upgrade command now and then (or <code>claude update</code> where it applies).</p>
       <p><b>Windows notes.</b> You don't need to run as Administrator. Git for Windows is optional: with it Claude Code uses Git Bash for shell commands, without it Claude Code uses PowerShell. If you want a Linux toolchain, install inside WSL and use the Linux command there.</p>
+      <div class="cc-callout">
+        <p><strong>Do you need Node.js?</strong> Not for the native installer, which is the recommended route and ships a self-contained binary. Only the npm route needs Node.js 22 or later (older versions print an <code>EBADENGINE</code> warning). You will also want Node.js later if you run MCP servers that start with <code>npx</code> (Day 7), and the Day 7 page covers what to do when <code>npx</code> misbehaves. Never use <code>sudo npm install -g</code>.</p>
+      </div>
       <div class="cc-callout">
         <p><strong>If something fails:</strong> <code>claude</code> not found or not recognized almost always means your terminal was open before the install, so open a new one. Seeing <code>The token '&amp;&amp;' is not a valid statement separator</code> means you pasted the CMD command into PowerShell; <code>'irm' is not recognized</code> means the PowerShell command went into CMD. <code>claude doctor</code> tells you what it found.</p>
       </div>

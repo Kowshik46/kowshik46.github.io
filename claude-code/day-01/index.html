@@ -113,7 +113,7 @@
         <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
       </aside>
       <aside class="cc-verify" aria-label="Verification and sources">
-        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p><b>Last verified 2026-10-24</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         
         <p>Official docs: <a href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener">Quickstart</a> · <a href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener">Common workflows</a></p>
         <details class="cc-report">
@@ -130,11 +130,26 @@
         </details>
       </aside>
 
-      <h2 id="full-guide"><span class="num">01</span>What Claude Code actually is</h2>
+      <h2 id="full-guide"><span class="num">01</span>The same task, asked two ways</h2>
+      <p>Same tool, same model, very different outcomes. The difference is how you ask and what you let it prove. Here are the four habits of this series as a before and after.</p>
+      <div class="cc-table-wrap">
+        <table class="cc-table">
+          <thead><tr><th>Habit</th><th class="bad">Before: the naive ask</th><th class="good">After: the proper ask</th></tr></thead>
+          <tbody>
+            <tr><td>Context</td><td class="bad">"Fix the login bug."</td><td class="good">"Users get logged out after refresh. The session logic is in <code>auth/session.py</code>. Find the cause and fix it."</td></tr>
+            <tr><td>Plan</td><td class="bad">"Add dark mode to the app."</td><td class="good">"Look at how styles are organised and propose a plan for dark mode. Don't change anything yet."</td></tr>
+            <tr><td>Verify</td><td class="bad">Accept every edit and hope.</td><td class="good">"Add a failing test first, fix it, run the tests and show me the result."</td></tr>
+            <tr><td>Setup</td><td class="bad">Re-explain your stack every session.</td><td class="good"><code>CLAUDE.md</code> says which commands to run and which conventions to follow.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The rest of this page explains each row. Every one gets its own day later in the series.</p>
+
+      <h2><span class="num">02</span>What Claude Code actually is</h2>
       <p>Claude Code is Anthropic's AI coding agent. Unlike a chatbot where you copy and paste code back and forth, it works <strong>inside your project</strong>. It reads your files, edits them, runs commands, runs your tests and explains what it did. You describe the outcome you want in plain English, and it does the work in front of you.</p>
       <p>It started in the terminal, and that is still where it is most powerful, but you can also use it in VS Code, JetBrains IDEs, a desktop app and the browser.</p>
 
-      <h2><span class="num">02</span>The easy part</h2>
+      <h2><span class="num">03</span>The easy part</h2>
       <p>Getting started takes about two minutes. On Windows, open PowerShell and run:</p>
 
       <div class="wt">
@@ -159,7 +174,7 @@
         <p><strong>The trap:</strong> because it works so well out of the box, it's easy to assume you're already using it well. Most people are using maybe a fifth of what it can do.</p>
       </div>
 
-      <h2><span class="num">03</span>Where it gets harder</h2>
+      <h2><span class="num">04</span>Where it gets harder</h2>
       <p>The gap between "it works" and "it works <em>and I trust it</em>" comes down to four habits. Each one gets its own day later in the series. Here's the short version.</p>
 
       <div class="cc-gaps">
@@ -200,8 +215,24 @@
         </div>
       </div>
 
-      <h2><span class="num">04</span>One habit to start with today</h2>
+      <h2><span class="num">05</span>One habit to start with today</h2>
       <p>If you only take one thing from Day 1, take this loop. It works for a one-line fix and for a whole feature.</p>
+
+      <figure class="cc-diagram">
+        <svg viewBox="0 0 720 210" role="img" aria-labelledby="loop-t loop-d">
+          <title id="loop-t">The explore, plan, build, verify loop</title>
+          <desc id="loop-d">Four boxes in a row: Explore, Plan, Build, Verify, joined by arrows. A dashed arrow from Verify back to Explore is labelled "next task, or fix what failed".</desc>
+          <defs><marker id="ah1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#818cf8"/></marker><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#f472b6"/></marker></defs>
+          <rect class="node" x="10" y="40" width="140" height="70" rx="12"/><text class="t" x="80" y="72">Explore</text><text class="s" x="80" y="92">read, explain back</text>
+          <rect class="node" x="190" y="40" width="140" height="70" rx="12"/><text class="t" x="260" y="72">Plan</text><text class="s" x="260" y="92">push back first</text>
+          <rect class="node" x="390" y="40" width="140" height="70" rx="12"/><text class="t" x="460" y="72">Build</text><text class="s" x="460" y="92">small steps</text>
+          <rect class="node" x="570" y="40" width="140" height="70" rx="12"/><text class="t" x="640" y="72">Verify</text><text class="s" x="640" y="92">tests, then the diff</text>
+          <path class="arrow" d="M150 75 H186" marker-end="url(#ah1)"/><path class="arrow" d="M330 75 H386" marker-end="url(#ah1)"/><path class="arrow" d="M530 75 H566" marker-end="url(#ah1)"/>
+          <path class="back" d="M640 112 V170 H80 V114" marker-end="url(#ah2)"/>
+          <text class="lab" x="360" y="192">next task, or fix what failed</text>
+        </svg>
+        <figcaption>The loop works for a one-line fix and for a whole feature.</figcaption>
+      </figure>
 
       <div class="cc-loop">
         <div><b>Explore</b><span>Ask it to read the relevant code and explain it back.</span></div>

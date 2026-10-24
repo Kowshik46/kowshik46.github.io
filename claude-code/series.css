@@ -184,3 +184,31 @@
 .cc-report textarea, .cc-report input { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; font: inherit; }
 .cc-report .cc-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .cc-report-msg { margin: 0 !important; min-height: 1.2em; }
+
+/* ---- Tables, terminal/VS Code split, diagrams, warnings ---- */
+.cc-table-wrap { overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--border); border-radius: 12px; }
+.cc-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; line-height: 1.55; }
+.cc-table th { text-align: left; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); background: var(--bg3); padding: 0.7rem 0.9rem; }
+.cc-table td { padding: 0.8rem 0.9rem; border-top: 1px solid var(--border); background: var(--bg2); vertical-align: top; color: rgba(232,232,240,0.82); }
+.cc-table td:first-child { color: var(--text); font-weight: 600; white-space: nowrap; }
+.cc-table td.bad { background: rgba(248,113,113,0.07); }
+.cc-table td.good { background: rgba(52,211,153,0.07); }
+.cc-table th.bad { color: #f87171; }
+.cc-table th.good { color: var(--green); }
+.cc-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1.4rem 0; }
+.cc-split > div { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; }
+.cc-split b.cc-where { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-hi); margin-bottom: 0.45rem; }
+.cc-split p { font-size: 0.94rem !important; margin: 0 !important; line-height: 1.65 !important; }
+.cc-diagram { margin: 1.6rem 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; }
+.cc-diagram svg { display: block; width: 100%; height: auto; max-width: 720px; margin: 0 auto; }
+.cc-diagram figcaption { text-align: center; font-size: 0.82rem; color: var(--faint); margin-top: 0.6rem; }
+.cc-diagram .node { fill: var(--bg3); stroke: var(--accent-hi); stroke-width: 1.5; }
+.cc-diagram .gate { fill: rgba(245,158,11,0.12); stroke: #f59e0b; stroke-width: 1.5; }
+.cc-diagram .t { fill: var(--text); font: 600 15px 'Inter', system-ui, sans-serif; text-anchor: middle; }
+.cc-diagram .s { fill: var(--muted); font: 400 12px 'Inter', system-ui, sans-serif; text-anchor: middle; }
+.cc-diagram .arrow { stroke: var(--accent-hi); stroke-width: 2; fill: none; }
+.cc-diagram .back { stroke: #f472b6; stroke-width: 2; fill: none; stroke-dasharray: 5 4; }
+.cc-diagram .lab { fill: #f472b6; font: 600 12px 'Inter', system-ui, sans-serif; text-anchor: middle; }
+.cc-warn { border-left: 3px solid #f87171; background: rgba(248,113,113,0.08); padding: 1.1rem 1.3rem; border-radius: 0 var(--radius) var(--radius) 0; margin: 1.6rem 0; }
+.cc-warn p { margin: 0; }
+@media (max-width: 640px) { .cc-split { grid-template-columns: 1fr; } .cc-table td:first-child { white-space: normal; } }

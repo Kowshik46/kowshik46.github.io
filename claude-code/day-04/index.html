@@ -114,7 +114,7 @@
         <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
       </aside>
       <aside class="cc-verify" aria-label="Verification and sources">
-        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p><b>Last verified 2026-10-24</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         
         <p>Official docs: <a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode and shortcuts</a> · <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands</a> · <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Permission modes</a></p>
         <details class="cc-report">
@@ -173,6 +173,22 @@
         <div><b>Build</b><span>Approve the plan, let it edit.</span></div>
         <div><b>Verify</b><span>Run tests, read the diff, then commit.</span></div>
       </div>
+      <figure class="cc-diagram">
+        <svg viewBox="0 0 720 250" role="img" aria-labelledby="pl-t pl-d">
+          <title id="pl-t">Plan first, build one step at a time</title>
+          <desc id="pl-d">Explore and Plan happen in plan mode, with no edits. You review and approve the plan at a review gate. Build runs one checklist item and stops. Verify runs tests and the diff. A dashed arrow returns from Verify to the next checklist item,.</desc>
+          <defs><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#818cf8"/></marker><marker id="ah4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#f472b6"/></marker></defs>
+          <rect x="10" y="10" width="300" height="24" rx="6" fill="none" stroke="#818cf8" stroke-dasharray="4 4"/><text class="s" x="160" y="27">plan mode: read-only, nothing changes</text>
+          <rect class="node" x="10" y="50" width="130" height="64" rx="12"/><text class="t" x="75" y="80">Explore</text><text class="s" x="75" y="99">read, change nothing</text>
+          <rect class="node" x="180" y="50" width="130" height="64" rx="12"/><text class="t" x="245" y="80">Plan</text><text class="s" x="245" y="99">numbered checklist</text>
+          <rect class="gate" x="350" y="50" width="130" height="64" rx="12"/><text class="t" x="415" y="80">You review</text><text class="s" x="415" y="99">approve or push back</text>
+          <rect class="node" x="520" y="50" width="190" height="64" rx="12"/><text class="t" x="615" y="80">Build item 1, stop</text><text class="s" x="615" y="99">wait for your review</text>
+          <rect class="node" x="520" y="150" width="190" height="64" rx="12"/><text class="t" x="615" y="180">Verify</text><text class="s" x="615" y="199">tests, /diff, then commit</text>
+          <path class="arrow" d="M140 82 H176" marker-end="url(#ah3)"/><path class="arrow" d="M310 82 H346" marker-end="url(#ah3)"/><path class="arrow" d="M480 82 H516" marker-end="url(#ah3)"/><path class="arrow" d="M615 114 V146" marker-end="url(#ah3)"/>
+          <path class="back" d="M520 182 H415 V120" marker-end="url(#ah4)"/><text class="lab" x="400" y="204">next item</text>
+        </svg>
+        <figcaption>The pink dashed arrow is the loop: after each item you review, then ask for the next one. If the plan is wrong, say so before approving.</figcaption>
+      </figure>
       <p><b>Plan mode</b> makes the first two steps safe. Claude can read your code and think, but it cannot edit anything until you approve its plan.</p>
       <div class="wt">
         <div class="wt-bar">
@@ -186,11 +202,26 @@
 &gt; <span class="s">/plan add rate limiting to the login route</span>
 <span class="c"># or press Shift+Tab until the status bar shows "plan mode on"</span></pre>
       </div>
-      <p><b>In VS Code</b>, use the mode indicator at the bottom of the prompt box and pick Plan. Claude shows the plan for you to read before anything changes. Read it properly: wrong files, a missing edge case or a step you did not ask for are far cheaper to fix now than in a diff. Tell it what to change ("also handle the case where the user is already locked out") and approve only when it matches what you want.</p>
+      <div class="cc-split">
+        <div><b class="cc-where">Terminal</b><p>Start with <code>claude --permission-mode plan</code>, type <code>/plan</code>, or press <code>Shift+Tab</code> until the status bar shows plan mode. The plan appears in the terminal for you to read and approve.</p></div>
+        <div><b class="cc-where">VS Code</b><p>Click the mode indicator at the bottom of the prompt box and pick Plan, or type <code>/plan</code> (needs a recent extension version). VS Code opens the plan as a Markdown document where you can add inline comments before Claude begins.</p></div>
+      </div>
+      <p><b>Either way,</b> read the plan properly: wrong files, a missing edge case or a step you did not ask for are far cheaper to fix now than in a diff. Tell it what to change ("also handle the case where the user is already locked out") and approve only when it matches what you want.</p>
       <p>Not every task needs this. A typo or a one-line rename can go straight to build. Use plan mode when the change touches several files, when you are in unfamiliar code, or when you cannot say in one sentence what the diff should look like.</p>
       <div class="cc-callout">
         <p><strong>Rule of thumb:</strong> if you could describe the diff in one sentence, just ask for it. If not, plan first.</p>
       </div>
+
+      <h3>Build one step at a time</h3>
+      <p><b>What.</b> Plan mode gives you a plan. Ask for it as a numbered checklist, then do not say "go". <b>Why.</b> A whole plan built in one go is one big diff you cannot review, and if step 2 was wrong, steps 3 to 9 are built on it. <b>How.</b> After you approve the plan, use this exact phrase:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Prompt</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">Write the plan as a numbered checklist. Then execute item 1 only, run the tests, and stop and wait for my review.</span></pre>
+      </div>
+      <p>Read the diff, then say "continue with item 2". It costs you a minute per step and saves the afternoon you would spend untangling a wrong turn.</p>
 
       <h2><span class="num">04</span>Commands worth knowing</h2>
       <p>Type <code>/</code> at the start of a message to see every command (in the VS Code panel too). These are the ones you will use all the time:</p>
@@ -211,10 +242,10 @@
 <span class="s">/resume</span>         pick up an earlier conversation
 <span class="s">/permissions</span>    see and change what Claude may do without asking
 <span class="s">/btw</span>            ask a side question without adding to the chat
-<span class="s">/usage</span>          see your usage and plan limits
+<span class="s">/usage</span>          see your usage and plan limits (<span class="s">/cost</span> is an alias)
 <span class="s">/help</span>           everything else</pre>
       </div>
-      <p>Two worth a closer look. <code>/rewind</code> is your safety net: every prompt creates a checkpoint, so you can roll the code back, roll the conversation back, or both. (It undoes Claude's file edits, not shell side effects like a database change, so keep using git.) <code>/btw</code> lets you ask "what does that flag do?" mid-task without cluttering the context.</p>
+      <p>Watch your spend with <code>/usage</code> (or its alias <code>/cost</code>). The Session block at the top shows the tokens used and an estimated cost for this session, computed locally at list price. On a Pro or Max subscription the dollar figure is not what you are billed, so look at the plan usage bars on the same screen instead. Check it after a big task, and <code>/clear</code> between unrelated tasks so old context does not ride along on every message. In VS Code the same numbers are in the Account and usage dialog. Two more worth a closer look. <code>/rewind</code> is your safety net: every prompt creates a checkpoint, so you can roll the code back, roll the conversation back, or both. (It undoes Claude's file edits, not shell side effects like a database change, so keep using git.) <code>/btw</code> lets you ask "what does that flag do?" mid-task without cluttering the context.</p>
 
       <h2><span class="num">05</span>Shortcuts that keep you in control</h2>
       <div class="wt">

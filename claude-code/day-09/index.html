@@ -115,7 +115,7 @@
         <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
       </aside>
       <aside class="cc-verify" aria-label="Verification and sources">
-        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p><b>Last verified 2026-10-24</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         <p>The `if` field and the prompt, agent and http hook types are newer; check the hooks reference if your version rejects them. Exit code 1 is not a block. Only exit 2 (or a deny decision) stops the action.</p>
         <p>Official docs: <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Subagents</a> · <a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a> · <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Hooks guide</a></p>
         <details class="cc-report">
@@ -155,6 +155,22 @@
         <div><b>Work in parallel</b><span>Claude can start several subagents at the same time, for example one per module, then combine the answers. Up to 20 can run at once by default.</span></div>
       </div>
       <p><b>How you meet them.</b> You already have, without noticing. When Claude says it is "searching the codebase" with an Explore agent, or when a Day 8 skill used <code>context: fork</code>, a subagent did the work. Now you will make your own.</p>
+
+      <h3>Skill or subagent? The difference in one table</h3>
+      <p>Day 8 skills and these subagents are easy to mix up, because both are Markdown files Claude can use. The difference is <b>where the work happens</b>. A skill is know-how that is loaded into the conversation you are already having. A subagent is a separate worker with its own context that only reports back.</p>
+      <div class="cc-table-wrap">
+        <table class="cc-table">
+          <thead><tr><th></th><th>Skill (Day 8)</th><th>Subagent</th></tr></thead>
+          <tbody>
+            <tr><td>What it is</td><td>Reusable instructions or a workflow</td><td>A separate Claude with its own system prompt</td></tr>
+            <tr><td>Where it runs</td><td>Inside your main conversation, by default</td><td>In its own context window</td></tr>
+            <tr><td>What you see</td><td>All its steps, in your chat</td><td>Only a short summary comes back</td></tr>
+            <tr><td>Tools and model</td><td>Uses your session's tools (it can pre-approve some)</td><td>Its own tool list and its own model</td></tr>
+            <tr><td>Reach for it when</td><td>You repeat the same procedure or need house know-how</td><td>The job is noisy or big, or the helper must be limited (read-only)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>They also combine. A skill can set <code>context: fork</code> to run in a subagent, and a subagent can list <code>skills</code> to preload as reference material. A skill that only holds guidelines gains nothing from <code>context: fork</code>, because the helper needs a concrete task.</p>
 
       <h2><span class="num">03</span>The built-in subagents</h2>
       <p><b>What and why.</b> Claude Code ships with helpers so delegation works from day one. Claude picks them itself when a task fits, and you can ask for them by name. <b>How to use:</b> just describe the job in words, for example <code>use an Explore agent to find where login errors are handled</code>.</p>

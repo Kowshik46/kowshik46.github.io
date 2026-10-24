@@ -114,7 +114,7 @@
         <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
       </aside>
       <aside class="cc-verify" aria-label="Verification and sources">
-        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p><b>Last verified 2026-10-24</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         
         <p>Official docs: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">How Claude remembers your project</a> · <a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Best practices</a></p>
         <details class="cc-report">
@@ -211,7 +211,92 @@ A web app for tracking orders (React + Node).
 
       <p>You don't need long prompts. You need the right three sentences. Naming a file also saves Claude from searching the whole project, which keeps the session faster and focused.</p>
 
-      <h2><span class="num">05</span>Try this today</h2>
+      <h2><span class="num">05</span>Copy-paste checkpoint: three starter files</h2>
+      <p>Pick the one closest to your project, paste it into a file named <code>CLAUDE.md</code> in the project root, then change every command to match what you really run. The point of each file is the same: tell Claude the exact build, test and lint commands so it never has to guess, and say what to avoid. Replace anything in <code>[brackets]</code>.</p>
+      <h3>Next.js / React frontend</h3>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>CLAUDE.md (Next.js / React)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># [App name]</span>
+Next.js (App Router) + React + TypeScript web app.
+
+<span class="c">## Commands</span>
+- Install: <span class="s">pnpm install</span>
+- Dev server: <span class="s">pnpm dev</span> (http://localhost:3000)
+- Type check: <span class="s">pnpm tsc --noEmit</span>
+- Lint: <span class="s">pnpm lint</span>
+- Test: <span class="s">pnpm test</span> (run before finishing any task)
+- Build: <span class="s">pnpm build</span> (run before opening a PR)
+
+<span class="c">## Conventions</span>
+- TypeScript only, strict mode. No <span class="s">any</span> without a comment saying why.
+- Server Components by default; add <span class="s">"use client"</span> only when needed.
+- Shared UI lives in <span class="s">src/components</span>; data fetching in <span class="s">src/lib/api</span>.
+- Style with [Tailwind / CSS Modules]; do not add another styling library.
+
+<span class="c">## Avoid</span>
+- Don't edit <span class="s">.next/</span> or anything generated.
+- Don't add dependencies without asking.
+- Never commit <span class="s">.env*</span> files.</pre>
+      </div>
+      <h3>Python / FastAPI backend</h3>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>CLAUDE.md (Python / FastAPI)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># [Service name]</span>
+FastAPI service with PostgreSQL. Python 3.12.
+
+<span class="c">## Commands</span>
+- Setup: <span class="s">python -m venv .venv &amp;&amp; source .venv/bin/activate &amp;&amp; pip install -r requirements.txt</span>
+- Run: <span class="s">uvicorn app.main:app --reload</span>
+- Test: <span class="s">pytest -q</span> (run before finishing any task)
+- Lint and format: <span class="s">ruff check . &amp;&amp; ruff format .</span>
+- Types: <span class="s">mypy app</span>
+
+<span class="c">## Conventions</span>
+- Routes in <span class="s">app/routers</span>, business logic in <span class="s">app/services</span>, never in the route.
+- Request and response bodies are Pydantic models. Type hints everywhere.
+- Database changes go through Alembic migrations: <span class="s">alembic revision --autogenerate -m "..."</span>
+- Every new endpoint gets a test in <span class="s">tests/</span>.
+
+<span class="c">## Avoid</span>
+- Don't edit applied migrations; add a new one.
+- Don't call the live database from tests; use the test fixtures.
+- Never log secrets or tokens.</pre>
+      </div>
+      <h3>Generic scripts repository</h3>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>CLAUDE.md (scripts repo)</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="c"># [Repo name]</span>
+A collection of small standalone scripts ([Python / Bash / Node]).
+
+<span class="c">## Commands</span>
+- Run a script: <span class="s">[python scripts/name.py --help]</span>
+- Check syntax: <span class="s">[shellcheck scripts/*.sh]</span> or <span class="s">[python -m py_compile scripts/*.py]</span>
+- Tests (if any): <span class="s">[command]</span>
+
+<span class="c">## Conventions</span>
+- One script, one job. Each has a usage comment at the top and a <span class="s">--help</span>.
+- Read config from environment variables; never hard-code paths or secrets.
+- Print a clear error and exit non-zero on failure.
+- Scripts must be safe to run twice.
+
+<span class="c">## Avoid</span>
+- Don't delete or overwrite files without a <span class="s">--force</span> flag.
+- Don't add dependencies for something the standard library can do.</pre>
+      </div>
+      <div class="cc-callout">
+        <p><strong>Not sure what to put in your own?</strong> Start with the Commands section. If Claude can build, test and lint your project without asking you how, the file is already doing its main job. Add the rest as it makes mistakes.</p>
+      </div>
+
+      <h2><span class="num">06</span>Try this today</h2>
       <div class="cc-loop">
         <div><b>Init</b><span>Run <code>/init</code> in one of your projects.</span></div>
         <div><b>Trim</b><span>Cut it down to commands, conventions and things to avoid.</span></div>

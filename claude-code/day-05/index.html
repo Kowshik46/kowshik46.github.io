@@ -115,7 +115,7 @@
         <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
       </aside>
       <aside class="cc-verify" aria-label="Verification and sources">
-        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p><b>Last verified 2026-10-24</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         <p>The --autocompact flag needs Claude Code v2.1.221 or later.</p>
         <p>Official docs: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> · <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Permission modes</a> · <a href="https://code.claude.com/docs/en/costs" target="_blank" rel="noopener">Costs</a></p>
         <details class="cc-report">
@@ -176,6 +176,22 @@
           <div class="good"><small>/clear</small>The task changed (new bug, new feature)<br>Claude keeps repeating a wrong idea<br>You finished and committed<br>Costs nothing, and your CLAUDE file loads again</div>
         </div>
       </div>
+      <h3>A concrete rule for which to use</h3>
+      <div class="cc-table-wrap">
+        <table class="cc-table">
+          <thead><tr><th>Situation</th><th>Use</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Same ticket, but the chat is long and you just refactored a file</td><td><code>/compact</code></td><td>You still need the decisions and what is left to do. Add a focus line.</td></tr>
+            <tr><td>You finished and committed, or switched to a new ticket or Git branch</td><td><code>/clear</code></td><td>Nothing in the old chat helps the new job, and it costs tokens on every message.</td></tr>
+            <tr><td>Claude keeps repeating a wrong idea</td><td><code>/clear</code></td><td>The wrong idea is in the context. Restate the task with what you learned.</td></tr>
+            <tr><td>You want a clean slate but may come back</td><td><code>/rename</code> then <code>/clear</code></td><td><code>/resume</code> brings the old session back later.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cc-split">
+        <div><b class="cc-where">Terminal</b><p>Run <code>/context</code> for a breakdown of what fills the window and <code>/usage</code> for tokens and plan limits. Compact or clear by typing the commands.</p></div>
+        <div><b class="cc-where">VS Code</b><p>Watch the context indicator in the prompt box. <code>/compact</code> and <code>/clear</code> work in the prompt box; for a new conversation use the plus button or a new tab, and <b>Session history</b> to resume. The <code>!</code> shell shortcut and Tab completion are terminal-only.</p></div>
+      </div>
       <p><b>In VS Code</b>, <code>/compact</code> and <code>/clear</code> work in the prompt box the same way. To start fresh, open a new conversation (the plus button in the panel, or a new editor tab). Click <b>Session history</b> to resume an earlier one. Name sessions before you leave them so you can find them tomorrow.</p>
 
       <h2><span class="num">04</span>Habits that keep it sharp for hours</h2>
@@ -230,6 +246,38 @@
         <div><b>Deny</b><span><code>git push</code>, secrets such as <code>.env</code>, anything that deletes.</span></div>
         <div><b>Backstop</b><span>Commit before big tasks. <code>/rewind</code> and git undo the rest.</span></div>
       </div>
+
+      <h3>Copy-paste checkpoint: a starter settings.json</h3>
+      <p>Save this as <code>.claude/settings.json</code> in your project (committed, so the team shares it), then adjust the commands to your stack. It allows the safe repeated commands, keeps asking for installs, and blocks pushes and secrets.</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>.claude/settings.json</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre>{
+  <span class="s">"permissions"</span>: {
+    <span class="s">"allow"</span>: [
+      <span class="p">"Bash(npm run test *)"</span>,
+      <span class="p">"Bash(npm run lint *)"</span>,
+      <span class="p">"Bash(npm run build)"</span>,
+      <span class="p">"Bash(git status)"</span>,
+      <span class="p">"Bash(git diff *)"</span>,
+      <span class="p">"Bash(git log *)"</span>
+    ],
+    <span class="s">"ask"</span>: [
+      <span class="p">"Bash(npm install *)"</span>,
+      <span class="p">"Bash(git commit *)"</span>
+    ],
+    <span class="s">"deny"</span>: [
+      <span class="p">"Bash(git push *)"</span>,
+      <span class="p">"Bash(rm -rf *)"</span>,
+      <span class="p">"Read(./.env)"</span>,
+      <span class="p">"Read(./.env.*)"</span>
+    ]
+  }
+}</pre>
+      </div>
+      <p>Remember the order: deny beats ask beats allow. Run <code>/permissions</code> afterwards to see the rules Claude Code loaded.</p>
 
       <h2><span class="num">08</span>Try this today</h2>
       <div class="cc-loop">

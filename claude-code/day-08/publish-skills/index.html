@@ -265,6 +265,20 @@
         <div><b>Set it in one place</b><span>Do not put a <code>version</code> in both <code>plugin.json</code> and the marketplace entry. The plugin file wins and validation warns about the mismatch.</span></div>
         <div><b>Tag a release</b><span>Run <code>claude plugin tag --push</code> in the plugin folder to create a <code>name--vX.Y.Z</code> git tag. Useful once other plugins depend on yours.</span></div>
       </div>
+      <div class="cc-warn">
+        <p><strong>Omitting the version has a cost.</strong> If you leave <code>version</code> out, every commit you push to the tracked branch becomes the new version for everyone who updates, including a broken one. That is fine while you iterate, but for anything public, bump the version on purpose, tag the release, and keep work in progress on another branch.</p>
+      </div>
+      <h3>Refresh the cache when users do not see your update</h3>
+      <p>Claude Code keeps a local copy of the marketplace and of each installed plugin, so a push is not visible until that copy is refreshed. If a user does not see your change, have them run this in a session, or the second line in a shell:</p>
+      <div class="wt">
+        <div class="wt-bar">
+          <div class="wt-tab"><span class="wt-ico">&gt;_</span>Refresh</div>
+          <div class="wt-ctl"><span>&#8212;</span><span>&#9744;</span><span>&#10005;</span></div>
+        </div>
+<pre><span class="s">/plugin marketplace update</span> kowshik-tools
+<span class="s">claude plugin update</span> create-launcher@kowshik-tools</pre>
+      </div>
+      <p>If the update still reports they are up to date, the version string did not change (see above), so there is nothing new to fetch. Test your own edits without any of this by loading the folder directly: <code>claude --plugin-dir ./plugins/create-launcher</code>. To let users pin to a tag, point your plugin entry at a <code>ref</code> (a tag or branch) or a <code>sha</code>, or tell them to add the marketplace as <code>Kowshik46/create_launcher_skill#v1.0.0</code>.</p>
       <p>Users update with <code>claude plugin update create-launcher@kowshik-tools</code>. Auto-update is off by default for third-party marketplaces, and each user turns it on under <b>Marketplaces</b> in <code>/plugin</code>. Never rename a published plugin: installs are recorded under the old name and break. If you must, add a <code>renames</code> map to the marketplace file so existing users migrate.</p>
 
       <h2><span class="num">09</span>Share it with a team, or keep it private</h2>
@@ -287,9 +301,13 @@
       <div class="cc-loop">
         <div><b>Keep it readable</b><span>Plain Markdown steps, no hidden downloads. Anyone can read the whole skill in a minute.</span></div>
         <div><b>Say what it touches</b><span>List the files it reads and writes, and the commands it runs, in the README.</span></div>
-        <div><b>Ask before risk</b><span>Anything destructive or outward-facing should need a yes. Use <code>disable-model-invocation: true</code> for skills with side effects.</span></div>
+        <div><b>Ask before risk</b><span>Anything destructive or outward-facing should need a yes. <strong>Use <code>disable-model-invocation: true</code> for any skill with side effects.</strong> It stops Claude from running the skill on its own; only a person typing the command can start it.</span></div>
         <div><b>Pin what users get</b><span>Tag releases so people can choose a version they reviewed.</span></div>
         <div><b>Review before you install</b><span>When you use someone else's skill, read its <code>SKILL.md</code> and any scripts first. The same advice applies to yours.</span></div>
+      </div>
+
+      <div class="cc-warn">
+        <p><strong>Set <code>disable-model-invocation: true</code> on any skill that deploys, deletes, sends or publishes.</strong> Without it, Claude can decide to run the skill by itself whenever your words seem to match its description. With it, the skill stays out of Claude's context until a person types its command. It is not a sandbox, so keep your permission rules as well.</p>
       </div>
 
       <h2><span class="num">13</span>Release checklist</h2>

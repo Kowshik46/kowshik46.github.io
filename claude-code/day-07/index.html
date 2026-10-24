@@ -114,7 +114,7 @@ claude mcp list</pre>
         <p class="cc-quick-go">Short on time? That is enough to start. <a href="#full-guide">Jump to the full guide <i class="fas fa-arrow-down"></i></a> for the what, why and how of every step, in the terminal and in VS Code.</p>
       </aside>
       <aside class="cc-verify" aria-label="Verification and sources">
-        <p><b>Last verified 2026-10-23</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
+        <p><b>Last verified 2026-10-24</b> against the official Claude Code docs. Commands and settings change between releases, so check <code>claude --version</code> and use the docs as the source of truth.</p>
         <p>SSE servers are deprecated in favour of HTTP. From v2.1.265 Claude Code tries HTTP first and falls back to SSE.</p>
         <p>Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> · <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a></p>
         <details class="cc-report">
@@ -230,6 +230,16 @@ claude mcp list</pre>
 <span class="s">claude mcp add --transport stdio --env</span> <span class="p">AIRTABLE_API_KEY=YOUR_KEY</span> airtable <span class="s">--</span> npx -y airtable-mcp-server</pre>
       </div>
       <p>The <code>--</code> matters: everything before it is Claude's options, everything after it is the command that launches the server. On Windows, run these in PowerShell as written. For long commands, PowerShell continues a line with a backtick instead of the backslash you see in Mac and Linux guides, so the simplest fix is to keep each command on one line.</p>
+
+      <h3>When a local server will not start (the npx snag)</h3>
+      <p><b>What.</b> Most local servers are launched with <code>npx -y some-package</code>. That needs Node.js installed, and <code>npx</code> keeps downloaded packages in a cache folder. <b>Why it breaks.</b> The first start downloads the package, which can be slower than Claude Code's startup wait, and a half-finished download can leave a broken cache entry that fails every time after. Claude Code does not retry a local server's first connection on its own. <b>How to fix it,</b> in this order:</p>
+      <div class="cc-loop">
+        <div><b>Check Node</b><span>Run <code>node --version</code> and <code>npx --version</code> in the same terminal. Not found means install Node.js first.</span></div>
+        <div><b>Reconnect</b><span>Type <code>/mcp</code> and choose Reconnect for the server. After a slow first download, this alone often works.</span></div>
+        <div><b>Wait longer</b><span>Start with a longer limit, for example <code>MCP_TIMEOUT=30000 claude</code> (milliseconds) on Mac or Linux, or set <code>$env:MCP_TIMEOUT=30000</code> in PowerShell first.</span></div>
+        <div><b>Clear the cache</b><span>Delete the <code>_npx</code> folder inside the npm cache (<code>npm config get cache</code> shows where it is), then reconnect. Pinning a version, such as <code>some-package@1.2.3</code>, also avoids surprise updates.</span></div>
+      </div>
+      <p>If it still fails on native Windows, try wrapping the command as <code>cmd /c npx -y some-package</code>, because Windows installs <code>npx</code> as a <code>.cmd</code> file. Treat this one as a fallback and check the current MCP docs, as it is not a step the docs require in every setup.</p>
 
       <h2><span class="num">03</span>Check it worked</h2>
       <div class="wt">
