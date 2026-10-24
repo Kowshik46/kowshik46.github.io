@@ -132,6 +132,16 @@
     box.querySelector(".cc-r-score").textContent = r.s + " / " + TOTAL;
     box.querySelector(".cc-r-title").textContent = b.title;
     box.querySelector(".cc-r-line").textContent = b.line;
+    var wink = box.querySelector(".cc-r-wink");
+    if (!wink) { wink = document.createElement("p"); wink.className = "cc-r-wink"; box.querySelector(".cc-r-line").after(wink); }
+    var WINKS = [
+      "Assuming you didn't have Claude open in another tab. 👀",
+      "No peeking at the answers, right? We trust you. Mostly. 😏",
+      "If you didn't cheat: impressive. If you did: Claude would be proud of your tool use. 🤖",
+      "Scores like this get audited. Just kidding. Unless? 🕵️"
+    ];
+    wink.textContent = r.s > 20 ? WINKS[Math.floor(Math.random() * WINKS.length)] : "";
+    wink.hidden = r.s <= 20;
     box.querySelector(".cc-r-stages").innerHTML = Object.keys(STAGES).map(function (k) {
       var x = r.st[k] || [0, 0]; return "<span><b>" + STAGES[k] + "</b> " + x[0] + "/" + x[1] + "</span>";
     }).join("");

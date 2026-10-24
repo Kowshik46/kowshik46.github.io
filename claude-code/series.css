@@ -221,6 +221,7 @@
 .cc-result .cc-r-kicker { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-hi); font-weight: 700; margin: 0 !important; }
 .cc-result .cc-r-score { font-size: 3.4rem; font-weight: 800; line-height: 1.1; margin: 0.3rem 0 0 !important; color: #fff; }
 .cc-result .cc-r-title { font-size: 1.4rem; font-weight: 800; margin: 0.3rem 0 0 !important; background: linear-gradient(90deg, #818cf8, #f472b6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cc-result .cc-r-wink { display: inline-block; margin: -0.4rem 0 1rem !important; padding: 0.35rem 0.9rem; border-radius: 99px; background: rgba(251,191,36,0.1); border: 1px dashed rgba(251,191,36,0.45); color: var(--yellow); font-size: 0.9rem; }
 .cc-result .cc-r-line { color: var(--muted); font-style: italic; margin: 0.3rem 0 1rem !important; }
 .cc-r-stages { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 1.2rem; }
 .cc-r-stages span { border: 1px solid var(--border-hi); border-radius: 99px; padding: 0.25rem 0.8rem; font-size: 0.88rem; color: var(--muted); }
