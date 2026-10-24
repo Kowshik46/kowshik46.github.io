@@ -131,20 +131,21 @@
       </aside>
 
       <div class="cc-callout">
-        <p><strong>No new feature today. A check on the twelve you have.</strong> Each question has four options. Pick your answer first, then press <b>Show the answer</b>. Keep score on paper (no JavaScript, nothing is recorded). The answers are short on purpose, with a link to the day that explains each one in full.</p>
+        <p><strong>No new feature today. A check on the twelve you have.</strong> 25 questions, four options each. Tap your pick and you see straight away if you got it, with a short explanation and a link to the day that covers it. Your score keeps count at the bottom of the screen. Finish all 25 to get your result, a personal reading list and a certificate with your name on it.</p>
+        <p><strong>New here?</strong> Take it anyway. Every miss points you to the one article that fixes it, so it doubles as a map of the whole series.</p>
       </div>
 
       <h2 id="full-guide"><span class="num">00</span>How to use this quiz</h2>
       <div class="cc-loop">
-        <div><b>1. Cover the answer</b><span>Choose A, B, C or D before you open anything. A guess you check is worth more than a re-read.</span></div>
-        <div><b>2. Score honestly</b><span>One point for each right answer on your first pick. No points for &quot;I almost had it&quot;.</span></div>
-        <div><b>3. Note the day</b><span>Write down the day number of every miss. Patterns show up fast.</span></div>
+        <div><b>1. Pick once</b><span>Tap A, B, C or D. Your first pick counts, so no peeking: a guess you check is worth more than a re-read.</span></div>
+        <div><b>2. Read the why</b><span>Each answer opens with what, why and how, plus the terminal or VS Code command where it matters.</span></div>
+        <div><b>3. Get your result</b><span>After question 25: your score, a fun title, a stage breakdown and a reading list of the days you missed.</span></div>
         <div><b>4. Try it for real</b><span>For each miss, run the command once in your own project, in the terminal or the VS Code panel.</span></div>
       </div>
 
       <h2 id="basics"><span class="num">01</span>Basics: Days 1 to 4</h2>
       <p class="cc-stage-note">Install, context, prompts and plan mode. 6 questions.</p>
-      <section class="cc-q" aria-label="Question 1">
+      <section class="cc-q" aria-label="Question 1" data-answer="2" data-stage="basics" data-day="01">
         <h3><span class="cc-qn">Q1</span> What is the loop from Day 1 that works for a one-line fix and for a whole feature?</h3>
         <ol class="cc-opts" type="A"><li>Ask, retry, retry, accept</li><li>Plan, build, deploy, monitor</li><li>Explore, plan, build, verify</li><li>Prompt, accept, commit, push</li></ol>
         <details class="cc-ans">
@@ -154,7 +155,7 @@
           <p class="cc-back-link">Covered on <a href="../day-01/">Day 1</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 2">
+      <section class="cc-q" aria-label="Question 2" data-answer="0" data-stage="basics" data-day="02">
         <h3><span class="cc-qn">Q2</span> Which of these belongs in your CLAUDE.md?</h3>
         <ol class="cc-opts" type="A"><li>Commands to test and lint, team conventions, and things to avoid</li><li>Your API keys, so it can call the service</li><li>A diary of what you changed each day</li><li>The full source of your main file, so it has it handy</li></ol>
         <details class="cc-ans">
@@ -164,7 +165,7 @@
           <p class="cc-back-link">Covered on <a href="../day-02/">Day 2</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 3">
+      <section class="cc-q" aria-label="Question 3" data-answer="1" data-stage="basics" data-day="03">
         <h3><span class="cc-qn">Q3</span> You installed the Claude Code VS Code extension. Typing claude in VS Code's integrated terminal says command not found. Why?</h3>
         <ol class="cc-opts" type="A"><li>The extension is broken and must be reinstalled</li><li>The extension bundles its own copy for the chat panel but does not add claude to your PATH</li><li>VS Code blocks terminal commands by default</li><li>You need an API key first</li></ol>
         <details class="cc-ans">
@@ -174,7 +175,7 @@
           <p class="cc-back-link">Covered on <a href="../day-03/">Day 3</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 4">
+      <section class="cc-q" aria-label="Question 4" data-answer="1" data-stage="basics" data-day="04">
         <h3><span class="cc-qn">Q4</span> Claude is heading down the wrong path mid-task. What is the best move?</h3>
         <ol class="cc-opts" type="A"><li>Type /clear and start over</li><li>Press Esc straight away and tell it what you want instead</li><li>Wait for it to finish, then undo everything</li><li>Close the terminal</li></ol>
         <details class="cc-ans">
@@ -184,7 +185,7 @@
           <p class="cc-back-link">Covered on <a href="../day-04/">Day 4</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 5">
+      <section class="cc-q" aria-label="Question 5" data-answer="1" data-stage="basics" data-day="04">
         <h3><span class="cc-qn">Q5</span> When is plan mode worth the extra step?</h3>
         <ol class="cc-opts" type="A"><li>Never, it only slows you down</li><li>When the change touches several files, the code is unfamiliar, or you cannot describe the diff in one sentence</li><li>Always, even for a typo</li><li>Only on Mondays</li></ol>
         <details class="cc-ans">
@@ -194,7 +195,7 @@
           <p class="cc-back-link">Covered on <a href="../day-04/">Day 4</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 6">
+      <section class="cc-q" aria-label="Question 6" data-answer="0" data-stage="basics" data-day="04">
         <h3><span class="cc-qn">Q6</span> What does /rewind NOT undo?</h3>
         <ol class="cc-opts" type="A"><li>Side effects of shell commands, such as deleting files with rm or changing a database</li><li>Messages in the conversation</li><li>A change you rejected</li><li>Edits Claude made to your files</li></ol>
         <details class="cc-ans">
@@ -206,7 +207,7 @@
       </section>
       <h2 id="control"><span class="num">02</span>Control: Days 5 and 6</h2>
       <p class="cc-stage-note">Context, permissions, git and reviews. 6 questions.</p>
-      <section class="cc-q" aria-label="Question 7">
+      <section class="cc-q" aria-label="Question 7" data-answer="2" data-stage="control" data-day="05">
         <h3><span class="cc-qn">Q7</span> The task has changed completely (from a bug fix to a new feature). Which command fits?</h3>
         <ol class="cc-opts" type="A"><li>/diff</li><li>/context</li><li>/clear</li><li>/compact</li></ol>
         <details class="cc-ans">
@@ -216,7 +217,7 @@
           <p class="cc-back-link">Covered on <a href="../day-05/">Day 5</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 8">
+      <section class="cc-q" aria-label="Question 8" data-answer="1" data-stage="control" data-day="05">
         <h3><span class="cc-qn">Q8</span> You have <code>allow: Bash(git *)</code> and <code>deny: Bash(git push *)</code>. What happens when Claude tries git push?</h3>
         <ol class="cc-opts" type="A"><li>Whichever rule was written last wins</li><li>It is blocked, because deny is checked first</li><li>It asks you every time</li><li>It is allowed, because allow is broader</li></ol>
         <details class="cc-ans">
@@ -226,7 +227,7 @@
           <p class="cc-back-link">Covered on <a href="../day-05/">Day 5</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 9">
+      <section class="cc-q" aria-label="Question 9" data-answer="3" data-stage="control" data-day="05">
         <h3><span class="cc-qn">Q9</span> Which settings file is committed to git, so the whole team gets its permission rules?</h3>
         <ol class="cc-opts" type="A"><li>CLAUDE.md</li><li>.claude/settings.local.json</li><li>~/.claude/settings.json</li><li>.claude/settings.json in the project</li></ol>
         <details class="cc-ans">
@@ -236,7 +237,7 @@
           <p class="cc-back-link">Covered on <a href="../day-05/">Day 5</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 10">
+      <section class="cc-q" aria-label="Question 10" data-answer="3" data-stage="control" data-day="05">
         <h3><span class="cc-qn">Q10</span> Your CLAUDE.md says &quot;never touch the .env file&quot;. What actually guarantees Claude cannot read it?</h3>
         <ol class="cc-opts" type="A"><li>Nothing, the sentence is enough</li><li>Asking nicely twice</li><li>Writing it in capital letters</li><li>A deny rule such as Read(./.env) in settings</li></ol>
         <details class="cc-ans">
@@ -246,7 +247,7 @@
           <p class="cc-back-link">Covered on <a href="../day-05/">Day 5</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 11">
+      <section class="cc-q" aria-label="Question 11" data-answer="3" data-stage="control" data-day="06">
         <h3><span class="cc-qn">Q11</span> Before asking teammates to review your branch, what is a quick first check you can run?</h3>
         <ol class="cc-opts" type="A"><li>/init</li><li>/model</li><li>/rename</li><li>/code-review (alias /review) on your current changes</li></ol>
         <details class="cc-ans">
@@ -256,7 +257,7 @@
           <p class="cc-back-link">Covered on <a href="../day-06/">Day 6</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 12">
+      <section class="cc-q" aria-label="Question 12" data-answer="2" data-stage="control" data-day="06">
         <h3><span class="cc-qn">Q12</span> Which pair of git commands is most worth putting in your deny list?</h3>
         <ol class="cc-opts" type="A"><li>git add and git commit</li><li>git status and git diff</li><li>git push --force and git reset --hard</li><li>git log and git show</li></ol>
         <details class="cc-ans">
@@ -268,7 +269,7 @@
       </section>
       <h2 id="extend"><span class="num">03</span>Extend: Days 7 to 10</h2>
       <p class="cc-stage-note">MCP, skills, subagents, hooks and plugins. 7 questions.</p>
-      <section class="cc-q" aria-label="Question 13">
+      <section class="cc-q" aria-label="Question 13" data-answer="3" data-stage="extend" data-day="07">
         <h3><span class="cc-qn">Q13</span> Where does a team-shared MCP server configuration live, and how should its token be stored?</h3>
         <ol class="cc-opts" type="A"><li>In your clipboard</li><li>In CLAUDE.md, with the token typed in</li><li>In .mcp.json, with the token typed in</li><li>In .mcp.json at the project root, with the token as an environment variable like ${API_KEY}</li></ol>
         <details class="cc-ans">
@@ -278,7 +279,7 @@
           <p class="cc-back-link">Covered on <a href="../day-07/">Day 7</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 14">
+      <section class="cc-q" aria-label="Question 14" data-answer="3" data-stage="extend" data-day="07">
         <h3><span class="cc-qn">Q14</span> With MCP, who decides which tool to call and when?</h3>
         <ol class="cc-opts" type="A"><li>The MCP server</li><li>The operating system</li><li>Anthropic's servers</li><li>Claude, based on the tool descriptions the server lists</li></ol>
         <details class="cc-ans">
@@ -288,7 +289,7 @@
           <p class="cc-back-link">Covered on <a href="../day-07/">Day 7</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 15">
+      <section class="cc-q" aria-label="Question 15" data-answer="2" data-stage="extend" data-day="08">
         <h3><span class="cc-qn">Q15</span> How much of a skill does Claude hold in context before the skill is used?</h3>
         <ol class="cc-opts" type="A"><li>Every file in the skill folder</li><li>Nothing at all</li><li>Only its one-line description</li><li>The whole SKILL.md of every skill</li></ol>
         <details class="cc-ans">
@@ -298,7 +299,7 @@
           <p class="cc-back-link">Covered on <a href="../day-08/">Day 8</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 16">
+      <section class="cc-q" aria-label="Question 16" data-answer="3" data-stage="extend" data-day="08">
         <h3><span class="cc-qn">Q16</span> You wrote a deploy skill. How do you stop Claude from running it on its own when you say &quot;ship it&quot; in passing?</h3>
         <ol class="cc-opts" type="A"><li>Make the description longer</li><li>Nothing, it can only run when you type it</li><li>Rename the folder</li><li>Add disable-model-invocation: true to the header</li></ol>
         <details class="cc-ans">
@@ -308,7 +309,7 @@
           <p class="cc-back-link">Covered on <a href="../day-08/">Day 8</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 17">
+      <section class="cc-q" aria-label="Question 17" data-answer="1" data-stage="extend" data-day="09">
         <h3><span class="cc-qn">Q17</span> What is the main reason to hand a big, noisy job to a subagent?</h3>
         <ol class="cc-opts" type="A"><li>It skips permissions</li><li>It works in its own fresh context, and only a short result comes back to your main chat</li><li>It is free</li><li>It makes Claude smarter</li></ol>
         <details class="cc-ans">
@@ -318,7 +319,7 @@
           <p class="cc-back-link">Covered on <a href="../day-09/">Day 9</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 18">
+      <section class="cc-q" aria-label="Question 18" data-answer="0" data-stage="extend" data-day="09">
         <h3><span class="cc-qn">Q18</span> You want a rule that Claude can never edit .env, with no exceptions. Which tool fits best?</h3>
         <ol class="cc-opts" type="A"><li>A PreToolUse hook that exits with code 2</li><li>A sentence in CLAUDE.md</li><li>A Notification hook</li><li>A PostToolUse hook</li></ol>
         <details class="cc-ans">
@@ -328,7 +329,7 @@
           <p class="cc-back-link">Covered on <a href="../day-09/">Day 9</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 19">
+      <section class="cc-q" aria-label="Question 19" data-answer="1" data-stage="extend" data-day="10">
         <h3><span class="cc-qn">Q19</span> Where does a plugin's manifest go, and what else may sit in that folder?</h3>
         <ol class="cc-opts" type="A"><li>In .claude-plugin/, together with skills/ and agents/</li><li>In .claude-plugin/plugin.json, and only that file belongs in .claude-plugin</li><li>In the root, next to skills/</li><li>In ~/.claude/plugin.json</li></ol>
         <details class="cc-ans">
@@ -340,7 +341,7 @@
       </section>
       <h2 id="operate"><span class="num">04</span>Operate: Days 11 and 12</h2>
       <p class="cc-stage-note">Scripts, automation, models, cost and parallel work. 6 questions.</p>
-      <section class="cc-q" aria-label="Question 20">
+      <section class="cc-q" aria-label="Question 20" data-answer="3" data-stage="operate" data-day="11">
         <h3><span class="cc-qn">Q20</span> What does claude -p &quot;...&quot; do?</h3>
         <ol class="cc-opts" type="A"><li>Prints the version</li><li>Opens plan mode</li><li>Pauses the session</li><li>Runs one prompt, prints the answer and stops, with no back and forth</li></ol>
         <details class="cc-ans">
@@ -350,7 +351,7 @@
           <p class="cc-back-link">Covered on <a href="../day-11/">Day 11</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 21">
+      <section class="cc-q" aria-label="Question 21" data-answer="0" data-stage="operate" data-day="11">
         <h3><span class="cc-qn">Q21</span> In a headless run, Claude wants a command you did not allow. What happens?</h3>
         <ol class="cc-opts" type="A"><li>It is denied, because nobody is there to approve it</li><li>It runs anyway</li><li>The run crashes</li><li>It asks you at the keyboard</li></ol>
         <details class="cc-ans">
@@ -360,7 +361,7 @@
           <p class="cc-back-link">Covered on <a href="../day-11/">Day 11</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 22">
+      <section class="cc-q" aria-label="Question 22" data-answer="1" data-stage="operate" data-day="11">
         <h3><span class="cc-qn">Q22</span> Who can trigger the @claude GitHub Action on an issue or pull request?</h3>
         <ol class="cc-opts" type="A"><li>Only Anthropic</li><li>Only people with write access to the repository (and bots only if you list them)</li><li>Only the repository's bots</li><li>Anyone on the internet</li></ol>
         <details class="cc-ans">
@@ -370,7 +371,7 @@
           <p class="cc-back-link">Covered on <a href="../day-11/">Day 11</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 23">
+      <section class="cc-q" aria-label="Question 23" data-answer="2" data-stage="operate" data-day="12">
         <h3><span class="cc-qn">Q23</span> What does the opusplan model alias do?</h3>
         <ol class="cc-opts" type="A"><li>Uses Opus for every step</li><li>Turns plan mode off</li><li>Uses Opus while planning, then Sonnet when it starts executing</li><li>Uses Haiku to plan and Opus to build</li></ol>
         <details class="cc-ans">
@@ -380,7 +381,7 @@
           <p class="cc-back-link">Covered on <a href="../day-12/">Day 12</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 24">
+      <section class="cc-q" aria-label="Question 24" data-answer="1" data-stage="operate" data-day="12">
         <h3><span class="cc-qn">Q24</span> Which command makes a second, isolated session on its own branch, so two sessions cannot collide?</h3>
         <ol class="cc-opts" type="A"><li>claude --clone</li><li>claude --worktree fix-rounding</li><li>claude --copy fix-rounding</li><li>claude -p fix-rounding</li></ol>
         <details class="cc-ans">
@@ -390,19 +391,40 @@
           <p class="cc-back-link">Covered on <a href="../day-12/">Day 12</a>.</p>
         </details>
       </section>
-      <section class="cc-q" aria-label="Question 25">
+      <section class="cc-q" aria-label="Question 25" data-answer="0" data-stage="operate" data-day="12">
         <h3><span class="cc-qn">Q25</span> Three parallel sessions will usually use...</h3>
-        <ol class="cc-opts" type="A"><li>At least three sessions&amp;#39; worth of tokens, because each reloads the project context</li><li>Fewer tokens, because they share a cache</li><li>The same tokens as one session</li><li>No tokens in the background</li></ol>
+        <ol class="cc-opts" type="A"><li>At least three sessions' worth of tokens, because each reloads the project context</li><li>Fewer tokens, because they share a cache</li><li>The same tokens as one session</li><li>No tokens in the background</li></ol>
         <details class="cc-ans">
           <summary>Show the answer</summary>
-          <p class="cc-correct"><b>Answer: A.</b> At least three sessions&#39; worth of tokens, because each reloads the project context</p>
+          <p class="cc-correct"><b>Answer: A.</b> At least three sessions' worth of tokens, because each reloads the project context</p>
           <p><b>What.</b> Parallel sessions save your waiting time, not tokens. <b>Why.</b> Each session carries its own context, and merge conflicts erase the time you saved if the sessions touch the same files. <b>How.</b> Run only as many as you can review carefully (two or three is plenty), give each its own worktree, and check the spend with <code>/usage</code>.</p>
           <p class="cc-back-link">Covered on <a href="../day-12/">Day 12</a>.</p>
         </details>
       </section>
 
       <h2 id="score"><span class="num">05</span>Your score</h2>
-      <p>Add up your points out of 25. Then use the band below as a guide to what to do next.</p>
+      <section id="cc-result" class="cc-result" hidden aria-live="polite">
+        <p class="cc-r-kicker">Your result</p>
+        <p class="cc-r-score"></p>
+        <p class="cc-r-title"></p>
+        <p class="cc-r-line"></p>
+        <div class="cc-r-stages"></div>
+        <div class="cc-r-read"></div>
+        <div class="cc-cert">
+          <h3>Get your certificate</h3>
+          <p>Type your name the way you want it printed. You get a 1200 x 1200 image to download and share.</p>
+          <form id="cc-cert-form">
+            <label>Name on the certificate <input name="name" maxlength="40" required autocomplete="name" placeholder="Your name" /></label>
+            <input class="cc-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button type="submit" class="cc-btn solid"><i class="fas fa-certificate"></i> Make my certificate</button>
+            <p class="cc-cert-msg" role="status"></p>
+            <p class="cc-cert-note">Your name, score and the date are saved with a certificate ID so I can count certificates. Nothing else you type is stored.</p>
+          </form>
+          <div id="cc-cert-out" class="cc-cert-out" hidden></div>
+        </div>
+        <div class="cc-jump"><button type="button" id="cc-again" class="cc-btn">Retake the quiz</button><a href="../day-01/" class="cc-btn">New here? Start with Day 1</a><a href="https://www.linkedin.com/in/kowshikkesavarapu/" target="_blank" rel="noopener" class="cc-btn"><i class="fab fa-linkedin"></i> Follow for Day 14</a></div>
+      </section>
+      <p>Every right answer is a point out of 25. Here is what each score band means and what to do next.</p>
       <div class="cc-loop">
         <div><b>22 to 25: ready to teach it</b><span>You could set up a teammate. Pick the Day 12 dials or a Day 9 hook and build something real this week.</span></div>
         <div><b>16 to 21: solid</b><span>Revisit the stage where you missed the most, then try each missed command once.</span></div>
@@ -443,10 +465,11 @@
 
   <footer class="cc-foot">
     © 2026 Kowshik Kesavarapu · <a href="../../">kowshik.co.in</a>
-    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data). If you send a step report, the text you type and your optional email are stored so I can fix the article.</small>
+    <br><small>Privacy: this site records anonymous visit stats (pages viewed, time on page, link clicks, country, browser, device; IP stored only as a one-way hash; a random ID in your browser recognises return visits, with no personal data). If you send a step report, the text you type and your optional email are stored so I can fix the article. If you make a quiz certificate, the name you type and your score are stored. Your quiz answers stay in your browser.</small>
   </footer>
 
   <script src="../../assets/js/site.js" defer></script>
   <script src="../../assets/js/site-note.js" defer></script>
+  <script src="../../assets/js/quiz.js" defer></script>
 </body>
 </html>
