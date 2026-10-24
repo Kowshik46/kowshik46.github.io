@@ -184,3 +184,17 @@
 .cc-report textarea, .cc-report input { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; font: inherit; }
 .cc-report .cc-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .cc-report-msg { margin: 0 !important; min-height: 1.2em; }
+
+/* quiz (Day 13) */
+.cc-stage-note { color: var(--muted); margin-top: 0; }
+.cc-q { border: 1px solid var(--border); background: var(--bg2); border-radius: 14px; padding: 1.1rem 1.3rem 1rem; margin: 1rem 0; }
+.cc-q h3 { font-size: 1.05rem; line-height: 1.5; margin: 0 0 0.7rem; }
+.cc-qn { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent-hi); border: 1px solid rgba(129,140,248,0.35); border-radius: 99px; padding: 0.1rem 0.55rem; margin-right: 0.4rem; vertical-align: 0.1em; }
+.cc-opts { margin: 0 0 0.8rem; padding-left: 1.6rem; list-style-type: upper-alpha; line-height: 1.7; color: rgba(232,232,240,0.85); }
+.cc-opts li::marker { color: var(--accent-hi); font-weight: 700; }
+.cc-ans summary { cursor: pointer; color: var(--accent-hi); font-weight: 600; }
+.cc-ans[open] { border-top: 1px solid var(--border); padding-top: 0.7rem; }
+.cc-ans p { font-size: 0.95rem; line-height: 1.7; margin: 0.6rem 0 0; }
+.cc-correct { color: var(--green); }
+.cc-correct b { color: var(--green); }
+.cc-back-link a { color: var(--accent-hi); }
