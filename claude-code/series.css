@@ -280,5 +280,4 @@ button.cc-btn.solid { background: var(--accent); color: #fff; }
 .review .cc-qbar, .review .cc-next { display: none !important; }
 @keyframes cc-pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .quiz-on .cc-q.cur, .quiz-on.finished .cc-result { animation: none; } }
-.cc-alt { color: var(--muted); font-size: 0.95rem; margin-top: 1rem; max-width: 620px; }
-.cc-alt a { color: var(--accent-hi); }
+.cc-jump + .cc-alt { color: var(--faint); font-size: 0.85rem; line-height: 1.6; margin-top: 0.9rem; max-width: 560px; }
