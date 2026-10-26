@@ -148,8 +148,8 @@
     box.querySelector(".cc-r-read").innerHTML = days.length
       ? "<h3>Your reading list</h3><ul>" + days.map(function (d) {
           return '<li><a href="../day-' + d + '/">Day ' + Number(d) + ": " + DAYS[d] + "</a> <span>" + r.miss[d] + " missed</span></li>";
-        }).join("") + "</ul>"
-      : "<h3>Nothing to revisit</h3><p>Full marks. Pick a hook from Day 9 or the Day 12 dials and build something real this week.</p>";
+        }).join("") + "</ul><p>Then <a href='../capstone/'>build the capstone project</a> to see the tools work together.</p>"
+      : "<h3>Nothing to revisit</h3><p>Full marks. Now put it together: <a href='../capstone/'>build the capstone project</a> and then pick a hook from Day 9 or the Day 12 dials.</p>";
   }
   var again = document.getElementById("cc-again");
   if (again) again.addEventListener("click", function () {
